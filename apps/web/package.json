@@ -10,10 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.17.19",
+    "@tanstack/react-query-devtools": "^5.17.21",
+    "@tanstack/react-router": "^1.14.0",
+    "@tanstack/router-devtools": "^1.14.0",
+    "@tanstack/router-vite-plugin": "^1.12.16",
+    "@trpc/client": "11.0.0-next-beta.242",
+    "@trpc/next": "11.0.0-next-beta.242",
+    "@trpc/react-query": "11.0.0-next-beta.242",
+    "@trpc/server": "11.0.0-next-beta.242",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rxdb": "^15.4.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "server": "workspace:*"
   },
   "devDependencies": {
     "@repo/ui": "workspace:*",
