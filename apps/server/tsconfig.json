@@ -2,6 +2,7 @@
   "compilerOptions": {
     "useDefineForClassFields": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
 
     /* Linting */
     "strict": true,
