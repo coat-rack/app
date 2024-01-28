@@ -1,9 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
-import { trpc } from "../trpc"
 import { db } from "../db"
+import { trpcReact } from "../trpc"
 
-import { Observable } from "rxjs"
+import { Todo } from "@repo/data/models"
 import { useEffect, useState } from "react"
+import { Observable } from "rxjs"
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -20,15 +21,19 @@ const useObservable = <T extends any>(obs: Observable<T>) => {
 }
 
 function Index() {
-  const data = trpc.getName.useQuery()
+  const data = trpcReact.getName.useQuery()
   const todos = useObservable(db.todos.find({}).$)
 
   const addTodo = () => {
-    db.todos.insert({
-      id: Date.now().toString(),
-      title: new Date().toString(),
-      done: true,
-    })
+    const now = new Date()
+    const todo: Todo = {
+      id: now.getTime().toString(),
+      timestamp: now.getTime(),
+      done: false,
+      title: now.toString(),
+    }
+
+    db.todos.insert(todo)
   }
 
   return (

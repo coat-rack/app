@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { httpBatchLink } from "@trpc/client"
-import { trpc } from "./trpc"
+import { trpcReact, trpcReactClient } from "./trpc"
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
@@ -8,15 +7,6 @@ import { RouterProvider, createRouter } from "@tanstack/react-router"
 import { routeTree } from "./routeTree.gen"
 
 const queryClient = new QueryClient()
-const trpcClient = trpc.createClient({
-  links: [
-    httpBatchLink({
-      url: "http://localhost:3000",
-      // We can add additional things like auth headers, etc. here
-    }),
-  ],
-})
-
 // Import the generated route tree
 
 // Create a new router instance
@@ -31,12 +21,12 @@ declare module "@tanstack/react-router" {
 
 function App() {
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <trpcReact.Provider client={trpcReactClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <ReactQueryDevtools />
       </QueryClientProvider>
-    </trpc.Provider>
+    </trpcReact.Provider>
   )
 }
 

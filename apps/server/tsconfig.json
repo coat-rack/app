@@ -9,7 +9,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "moduleResolution": "NodeNext"
   },
   "include": ["src"],
   "ts-node": {
