@@ -1,6 +1,7 @@
 {
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
+    "lib": ["es2022", "DOM", "DOM.Iterable"],
     "outDir": "dist"
   },
   "include": ["src"],

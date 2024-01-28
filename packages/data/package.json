@@ -1,0 +1,19 @@
+{
+  "name": "@repo/data",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./models": "./src/models.ts"
+  },
+  "scripts": {},
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@turbo/gen": "^1.11.3",
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.22.4"
+  }
+}
