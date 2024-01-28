@@ -4,6 +4,7 @@ import { trpcReact } from "../trpc"
 
 import { Todo } from "@repo/data/models"
 import { useEffect, useState } from "react"
+import { RxDocument } from "rxdb"
 import { Observable } from "rxjs"
 
 export const Route = createLazyFileRoute("/")({
@@ -36,6 +37,10 @@ function Index() {
     db.todos.insert(todo)
   }
 
+  const deleteTodo = (todo: RxDocument<Todo>) => {
+    todo.remove()
+  }
+
   return (
     <div>
       <h1>Message From Server</h1>
@@ -44,7 +49,13 @@ function Index() {
 
       <button onClick={addTodo}>Add Todo</button>
 
-      <ol>{todos?.map((todo) => <li key={todo.id}>{todo.title}</li>)}</ol>
+      <ol>
+        {todos?.map((todo) => (
+          <li onClick={() => deleteTodo(todo)} key={todo.id}>
+            {todo.title}
+          </li>
+        ))}
+      </ol>
     </div>
   )
 }
