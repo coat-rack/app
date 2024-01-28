@@ -45,31 +45,39 @@ export const db = await createRxDatabase<RxSchema>({
   storage: getRxStorageDexie(),
 })
 
-await db.addCollections({
-  todos: {
-    schema: todoSchema,
-  },
-})
+const replicateCollection = async <K extends keyof Schema>(
+  key: K,
+  schema: RxJsonSchema<Schema[K][number]>,
+) => {
+  const collection = await db.addCollections({
+    [key]: {
+      schema,
+    },
+  })
 
-const replicateCollection = <K extends keyof Schema>(key: K) =>
-  replicateRxCollection<Schema[K], number>({
-    collection: "my-database-key",
-    replicationIdentifier: key + " trpc-replication",
+  return replicateRxCollection<Schema[K][number], number>({
+    collection: collection[key],
+    replicationIdentifier: key + "-trpc-replication",
     push: {
       handler: async (changeRows) => {
-        console.log(changeRows)
+        console.log({ changeRows })
 
         const changes = changeRows
           .filter((row) => !row.newDocumentState._deleted)
-          .map((row) => row.newDocumentState.map((doc) => doc))
+          .map((row) => row.newDocumentState)
           .flat()
+
+        console.log({ changes })
 
         const deletes = changeRows
           .filter((row) => row.newDocumentState._deleted)
-          .map((row) => row.newDocumentState.map((doc) => doc))
+          .map((row) => row.newDocumentState)
           .flat()
 
+        console.log({ changes, deletes })
+
         const conflicted = await trpcClient.rxdb.push.mutate({
+          collection: key,
           changes: {
             [key]: changes,
           },
@@ -78,13 +86,19 @@ const replicateCollection = <K extends keyof Schema>(key: K) =>
           },
         })
 
-        return conflicted
+        console.log({ conflicted })
+
+        return []
       },
     },
 
     pull: {
-      handler: async (checkpoint, batchSize) => {
-        console.log(checkpoint, batchSize)
+      handler: async (baseCheckpoint, batchSize) => {
+        // For some reason RxDB sometimes sets the checkpoint to an object and not a number
+        const checkpoint =
+          typeof baseCheckpoint === "number" ? baseCheckpoint : 0
+
+        console.log({ checkpoint, batchSize })
 
         const result = await trpcClient.rxdb.pull.query({
           batchSize,
@@ -92,12 +106,18 @@ const replicateCollection = <K extends keyof Schema>(key: K) =>
           collection: key,
         })
 
+        const documents = result.documents[key]?.map((doc) => ({
+          ...doc,
+          _deleted: doc.dltd || false,
+        }))
+
         return {
-          ...result,
-          checkpoint: checkpoint || null,
+          documents,
+          checkpoint: result.checkpoint,
         }
       },
     },
   })
+}
 
-// const todosReplication = await replicateCollection("todos")
+const todosCollection = await replicateCollection("todos", todoSchema)

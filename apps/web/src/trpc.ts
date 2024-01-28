@@ -2,12 +2,14 @@ import {
   createTRPCClient,
   createTRPCReact,
   httpBatchLink,
+  loggerLink,
 } from "@trpc/react-query"
 
 import type { AppRouter } from "server/src/types"
 
 const config = {
   links: [
+    loggerLink(),
     httpBatchLink({
       url: "http://localhost:3000",
       // We can add additional things like auth headers, etc. here
