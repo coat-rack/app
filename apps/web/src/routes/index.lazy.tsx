@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router"
 import { db } from "../db"
 import { trpcReact } from "../trpc"
 
+import { Layout } from "@/layout"
 import { Todo } from "@repo/data/models"
 import { useEffect, useState } from "react"
 import { RxDocument } from "rxdb"
@@ -42,10 +43,8 @@ function Index() {
   }
 
   return (
-    <div>
-      <h1>Message From Server</h1>
-
-      <pre>{data?.data}</pre>
+    <Layout title="Server Content">
+      <p>{data?.data}</p>
 
       <button onClick={addTodo}>Add Todo</button>
 
@@ -56,6 +55,6 @@ function Index() {
           </li>
         ))}
       </ol>
-    </div>
+    </Layout>
   )
 }
