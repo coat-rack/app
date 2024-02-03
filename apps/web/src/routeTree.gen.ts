@@ -9,6 +9,8 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
+const AppsNotesIndexLazyImport = createFileRoute('/apps/notes/')()
+const AppsNotesIdLazyImport = createFileRoute('/apps/notes/$id')()
 
 // Create/Update Routes
 
@@ -16,6 +18,20 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const AppsNotesIndexLazyRoute = AppsNotesIndexLazyImport.update({
+  path: '/apps/notes/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/apps/notes/index.lazy').then((d) => d.Route),
+)
+
+const AppsNotesIdLazyRoute = AppsNotesIdLazyImport.update({
+  path: '/apps/notes/$id',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/apps/notes/$id.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -25,9 +41,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/apps/notes/$id': {
+      preLoaderRoute: typeof AppsNotesIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/apps/notes/': {
+      preLoaderRoute: typeof AppsNotesIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexLazyRoute,
+  AppsNotesIdLazyRoute,
+  AppsNotesIndexLazyRoute,
+])

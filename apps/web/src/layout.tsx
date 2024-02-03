@@ -5,7 +5,7 @@ type Props = PropsWithChildren<{
 }>
 
 export const Layout = ({ title, children }: Props) => (
-  <div className="flex flex-col gap-4">
+  <div className="flex flex-col gap-4 p-4">
     <h1 className="font-title text-5xl">{title}</h1>
     <div>{children}</div>
   </div>

@@ -1,34 +1,25 @@
-import { createLazyFileRoute } from "@tanstack/react-router"
-import { db } from "../db"
-import { trpcReact } from "../trpc"
+import { Link, createLazyFileRoute } from "@tanstack/react-router"
+import { db, useObservable } from "../db"
 
 import { Layout } from "@/layout"
 import { Todo } from "@repo/data/models"
-import { useEffect, useState } from "react"
 import { RxDocument } from "rxdb"
-import { Observable } from "rxjs"
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 })
 
-const useObservable = <T extends any>(obs: Observable<T>) => {
-  const [value, setValue] = useState<T>()
-
-  useEffect(() => {
-    obs.subscribe(setValue)
-  }, [])
-
-  return value
-}
-
 function Index() {
-  const data = trpcReact.getName.useQuery()
   const todos = useObservable(db.todos.find({}).$)
+
+  console.log({ todos })
 
   const addTodo = () => {
     const now = new Date()
     const todo: Todo = {
+      space: "basic",
+      type: "todo",
+      isDeleted: false,
       id: now.getTime().toString(),
       timestamp: now.getTime(),
       done: false,
@@ -44,9 +35,7 @@ function Index() {
 
   return (
     <Layout title="Server Content">
-      <p>{data?.data}</p>
-
-      <button onClick={addTodo}>Add Todo</button>
+      <Link to="/apps/notes">Notes</Link>
 
       <ol>
         {todos?.map((todo) => (
@@ -55,6 +44,7 @@ function Index() {
           </li>
         ))}
       </ol>
+      <button onClick={addTodo}>Add Todo</button>
     </Layout>
   )
 }

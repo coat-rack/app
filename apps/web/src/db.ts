@@ -1,8 +1,10 @@
-import { Schema, Todo } from "@repo/data/models"
+import { Note, Schema, Todo } from "@repo/data/models"
+import { useEffect, useState } from "react"
 import { RxCollection, RxJsonSchema, addRxPlugin, createRxDatabase } from "rxdb"
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode"
 import { replicateRxCollection } from "rxdb/plugins/replication"
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie"
+import { Observable } from "rxjs"
 import { trpcClient } from "./trpc"
 
 // Enable Dev Mode - this allows us to be a little loose with schemas while we're still figuring things out
@@ -19,6 +21,12 @@ const todoSchema: RxJsonSchema<Todo> = {
   primaryKey: "id",
   type: "object",
   properties: {
+    space: {
+      type: "string",
+    },
+    type: {
+      type: "string",
+    },
     timestamp: {
       type: "number",
     },
@@ -27,7 +35,7 @@ const todoSchema: RxJsonSchema<Todo> = {
       maxLength: 100,
       type: "string",
     },
-    dltd: {
+    isDeleted: {
       type: "boolean",
     },
     title: {
@@ -37,7 +45,39 @@ const todoSchema: RxJsonSchema<Todo> = {
       type: "boolean",
     },
   },
-  required: ["id", "title", "done"],
+  required: ["id", "title", "done", "type", "space"],
+}
+
+const noteSchema: RxJsonSchema<Note> = {
+  version: 0,
+  primaryKey: "id",
+  type: "object",
+  properties: {
+    space: {
+      type: "string",
+    },
+    type: {
+      type: "string",
+    },
+    timestamp: {
+      type: "number",
+    },
+    id: {
+      // Primary key requires a max length
+      maxLength: 100,
+      type: "string",
+    },
+    isDeleted: {
+      type: "boolean",
+    },
+    title: {
+      type: "string",
+    },
+    content: {
+      type: "string",
+    },
+  },
+  required: ["id", "title", "type", "space", "content"],
 }
 
 export const db = await createRxDatabase<RxSchema>({
@@ -77,7 +117,6 @@ const replicateCollection = async <K extends keyof Schema>(
         console.log({ changes, deletes })
 
         const conflicted = await trpcClient.rxdb.push.mutate({
-          collection: key,
           changes: {
             [key]: changes,
           },
@@ -88,7 +127,10 @@ const replicateCollection = async <K extends keyof Schema>(
 
         console.log({ conflicted })
 
-        return []
+        return conflicted.map((item) => ({
+          ...item,
+          _deleted: item.isDeleted || false,
+        }))
       },
     },
 
@@ -108,7 +150,7 @@ const replicateCollection = async <K extends keyof Schema>(
 
         const documents = result.documents[key]?.map((doc) => ({
           ...doc,
-          _deleted: doc.dltd || false,
+          _deleted: doc.isDeleted || false,
         }))
 
         return {
@@ -121,3 +163,14 @@ const replicateCollection = async <K extends keyof Schema>(
 }
 
 const todosCollection = await replicateCollection("todos", todoSchema)
+const notesCollection = await replicateCollection("notes", noteSchema)
+
+export const useObservable = <T extends any>(obs: Observable<T>) => {
+  const [value, setValue] = useState<T>()
+
+  useEffect(() => {
+    obs.subscribe(setValue)
+  }, [])
+
+  return value
+}
