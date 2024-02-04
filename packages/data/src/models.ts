@@ -30,3 +30,19 @@ export const Schema = z.object({
 })
 
 export type Schema = z.infer<typeof Schema>
+
+export type User = z.infer<typeof User>
+export const User = z.object({
+  id: z.string(),
+  name: z.string(),
+})
+
+export type Space = z.infer<typeof Space>
+export const Space = z.object({
+  id: z.string(),
+  name: z.string(),
+  isUserSpace: z.boolean(),
+})
+
+export type UserSpaces = z.infer<typeof UserSpaces>
+export const UserSpaces = z.record(z.array(z.string()))

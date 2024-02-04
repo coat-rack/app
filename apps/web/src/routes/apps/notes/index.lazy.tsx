@@ -35,7 +35,7 @@ function Index() {
       <button onClick={addNote}>Add Note</button>
       <ul>
         {notes?.map((note) => (
-          <li>
+          <li key={note.id}>
             <Link
               key={note.id}
               to="/apps/notes/$id"

@@ -1,15 +1,40 @@
 import { z } from "zod"
 import { publicProcedure, router } from "./trpc"
 
-import { Schema } from "@repo/data/models"
+import { Schema, Space, User, UserSpaces } from "@repo/data/models"
 import { Database } from "./db"
 
 interface DB extends Schema {
   checkpoint: number
+  spaces: Space[]
+  users: User[]
+  userSpaces: UserSpaces
 }
 
 const db = new Database<DB>("./database.json", {
   checkpoint: Date.now(),
+  spaces: [
+    {
+      id: "public",
+      name: "public",
+      isUserSpace: false,
+    },
+    {
+      // Each user has a space defined for them
+      id: "admin",
+      name: "admin",
+      isUserSpace: true,
+    },
+  ],
+  users: [
+    {
+      id: "admin",
+      name: "admin",
+    },
+  ],
+  userSpaces: {
+    admin: ["public", "admin"],
+  },
   todos: [],
   notes: [],
 })
@@ -24,20 +49,26 @@ export const rxdbRouter = router({
     .input(
       z.object({
         collection: schemaKey,
+        userId: z.string(),
         checkpoint: z.number().optional(),
         batchSize: z.number(),
       }),
     )
     .query(async ({ input }) => {
-      const collection = Object.values(db.data[input.collection])
+      const collection = db.data[input.collection]
+      const userSpaces = db.data["userSpaces"][input.userId] || []
+      const userRecords = collection.filter((item) =>
+        userSpaces.includes(item.space),
+      )
 
       console.log("pull", {
         input,
       })
+
       return {
         checkpoint: db.data.checkpoint,
         documents: {
-          [input.collection]: collection,
+          [input.collection]: userRecords,
         },
       }
     }),
@@ -77,9 +108,11 @@ export const rxdbRouter = router({
         }
       }
 
-      const keys = Object.keys(input.deletes) as z.infer<typeof schemaKey>[]
+      const deleteKeys = Object.keys(input.deletes) as z.infer<
+        typeof schemaKey
+      >[]
 
-      for (const key of keys) {
+      for (const key of deleteKeys) {
         const collection = db.data[key]
         for (const dlt of input.deletes[key] || []) {
           const existingIndex = collection.findIndex(
