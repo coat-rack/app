@@ -1,5 +1,5 @@
 import { Note, Schema, Todo } from "@repo/data/models"
-import { useEffect, useState } from "react"
+import { DependencyList, useEffect, useState } from "react"
 import { RxCollection, RxJsonSchema, addRxPlugin, createRxDatabase } from "rxdb"
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode"
 import { RxDBLocalDocumentsPlugin } from "rxdb/plugins/local-documents"
@@ -21,7 +21,7 @@ type CreateRxSchema<T extends Record<string, Array<any>>> = {
 
 interface KeyValue {
   id: string
-  value: string
+  value?: string
 }
 
 type LocalSchema = {
@@ -46,7 +46,7 @@ const metaSchema: RxJsonSchema<KeyValue> = {
       type: "string",
     },
   },
-  required: ["id", "value"],
+  required: ["id"],
 }
 
 const todoSchema: RxJsonSchema<Todo> = {
@@ -220,25 +220,32 @@ const replicateCollection = async <K extends keyof Schema>(
     },
   })
 }
+
 const todosCollection = await replicateCollection("todos", todoSchema)
 const notesCollection = await replicateCollection("notes", noteSchema)
 
-export const useObservable = <T extends any>(obs: Observable<T>) => {
+export const useObservable = <T extends any>(
+  obs: Observable<T>,
+  deps: DependencyList,
+) => {
   const [value, setValue] = useState<T>()
 
   useEffect(() => {
     obs.subscribe(setValue)
-  }, [])
+  }, deps)
 
   return value
 }
 
 export const useDBUser = () =>
   useObservable(
-    db.meta.getLocal$<KeyValue>(USER_META_KEY).pipe(map((d) => d?._data.data)),
+    db.meta
+      .getLocal$<KeyValue>(USER_META_KEY)
+      .pipe(map((d) => d?._data.data.value)),
+    [],
   )
 
-export const setDBUser = (user: string) =>
+export const setDBUser = (user?: string) =>
   db.meta.upsertLocal(USER_META_KEY, {
     id: USER_META_KEY,
     value: user,

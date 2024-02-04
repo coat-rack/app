@@ -11,11 +11,13 @@ interface DB extends Schema {
   userSpaces: UserSpaces
 }
 
+const PUBLIC_SPACE_ID = "public"
+
 const db = new Database<DB>("./database.json", {
   checkpoint: Date.now(),
   spaces: [
     {
-      id: "public",
+      id: PUBLIC_SPACE_ID,
       name: "public",
       isUserSpace: false,
     },
@@ -33,7 +35,7 @@ const db = new Database<DB>("./database.json", {
     },
   ],
   userSpaces: {
-    admin: ["public", "admin"],
+    admin: [PUBLIC_SPACE_ID, "admin"],
   },
   todos: [],
   notes: [],
@@ -56,10 +58,6 @@ export const rxdbRouter = router({
     )
     .query(async ({ input }) => {
       const collection = db.data[input.collection]
-      const userSpaces = db.data["userSpaces"][input.userId] || []
-      const userRecords = collection.filter((item) =>
-        userSpaces.includes(item.space),
-      )
 
       console.log("pull", {
         input,
@@ -68,7 +66,7 @@ export const rxdbRouter = router({
       return {
         checkpoint: db.data.checkpoint,
         documents: {
-          [input.collection]: userRecords,
+          [input.collection]: collection,
         },
       }
     }),
@@ -148,4 +146,54 @@ export const rxdbRouter = router({
 
 export const appRouter = router({
   rxdb: rxdbRouter,
+  users: router({
+    create: publicProcedure
+      .input(
+        z.object({
+          name: z.string(),
+        }),
+      )
+      .mutation(({ input }) => {
+        const user: User = {
+          id: input.name,
+          name: input.name,
+        }
+
+        const existing = db.data.users.find((u) => u.id === user.id)
+        if (existing) {
+          return existing
+        }
+
+        db.data.users.push(user)
+        db.data.spaces.push({
+          id: user.id,
+          name: user.name,
+          isUserSpace: true,
+        })
+
+        db.data.userSpaces[user.id] = [PUBLIC_SPACE_ID, user.id]
+
+        db.commit()
+
+        return user
+      }),
+    getAll: publicProcedure.query(() => db.data.users),
+  }),
+  spaces: router({
+    grantAccess: publicProcedure
+      .input(
+        z.object({
+          spaceId: z.string(),
+          toUserId: z.string(),
+        }),
+      )
+      .mutation(async ({ input }) => {
+        const userSpaces = db.data["userSpaces"][input.toUserId] || []
+
+        userSpaces.push(input.spaceId)
+
+        db.data["userSpaces"][input.toUserId] = userSpaces
+        db.commit()
+      }),
+  }),
 })

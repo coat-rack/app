@@ -14,6 +14,7 @@ function Note() {
         id,
       },
     }).$,
+    [id],
   )
 
   if (!note) {

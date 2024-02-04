@@ -1,5 +1,5 @@
-import { db, useObservable } from "@/db"
-import { Layout, useUser } from "@/layout"
+import { db, useDBUser, useObservable } from "@/db"
+import { Layout } from "@/layout"
 import { Todo } from "@repo/data/models"
 import { createLazyFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
@@ -10,11 +10,23 @@ export const Route = createLazyFileRoute("/apps/todos/")({
 })
 
 function Index() {
-  const todos = useObservable(db.todos.find({}).$)
-  const user = useUser()
+  const user = useDBUser()
+
+  const todos = useObservable(
+    db.todos.find({
+      selector: {
+        space: user,
+      },
+    }).$,
+    [user],
+  )
 
   const [value, setValue] = useState("")
   const addTodo = () => {
+    if (!user) {
+      return
+    }
+
     const todo: Todo = {
       type: "todo",
       id: Date.now().toString(),
