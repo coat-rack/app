@@ -1,10 +1,30 @@
 import { Note, Space, Todo } from "@repo/data/models"
-import { RxJsonSchema } from "rxdb"
+import { PrimaryKey, RxJsonSchema } from "rxdb"
+import { ZodType } from "zod"
+import { zodToJsonSchema } from "zod-to-json-schema"
 
 export interface KeyValue {
   id: string
   value?: string
 }
+
+function inferRxJsonSchemaFromZod<TSchema>(
+  type: ZodType<TSchema>,
+  version: number,
+): RxJsonSchema<TSchema> {
+  let schema = zodToJsonSchema(type) as RxJsonSchema<TSchema>
+  console.log(JSON.stringify(schema))
+  return {
+    ...schema,
+    type: "object",
+    version,
+    primaryKey: "id" as PrimaryKey<TSchema>,
+    required: schema.required,
+    properties: schema.properties,
+  }
+}
+
+export const todoSchema = inferRxJsonSchemaFromZod(Todo, 0)
 
 export const metaSchema: RxJsonSchema<KeyValue> = {
   version: 0,
@@ -22,95 +42,8 @@ export const metaSchema: RxJsonSchema<KeyValue> = {
   required: ["id"],
 }
 
-export const todoSchema: RxJsonSchema<Todo> = {
-  version: 0,
-  primaryKey: "id",
-  type: "object",
-  properties: {
-    space: {
-      type: "string",
-    },
-    type: {
-      type: "string",
-    },
-    timestamp: {
-      type: "number",
-    },
-    id: {
-      // Primary key requires a max length
-      maxLength: 100,
-      type: "string",
-    },
-    isDeleted: {
-      type: "boolean",
-    },
-    title: {
-      type: "string",
-    },
-    done: {
-      type: "boolean",
-    },
-  },
-  required: ["id", "title", "done", "type", "space"],
-}
-
-export const noteSchema: RxJsonSchema<Note> = {
-  version: 0,
-  primaryKey: "id",
-  type: "object",
-  properties: {
-    space: {
-      type: "string",
-    },
-    type: {
-      type: "string",
-    },
-    timestamp: {
-      type: "number",
-    },
-    id: {
-      // Primary key requires a max length
-      maxLength: 100,
-      type: "string",
-    },
-    isDeleted: {
-      type: "boolean",
-    },
-    title: {
-      type: "string",
-    },
-    content: {
-      type: "string",
-    },
-  },
-  required: ["id", "title", "type", "space", "content"],
-}
-
-export const spaceSchema: RxJsonSchema<Space> = {
-  version: 0,
-  primaryKey: "id",
-  type: "object",
-  properties: {
-    type: {
-      type: "string",
-    },
-    timestamp: {
-      type: "number",
-    },
-    id: {
-      // Primary key requires a max length
-      maxLength: 100,
-      type: "string",
-    },
-    isDeleted: {
-      type: "boolean",
-    },
-    isUserSpace: {
-      type: "boolean",
-    },
-    name: {
-      type: "string",
-    },
-  },
-  required: ["type", "timestamp", "id", "name"],
-}
+export const noteSchema: RxJsonSchema<Note> = inferRxJsonSchemaFromZod(Note, 0)
+export const spaceSchema: RxJsonSchema<Space> = inferRxJsonSchemaFromZod(
+  Space,
+  0,
+)
