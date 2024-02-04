@@ -4,6 +4,7 @@ import { trpcReact, trpcReactClient } from "./trpc"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import { RouterProvider, createRouter } from "@tanstack/react-router"
+import { DatabaseProvider } from "./data"
 import { routeTree } from "./routeTree.gen"
 
 const queryClient = new QueryClient()
@@ -23,8 +24,10 @@ function App() {
   return (
     <trpcReact.Provider client={trpcReactClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <ReactQueryDevtools />
+        <DatabaseProvider>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools />
+        </DatabaseProvider>
       </QueryClientProvider>
     </trpcReact.Provider>
   )

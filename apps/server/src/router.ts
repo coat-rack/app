@@ -17,12 +17,16 @@ const db = new Database<DB>("./database.json", {
   checkpoint: Date.now(),
   spaces: [
     {
+      type: "space",
       id: PUBLIC_SPACE_ID,
+      timestamp: Date.now(),
       name: "public",
       isUserSpace: false,
     },
     {
       // Each user has a space defined for them
+      type: "space",
+      timestamp: Date.now(),
       id: "admin",
       name: "admin",
       isUserSpace: true,
@@ -32,6 +36,8 @@ const db = new Database<DB>("./database.json", {
     {
       id: "admin",
       name: "admin",
+      type: "user",
+      timestamp: Date.now(),
     },
   ],
   userSpaces: {
@@ -42,6 +48,8 @@ const db = new Database<DB>("./database.json", {
 })
 
 const schemaKey = Schema.keyof()
+
+const username = z.string().regex(/^[a-z]+$/)
 
 /**
  * Implements handling for https://rxdb.info/replication-http.html
@@ -147,31 +155,46 @@ export const rxdbRouter = router({
 export const appRouter = router({
   rxdb: rxdbRouter,
   users: router({
+    login: publicProcedure
+      .input(
+        z.object({
+          name: username,
+        }),
+      )
+      .query(({ input }) => {
+        return db.data.users.find((user) => user.name === input.name)
+      }),
     create: publicProcedure
       .input(
         z.object({
-          name: z.string(),
+          name: username,
         }),
       )
       .mutation(({ input }) => {
+        const id = input.name.toLowerCase()
+
         const user: User = {
-          id: input.name,
-          name: input.name,
+          id,
+          name: id,
+          timestamp: Date.now(),
+          type: "user",
         }
 
-        const existing = db.data.users.find((u) => u.id === user.id)
+        const existing = db.data.users.find((u) => u.id === id)
         if (existing) {
           return existing
         }
 
         db.data.users.push(user)
         db.data.spaces.push({
-          id: user.id,
+          id,
           name: user.name,
           isUserSpace: true,
+          timestamp: Date.now(),
+          type: "space",
         })
 
-        db.data.userSpaces[user.id] = [PUBLIC_SPACE_ID, user.id]
+        db.data.userSpaces[id] = [PUBLIC_SPACE_ID, id]
 
         db.commit()
 

@@ -1,4 +1,5 @@
-import { db, useDBUser, useObservable } from "@/db"
+import { useObservable } from "@/async"
+import { useDatabase } from "@/data"
 import { Layout } from "@/layout"
 import { Note } from "@repo/data/models"
 import { Link, createLazyFileRoute, useNavigate } from "@tanstack/react-router"
@@ -8,15 +9,9 @@ export const Route = createLazyFileRoute("/apps/notes/")({
 })
 
 function Index() {
-  const user = useDBUser()
-  const notes = useObservable(
-    db.notes.find({
-      selector: {
-        space: user,
-      },
-    }).$,
-    [user],
-  )
+  const { user, db } = useDatabase()
+
+  const notes = useObservable(db.notes.find({}).$)
 
   console.log({ notes, user })
 
