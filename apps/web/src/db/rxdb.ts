@@ -1,4 +1,4 @@
-import { Schema } from "@repo/data/models"
+import { Schema, Space } from "@repo/data/models"
 import {
   RxCollection,
   RxDatabase,
@@ -10,12 +10,18 @@ import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode"
 import { RxDBLocalDocumentsPlugin } from "rxdb/plugins/local-documents"
 import { replicateRxCollection } from "rxdb/plugins/replication"
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie"
-import { trpcClient } from "./trpc"
+import { trpcClient } from "../trpc"
 
 import { RxDBUpdatePlugin } from "rxdb/plugins/update"
 import { map } from "rxjs"
-import { useObservable } from "./async"
-import { KeyValue, metaSchema, noteSchema, todoSchema } from "./db/schema"
+import { useObservable } from "../async"
+import {
+  KeyValue,
+  metaSchema,
+  noteSchema,
+  spaceSchema,
+  todoSchema,
+} from "./schema"
 
 // Enable Dev Mode - this allows us to be a little loose with schemas while we're still figuring things out
 addRxPlugin(RxDBDevModePlugin)
@@ -35,7 +41,11 @@ type LocalSchema = {
 
 type LocalRxSchema = CreateRxSchema<LocalSchema>
 
-export type SyncedRxSchema = CreateRxSchema<Schema>
+type ClientSchema = Schema & {
+  spaces: Space[]
+}
+
+export type SyncedRxSchema = CreateRxSchema<ClientSchema>
 
 /**
  * Device specific data that is not synchronized over the network. For local
@@ -63,9 +73,9 @@ const metaCollection = await localCollection("meta", metaSchema)
 
 const replicateCollection =
   (user: string, db: RxDatabase<SyncedRxSchema>) =>
-  async <K extends keyof Schema>(
+  async <K extends keyof ClientSchema>(
     key: K,
-    schema: RxJsonSchema<Schema[K][number]>,
+    schema: RxJsonSchema<ClientSchema[K][number]>,
   ) => {
     const collection = await db.addCollections({
       [key]: {
@@ -73,26 +83,20 @@ const replicateCollection =
       },
     })
 
-    return replicateRxCollection<Schema[K][number], number>({
+    return replicateRxCollection<ClientSchema[K][number], number>({
       collection: collection[key],
       replicationIdentifier: `${user}-${key}-trpc-replication`,
       push: {
         handler: async (changeRows) => {
-          console.log({ changeRows })
-
           const changes = changeRows
             .filter((row) => !row.newDocumentState._deleted)
             .map((row) => row.newDocumentState)
             .flat()
 
-          console.log({ changes })
-
           const deletes = changeRows
             .filter((row) => row.newDocumentState._deleted)
             .map((row) => row.newDocumentState)
             .flat()
-
-          console.log({ changes, deletes })
 
           const conflicted = await trpcClient.rxdb.push.mutate({
             changes: {
@@ -102,8 +106,6 @@ const replicateCollection =
               [key]: deletes,
             },
           })
-
-          console.log({ conflicted })
 
           return conflicted.map((item) => ({
             ...item,
@@ -118,19 +120,8 @@ const replicateCollection =
           const checkpoint =
             typeof baseCheckpoint === "number" ? baseCheckpoint : 0
 
-          console.log({ checkpoint, batchSize })
-
-          const user = await localDB.meta.getLocal(USER_META_KEY)
-          const userId = user?._data.data?.value
-
-          if (!userId) {
-            throw new Error("Not logged in")
-          }
-
-          console.log(user)
-
           const result = await trpcClient.rxdb.pull.query({
-            userId,
+            userId: user,
             batchSize,
             checkpoint,
             collection: key,
@@ -166,8 +157,9 @@ export const setupUserDB = async (user: string) => {
 
   const todosCollection = await replicate("todos", todoSchema)
   const notesCollection = await replicate("notes", noteSchema)
+  const spacesCollection = await replicate("spaces", spaceSchema)
 
-  return { db, todosCollection, notesCollection }
+  return { db, todosCollection, notesCollection, spacesCollection }
 }
 
 export const setLocalUser = (username?: string) =>

@@ -1,4 +1,4 @@
-import { Note, Todo } from "@repo/data/models"
+import { Note, Space, Todo } from "@repo/data/models"
 import { RxJsonSchema } from "rxdb"
 
 export interface KeyValue {
@@ -84,4 +84,33 @@ export const noteSchema: RxJsonSchema<Note> = {
     },
   },
   required: ["id", "title", "type", "space", "content"],
+}
+
+export const spaceSchema: RxJsonSchema<Space> = {
+  version: 0,
+  primaryKey: "id",
+  type: "object",
+  properties: {
+    type: {
+      type: "string",
+    },
+    timestamp: {
+      type: "number",
+    },
+    id: {
+      // Primary key requires a max length
+      maxLength: 100,
+      type: "string",
+    },
+    isDeleted: {
+      type: "boolean",
+    },
+    isUserSpace: {
+      type: "boolean",
+    },
+    name: {
+      type: "string",
+    },
+  },
+  required: ["type", "timestamp", "id", "name"],
 }

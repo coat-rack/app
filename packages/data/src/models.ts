@@ -46,5 +46,8 @@ export const Space = Row("space").extend({
   isUserSpace: z.boolean(),
 })
 
+export type SpaceRelation = z.infer<typeof SpaceRelation>
+export const SpaceRelation = RowWithSpace("user-space")
+
 export type UserSpaces = z.infer<typeof UserSpaces>
-export const UserSpaces = z.record(z.array(z.string()))
+export const UserSpaces = z.record(z.array(SpaceRelation))

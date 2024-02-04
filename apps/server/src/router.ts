@@ -11,6 +11,8 @@ interface DB extends Schema {
   userSpaces: UserSpaces
 }
 
+type Row = Schema[keyof Schema][number]
+
 const PUBLIC_SPACE_ID = "public"
 
 const db = new Database<DB>("./database.json", {
@@ -41,7 +43,21 @@ const db = new Database<DB>("./database.json", {
     },
   ],
   userSpaces: {
-    admin: [PUBLIC_SPACE_ID, "admin"],
+    admin: [
+      {
+        id: Date.now().toString(),
+        space: PUBLIC_SPACE_ID,
+        // Space relationship so we can later use timestamps to send filtered data when symchronizing
+        timestamp: Date.now(),
+        type: "user-space",
+      },
+      {
+        id: Date.now().toString(),
+        space: "admin",
+        timestamp: Date.now(),
+        type: "user-space",
+      },
+    ],
   },
   todos: [],
   notes: [],
@@ -58,14 +74,27 @@ export const rxdbRouter = router({
   pull: publicProcedure
     .input(
       z.object({
-        collection: schemaKey,
+        collection: z.union([schemaKey, z.enum(["spaces"])]),
         userId: z.string(),
         checkpoint: z.number().optional(),
         batchSize: z.number(),
       }),
     )
     .query(async ({ input }) => {
-      const collection = db.data[input.collection]
+      const userSpaces = db.data.userSpaces[input.userId] || []
+      const userSpaceIds = userSpaces.map((us) => us.space)
+      const isUserItem = (item: Row) => userSpaceIds.includes(item.space)
+
+      console.log(userSpaceIds)
+
+      const spaces = db.data.spaces.filter((space) =>
+        userSpaceIds.includes(space.id),
+      )
+
+      const collection =
+        input.collection === "spaces"
+          ? spaces
+          : db.data[input.collection].filter(isUserItem)
 
       console.log("pull", {
         input,
@@ -194,7 +223,20 @@ export const appRouter = router({
           type: "space",
         })
 
-        db.data.userSpaces[id] = [PUBLIC_SPACE_ID, id]
+        db.data.userSpaces[id] = [
+          {
+            id: id + PUBLIC_SPACE_ID,
+            space: PUBLIC_SPACE_ID,
+            timestamp: Date.now(),
+            type: "user-space",
+          },
+          {
+            id: id + user.name,
+            space: user.name,
+            timestamp: Date.now(),
+            type: "user-space",
+          },
+        ]
 
         db.commit()
 
@@ -213,7 +255,12 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const userSpaces = db.data["userSpaces"][input.toUserId] || []
 
-        userSpaces.push(input.spaceId)
+        userSpaces.push({
+          id: Date.now().toString(),
+          space: input.spaceId,
+          timestamp: Date.now(),
+          type: "user-space",
+        })
 
         db.data["userSpaces"][input.toUserId] = userSpaces
         db.commit()

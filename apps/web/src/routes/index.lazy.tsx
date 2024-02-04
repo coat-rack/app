@@ -8,9 +8,12 @@ export const Route = createLazyFileRoute("/")({
 
 function Index() {
   return (
-    <Layout title="Server Content">
-      <Link to="/apps/todos">Todos</Link>
-      <Link to="/apps/notes">Notes</Link>
+    <Layout title="Home">
+      <div className="flex flex-col gap-1">
+        <Link to="/apps/todos">Todos</Link>
+        <Link to="/apps/notes">Notes</Link>
+        <Link to="/spaces">Spaces</Link>
+      </div>
     </Layout>
   )
 }

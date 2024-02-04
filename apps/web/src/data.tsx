@@ -1,7 +1,12 @@
 import { PropsWithChildren, createContext, useContext, useState } from "react"
 import { RxDatabase } from "rxdb"
 import { usePromise } from "./async"
-import { SyncedRxSchema, setLocalUser, setupUserDB, useLocalUser } from "./db"
+import {
+  SyncedRxSchema,
+  setLocalUser,
+  setupUserDB,
+  useLocalUser,
+} from "./db/rxdb"
 import { trpcClient } from "./trpc"
 
 interface Context {
