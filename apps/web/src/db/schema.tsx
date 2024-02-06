@@ -42,8 +42,8 @@ export const metaSchema: RxJsonSchema<KeyValue> = {
   required: ["id"],
 }
 
-export const noteSchema: RxJsonSchema<Note> = inferRxJsonSchemaFromZod(Note, 0)
-export const spaceSchema: RxJsonSchema<Space> = inferRxJsonSchemaFromZod(
+export const noteSchema = inferRxJsonSchemaFromZod(Note, 0)
+export const spaceSchema = inferRxJsonSchemaFromZod(
   Space,
   0,
 )
