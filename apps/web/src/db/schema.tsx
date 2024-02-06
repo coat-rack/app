@@ -13,7 +13,6 @@ function inferRxJsonSchemaFromZod<TSchema>(
   version: number,
 ): RxJsonSchema<TSchema> {
   let schema = zodToJsonSchema(type) as RxJsonSchema<TSchema>
-  console.log(JSON.stringify(schema))
   return {
     ...schema,
     type: "object",
