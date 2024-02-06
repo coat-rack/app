@@ -14,7 +14,6 @@ function inferRxJsonSchemaFromZod<TSchema>(
 ): RxJsonSchema<TSchema> {
   let schema = zodToJsonSchema(type) as RxJsonSchema<TSchema>
   return {
-    ...schema,
     type: "object",
     version,
     primaryKey: "id" as PrimaryKey<TSchema>,
