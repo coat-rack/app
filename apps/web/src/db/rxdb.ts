@@ -1,4 +1,4 @@
-import { Schema, Space, TodoJsonSchema } from "@repo/data/models"
+import { Schema, Space } from "@repo/data/models"
 import {
   RxCollection,
   RxDatabase,
