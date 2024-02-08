@@ -1,6 +1,5 @@
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin"
 import react from "@vitejs/plugin-react-swc"
-import externalGlobals from "rollup-plugin-external-globals"
 import { defineConfig } from "vite"
 
 import tsconfigPaths from "vite-tsconfig-paths"
@@ -12,15 +11,9 @@ export default defineConfig({
     react(),
     TanStackRouterVite(),
     // External global so that we can provide React to dynamically loaded apps
-    // externalGlobals({
-    //   react: "React",
-    //   "react-dom": "ReactDOM",
-    // }),
   ],
 
   build: {
-    rollupOptions: {
-      external: ["react", "react-dom"],
-    },
+    target: "esnext",
   },
 })
