@@ -9,39 +9,33 @@ export const Route = createLazyFileRoute("/")({
 })
 
 const files = [
-  // "http://localhost:3000/catalog/sample-app/dist/sample-app.iife.js",
-  // "http://localhost:3000/catalog/sample-app/dist/sample-app.js",
-  // "http://localhost:3000/catalog/sample-app/dist/sample-app.mjs",
+  "http://localhost:3000/catalog/sample-app/dist/sample-app.iife.js",
+  "http://localhost:3000/catalog/sample-app/dist/sample-app.js",
+  "http://localhost:3000/catalog/sample-app/dist/sample-app.mjs",
 
   // UMD seems to be the only one that doesn't crash, registers the app globally
   // using the name of the app. This could be a bit conflicty but probably okay for now
   "http://localhost:3000/catalog/sample-app/dist/sample-app.umd.js",
+  "http://localhost:3000/catalog/sample-app/example-module.js",
 ]
-
-const file = "http://localhost:3000/catalog/sample-app/dist/sample-app.umd.js"
 
 window["React"] = React
 
+const sampleAppImport =
+  "http://localhost:3000/catalog" + "/sample-app/dist/sample-app.mjs"
+
 function Index() {
-  const SampleApp = usePromise(() =>
-    import(file).then((res) => {
-      console.log(res, file)
+  const dynamic = usePromise(() => import(sampleAppImport))
 
-      const mod = window["sampleapp"]
-
-      console.log(mod.entry)
-      return mod.entry
-    }),
-  )
+  const DynamicComponent = dynamic?.default?.entry
 
   return (
     <Layout title="Home">
+      {DynamicComponent && <DynamicComponent />}
       <div className="flex flex-col gap-1">
         <Link to="/apps/todos">Todos</Link>
         <Link to="/apps/notes">Notes</Link>
         <Link to="/spaces">Spaces</Link>
-
-        <React.Suspense>{SampleApp && <SampleApp />}</React.Suspense>
       </div>
     </Layout>
   )
