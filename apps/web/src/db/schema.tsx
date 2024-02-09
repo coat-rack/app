@@ -1,12 +1,7 @@
-import { Note, Space, Todo } from "@repo/data/models"
+import { KeyValue, Note, Space, Todo } from "@repo/data/models"
 import { PrimaryKey, RxJsonSchema } from "rxdb"
 import { ZodType } from "zod"
 import { zodToJsonSchema } from "zod-to-json-schema"
-
-export interface KeyValue {
-  id: string
-  value?: string
-}
 
 function inferRxJsonSchemaFromZod<TSchema>(
   type: ZodType<TSchema>,
@@ -23,25 +18,6 @@ function inferRxJsonSchemaFromZod<TSchema>(
 }
 
 export const todoSchema = inferRxJsonSchemaFromZod(Todo, 0)
-
-export const metaSchema: RxJsonSchema<KeyValue> = {
-  version: 0,
-  primaryKey: "id",
-  type: "object",
-  properties: {
-    id: {
-      maxLength: 100,
-      type: "string",
-    },
-    value: {
-      type: "string",
-    },
-  },
-  required: ["id"],
-}
-
+export const metaSchema = inferRxJsonSchemaFromZod(KeyValue, 0)
 export const noteSchema = inferRxJsonSchemaFromZod(Note, 0)
-export const spaceSchema = inferRxJsonSchemaFromZod(
-  Space,
-  0,
-)
+export const spaceSchema = inferRxJsonSchemaFromZod(Space, 0)

@@ -46,6 +46,12 @@ export const Space = Row("space").extend({
   isUserSpace: z.boolean(),
 })
 
+export const KeyValue = z.object({
+  id: z.string().max(100),
+  value: z.string().optional(),
+})
+export type KeyValue = z.infer<typeof KeyValue>
+
 export type SpaceRelation = z.infer<typeof SpaceRelation>
 export const SpaceRelation = RowWithSpace("user-space")
 
