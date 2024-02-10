@@ -8,7 +8,7 @@ export const Route = createLazyFileRoute("/")({
 })
 
 const sampleAppImport =
-  "http://localhost:3000/catalog/sample-app/dist/sample-app.mjs"
+  "http://localhost:3000/catalog/sample-app/dist/index.mjs"
 
 function Index() {
   const app = useApp(sampleAppImport)

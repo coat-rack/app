@@ -30,6 +30,7 @@ export default defineConfig({
       output: {
         format: "es",
         exports: "named",
+        entryFileNames: "index.mjs",
       },
     },
   },
