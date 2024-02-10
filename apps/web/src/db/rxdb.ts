@@ -68,7 +68,7 @@ const localCollection = <K extends keyof LocalSchema>(
     },
   })
 
-const metaCollection = await localCollection("meta", metaSchema)
+export const metaCollection = await localCollection("meta", metaSchema)
 
 const replicateCollection =
   (user: string, db: RxDatabase<SyncedRxSchema>) =>
