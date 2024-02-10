@@ -155,6 +155,9 @@ importers:
       '@repo/data':
         specifier: workspace:*
         version: link:../../packages/data
+      '@repo/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -179,6 +182,9 @@ importers:
 
   catalog/sample-app:
     dependencies:
+      '@repo/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.6)
@@ -213,6 +219,9 @@ importers:
 
   catalog/tasks:
     dependencies:
+      '@repo/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@rollup/plugin-replace':
         specifier: ^5.0.5
         version: 5.0.5(rollup@4.9.6)
@@ -266,6 +275,15 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+
+  packages/sdk:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.46
+        version: 18.2.46
+      '@types/react-dom':
+        specifier: ^18.2.18
+        version: 18.2.18
 
   packages/typescript-config: {}
 

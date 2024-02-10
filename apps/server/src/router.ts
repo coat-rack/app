@@ -4,6 +4,28 @@ import { publicProcedure, router } from "./trpc"
 import { Schema, Space, User, UserSpaces } from "@repo/data/models"
 import { Database } from "./db"
 
+/**
+ * Need to make this somehow managable and installable from the datbase. Not
+ * doing this right now as it will add some complexity as we have not yet
+ * determined how we will manage installations more generally
+ **/
+interface App {
+  name: string
+  url: string
+}
+
+const apps: App[] = [
+  {
+    name: "sample-app",
+    url: "http://localhost:3000/catalog/sample-app/dist/index.mjs",
+  },
+
+  {
+    name: "tasks",
+    url: "http://localhost:3000/catalog/tasks/dist/index.mjs",
+  },
+]
+
 interface DB extends Schema {
   checkpoint: number
   spaces: Space[]
@@ -265,5 +287,11 @@ export const appRouter = router({
         db.data["userSpaces"][input.toUserId] = userSpaces
         db.commit()
       }),
+  }),
+  apps: router({
+    list: publicProcedure.query(() => apps),
+    get: publicProcedure
+      .input(z.object({ name: z.string() }))
+      .query(({ input }) => apps.find((app) => app.name === input.name)),
   }),
 })
