@@ -4,10 +4,9 @@ export const App = {
    */
   name: "my-sample-app",
   /**
-   *  A collection of schemas that the app would like to store
+   *  The Entrypoint for the app
    */
-  schemas: [],
-  entry: () => {
+  Entry: () => {
     return <h1>I am rendered from an app in the sample catalog</h1>
   },
 }

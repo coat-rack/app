@@ -11,9 +11,8 @@ window["ReactDOM"] = ReactDOM
 // an "SDK" of sorts with the things that we would like to make accessible to
 // user-defined "Apps"
 interface App {
-  entry: React.ComponentType
+  Entry: React.ComponentType
   name: string
-  schemas: []
 }
 
 export const useApp = (url: string) => {

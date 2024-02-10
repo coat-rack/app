@@ -13,7 +13,7 @@ const sampleAppImport =
 function Index() {
   const app = useApp(sampleAppImport)
 
-  const App = app?.entry
+  const App = app?.Entry
 
   return (
     <Layout title="Home">
