@@ -29,7 +29,8 @@
     "server": "workspace:*",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "vite-tsconfig-paths": "^4.3.1"
+    "vite-tsconfig-paths": "^4.3.1",
+    "zod-to-json-schema": "^3.22.4"
   },
   "devDependencies": {
     "@repo/data": "workspace:*",

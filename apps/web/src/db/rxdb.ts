@@ -1,4 +1,4 @@
-import { Schema, Space } from "@repo/data/models"
+import { KeyValue, Schema, Space } from "@repo/data/models"
 import {
   RxCollection,
   RxDatabase,
@@ -16,7 +16,6 @@ import { RxDBUpdatePlugin } from "rxdb/plugins/update"
 import { map } from "rxjs"
 import { useObservable } from "../async"
 import {
-  KeyValue,
   metaSchema,
   noteSchema,
   spaceSchema,
