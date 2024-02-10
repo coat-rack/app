@@ -10,18 +10,18 @@ import { Database } from "./db"
  * determined how we will manage installations more generally
  **/
 interface App {
-  name: string
+  id: string
   url: string
 }
 
 const apps: App[] = [
   {
-    name: "sample-app",
+    id: "sample-app",
     url: "http://localhost:3000/catalog/sample-app/dist/index.mjs",
   },
 
   {
-    name: "tasks",
+    id: "tasks",
     url: "http://localhost:3000/catalog/tasks/dist/index.mjs",
   },
 ]
@@ -291,7 +291,7 @@ export const appRouter = router({
   apps: router({
     list: publicProcedure.query(() => apps),
     get: publicProcedure
-      .input(z.object({ name: z.string() }))
-      .query(({ input }) => apps.find((app) => app.name === input.name)),
+      .input(z.object({ id: z.string() }))
+      .query(({ input }) => apps.find((app) => app.id === input.id)),
   }),
 })
