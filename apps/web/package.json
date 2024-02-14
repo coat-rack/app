@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@repo/data": "workspace:*",
+    "@repo/sdk": "workspace:*",
     "@repo/ui": "workspace:*",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
