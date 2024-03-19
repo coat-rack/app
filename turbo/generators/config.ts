@@ -2,9 +2,12 @@ import type { PlopTypes } from "@turbo/gen"
 
 const catalogAppFiles = [
   "src/index.tsx",
+  "src/styles.css",
   "package.json",
   "tsconfig.json",
   "vite.config.ts",
+  "tailwind.config.ts",
+  "postcss.config.js",
 ]
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {

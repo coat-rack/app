@@ -24,7 +24,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      name: "sampleapp",
+      name: "sample-app",
       entry: resolve(__dirname, "src/index.tsx"),
       formats: ["es"],
     },
