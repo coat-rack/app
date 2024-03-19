@@ -1,7 +1,7 @@
 import { App } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 
-import "./styles.css"  
+import "./styles.css"
 
 export const SampleApp: App = {
   /**
@@ -12,7 +12,8 @@ export const SampleApp: App = {
    *  The Entrypoint for the app
    */
   Entry: () => {
-    return (<>
+    return (
+      <>
         <h1 className="bg-red-500">Hello sample-app</h1>
         <Button>Click Me</Button>
       </>
@@ -20,4 +21,4 @@ export const SampleApp: App = {
   },
 }
 
-export default SampleApp 
+export default SampleApp
