@@ -1,6 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 
-import { useApp } from "@/dynamic"
 import { Layout } from "@/layout"
 import { trpcReact } from "@/trpc"
 
@@ -12,8 +11,15 @@ function Index() {
   const { id } = Route.useParams()
   const { data } = trpcReact.apps.get.useQuery({ id })
 
-  const app = useApp(data?.url)
-  const App = app?.Entry
+  if (!data) {
+    return null
+  }
 
-  return <Layout title={data?.id || "Loading"}>{App && <App />}</Layout>
+  const url = `http://localhost:5000/?url=${encodeURIComponent(data.url)}`
+
+  return (
+    <Layout title={data?.id || "Loading"}>
+      <iframe src={url}></iframe>
+    </Layout>
+  )
 }
