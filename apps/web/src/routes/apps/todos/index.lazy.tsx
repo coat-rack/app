@@ -55,7 +55,7 @@ function Index() {
   return (
     <Layout title="Todos">
       <input
-        className="p-2 border-solid border-4 border-black"
+        className="border-4 border-solid border-black p-2"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />

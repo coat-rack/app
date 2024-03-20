@@ -9,6 +9,8 @@ import {
 } from "./db/rxdb"
 import { trpcClient } from "./trpc"
 
+import { Button } from "@repo/ui/components/button"
+
 interface Context {
   user: string
   db: RxDatabase<SyncedRxSchema>
@@ -59,13 +61,13 @@ const LoginScreen = ({ onLogin }: Props) => {
       <h1 className="font-title text-5xl">Login</h1>
 
       <input
-        className="p-4 border-solid border-black border-4"
+        className="border-4 border-solid border-black p-4"
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
 
-      <button onClick={logIn}>Log In</button>
-      <button onClick={signUp}>Sign Up</button>
+      <Button onClick={logIn}>Log In</Button>
+      <Button onClick={signUp}>Sign Up</Button>
 
       <div>{error && <p className="text-red-500">{error}</p>}</div>
     </div>

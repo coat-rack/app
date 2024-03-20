@@ -51,7 +51,7 @@ function Note() {
 
       <textarea
         value={note.content}
-        className="w-full h-96 border-solid border-black border-4 p-4"
+        className="h-96 w-full border-4 border-solid border-black p-4"
         onChange={(e) => updateContent(e.target.value)}
       />
     </Layout>

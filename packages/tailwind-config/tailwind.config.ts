@@ -1,9 +1,9 @@
-const { fontFamily } = require("tailwindcss/defaultTheme")
+import type { Config } from "tailwindcss"
+import animatePlugin from "tailwindcss-animate"
+import { fontFamily } from "tailwindcss/defaultTheme"
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+const config: Omit<Config, "content"> = {
   darkMode: [],
-  content: ["src/**/*.{ts,tsx}"],
   theme: {
     container: {
       center: true,
@@ -73,5 +73,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animatePlugin],
 }
+
+export default config

@@ -15,12 +15,7 @@ import { trpcClient } from "../trpc"
 import { RxDBUpdatePlugin } from "rxdb/plugins/update"
 import { map } from "rxjs"
 import { useObservable } from "../async"
-import {
-  metaSchema,
-  noteSchema,
-  spaceSchema,
-  todoSchema,
-} from "./schema"
+import { metaSchema, noteSchema, spaceSchema, todoSchema } from "./schema"
 
 // Enable Dev Mode - this allows us to be a little loose with schemas while we're still figuring things out
 addRxPlugin(RxDBDevModePlugin)

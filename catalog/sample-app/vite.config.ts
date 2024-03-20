@@ -3,12 +3,16 @@ import react from "@vitejs/plugin-react"
 import { resolve } from "path"
 import externalGlobals from "rollup-plugin-external-globals"
 import { defineConfig } from "vite"
-import { libInjectCss } from "vite-plugin-lib-inject-css"
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js"
 
 export default defineConfig({
   plugins: [
     react(),
-    libInjectCss(),
+    cssInjectedByJsPlugin({
+      dev: {
+        enableDev: true,
+      },
+    }),
     replace({
       "process.env.NODE_ENV": JSON.stringify("production"),
     }),
@@ -20,7 +24,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      name: "sampleapp",
+      name: "sample-app",
       entry: resolve(__dirname, "src/index.tsx"),
       formats: ["es"],
     },
