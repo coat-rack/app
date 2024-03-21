@@ -7,6 +7,12 @@ export const Route = createLazyFileRoute("/apps/$id")({
   component: Index,
 })
 
+interface ApiCall {
+  correlationId: string
+  method: string
+  args: Array<any>
+}
+
 function Index() {
   const sandboxHost = "http://localhost:5000"
   const host = window.location.origin
@@ -18,10 +24,19 @@ function Index() {
       if (event.origin != sandboxHost) {
         return
       }
-      console.log("web: got message from sandbox", event.data)
-      event.source?.postMessage("hello from web", {
-        targetOrigin: event.origin,
-      })
+      if (!("correlationId" in event.data)) {
+        return
+      }
+
+      if (event.data.method === "get") {
+        event.source?.postMessage(
+          {
+            correlationId: event.data.correlationId,
+            value: event.data.args[0],
+          },
+          { targetOrigin: event.origin },
+        )
+      }
     }
     window.addEventListener("message", handler)
 
