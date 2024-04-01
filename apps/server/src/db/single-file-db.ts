@@ -34,7 +34,7 @@ export class SingleFileTable<ID, T extends TableRow<ID>>
 
   getItems(from: number, to: number): Async<T[]> {
     return this.file.data.filter(
-      (row) => row.timestamp <= from && row.timestamp >= to,
+      (row) => row.timestamp >= from && row.timestamp <= to,
     )
   }
 

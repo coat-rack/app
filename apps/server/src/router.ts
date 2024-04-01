@@ -86,7 +86,7 @@ export const rxdbRouter = router({
       const userSpaces = allSpaces.filter(
         (space) =>
           space.owner === input.userId ||
-          (space.spaceType === "shared" && space.users.includes(input.userId)),
+          (space.spaceType === "shared" && space.users?.includes(input.userId)),
       )
 
       if (input.collection === "spaces") {
