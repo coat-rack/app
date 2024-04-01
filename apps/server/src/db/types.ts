@@ -1,24 +1,27 @@
 export type Async<T> = T | Promise<T>
-export type AsyncArray<T> = Array<T> | Promise<Array<T>>
 
 export type Checkpoint = number
 
-export interface DB<ID, TSchema> {
-  getItems<TType extends keyof TSchema>(
-    type: TSchema[TType] extends Array<any> ? TType : never,
-    from: Checkpoint,
-    to: Checkpoint,
-  ): Async<TSchema[TType] extends Array<any> ? TSchema[TType] : never>
+export interface TableRow<ID> {
+  id: ID
+  timestamp: number
+  isDeleted?: boolean
+}
 
-  //   putItems<TType extends keyof Table<TSchema>>(
-  //     type: TType,
-  //     items: Table<TSchema>[TType],
-  //   ): Async<Table<TSchema>[TType]>
+export interface OperationResult<T> {
+  conflicts?: T[]
+}
 
-  //   deleteItems<TType extends keyof Table<TSchema>>(
-  //     type: TType,
-  //     ids: ID[],
-  //   ): Async<void>
+export interface Table<ID, T extends TableRow<ID>> {
+  getCheckpoint(): Checkpoint
 
-  //   getDeletes<TType extends keyof Table<TSchema>>(type: TType): AsyncArray<ID>
+  get(id: ID): Async<T | undefined>
+
+  getAll(): Async<T[]>
+
+  getItems(from: Checkpoint, to: Checkpoint): Async<T[]>
+
+  putItems(items: T[]): Async<OperationResult<T>>
+
+  deleteItems(ids: ID[]): Async<OperationResult<T>>
 }

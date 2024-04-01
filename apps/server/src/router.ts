@@ -1,8 +1,9 @@
 import { z } from "zod"
 import { publicProcedure, router } from "./trpc"
 
-import { Schema, Space, User, UserSpaces } from "@repo/data/models"
-import { Database } from "./db"
+import { AppData, Push, Schema, Space, User } from "@repo/data/models"
+import { SingleFileTable } from "./db/single-file-db"
+import { Table } from "./db/types"
 
 /**
  * Need to make this somehow managable and installable from the datbase. Not
@@ -26,26 +27,22 @@ const apps: App[] = [
   },
 ]
 
-interface DB extends Schema {
-  checkpoint: number
-  spaces: Space[]
-  users: User[]
-  userSpaces: UserSpaces
+type DB = {
+  [K in keyof Schema]: Table<string, Schema[K]>
 }
-
-type Row = Schema[keyof Schema][number]
 
 const PUBLIC_SPACE_ID = "public"
 
-const db = new Database<DB>("./database.json", {
-  checkpoint: Date.now(),
-  spaces: [
+const db: DB = {
+  spaces: new SingleFileTable("./database/spaces.json", [
     {
       type: "space",
       id: PUBLIC_SPACE_ID,
       timestamp: Date.now(),
       name: "public",
-      isUserSpace: false,
+      spaceType: "shared",
+      owner: "admin",
+      users: [],
     },
     {
       // Each user has a space defined for them
@@ -53,39 +50,21 @@ const db = new Database<DB>("./database.json", {
       timestamp: Date.now(),
       id: "admin",
       name: "admin",
-      isUserSpace: true,
+      owner: "admin",
+      spaceType: "shared",
+      users: ["admin"],
     },
-  ],
-  users: [
+  ]),
+  users: new SingleFileTable("./database/users.json", [
     {
       id: "admin",
       name: "admin",
       type: "user",
       timestamp: Date.now(),
     },
-  ],
-  userSpaces: {
-    admin: [
-      {
-        id: Date.now().toString(),
-        space: PUBLIC_SPACE_ID,
-        // Space relationship so we can later use timestamps to send filtered data when symchronizing
-        timestamp: Date.now(),
-        type: "user-space",
-      },
-      {
-        id: Date.now().toString(),
-        space: "admin",
-        timestamp: Date.now(),
-        type: "user-space",
-      },
-    ],
-  },
-  todos: [],
-  notes: [],
-})
-
-const schemaKey = Schema.keyof()
+  ]),
+  appData: new SingleFileTable("./database/users.json"),
+}
 
 const username = z.string().regex(/^[a-z]+$/)
 
@@ -96,105 +75,63 @@ export const rxdbRouter = router({
   pull: publicProcedure
     .input(
       z.object({
-        collection: z.union([schemaKey, z.enum(["spaces"])]),
+        collection: z.enum(["spaces", "appData", "users"]),
         userId: z.string(),
         checkpoint: z.number().optional(),
         batchSize: z.number(),
       }),
     )
     .query(async ({ input }) => {
-      const userSpaces = db.data.userSpaces[input.userId] || []
-      const userSpaceIds = userSpaces.map((us) => us.space)
-      const isUserItem = (item: Row) => userSpaceIds.includes(item.space)
-
-      console.log(userSpaceIds)
-
-      const spaces = db.data.spaces.filter((space) =>
-        userSpaceIds.includes(space.id),
+      const allSpaces = await db.spaces.getItems(0, Infinity)
+      const userSpaces = allSpaces.filter(
+        (space) =>
+          space.owner === input.userId ||
+          (space.spaceType === "shared" && space.users.includes(input.userId)),
       )
 
-      const collection =
-        input.collection === "spaces"
-          ? spaces
-          : db.data[input.collection].filter(isUserItem)
+      if (input.collection === "spaces") {
+        return {
+          checkpoint: db.spaces.getCheckpoint(),
+          documents: userSpaces,
+        }
+      }
 
-      console.log("pull", {
-        input,
-      })
+      const userSpaceIds = userSpaces.map((us) => us.id)
+      const isUserItem = (item: AppData) => userSpaceIds.includes(item.space)
+
+      const appData = await db.appData.getItems(input.checkpoint || 0, Infinity)
+      const documents = appData.filter(isUserItem)
 
       return {
-        checkpoint: db.data.checkpoint,
-        documents: {
-          [input.collection]: collection,
-        },
+        checkpoint: db.appData.getCheckpoint(),
+        documents,
       }
     }),
 
   push: publicProcedure
     .input(
-      z.object({
-        changes: Schema.partial(),
-        deletes: Schema.partial(),
-      }),
+      z.union([
+        Push("spaces", Space),
+        Push("appData", AppData),
+        Push("users", User),
+      ]),
     )
     .mutation(async ({ input }) => {
-      const conflicting: Schema[keyof Schema][number][] = []
+      const { conflicts } = await db[input.type].putItems(
+        // Would be nice to not do this but I don't think the inference at this
+        // point matters since we're already so generic
+        input.changes as any,
+      )
 
-      const changeKeys = Object.keys(input.deletes) as z.infer<
-        typeof schemaKey
-      >[]
-
-      for (const key of changeKeys) {
-        const collection = db.data[key]
-        for (const change of input.changes[key] || []) {
-          const existingIndex = collection.findIndex(
-            (item) => item.id === change.id,
-          )
-
-          const existing = collection[existingIndex]
-
-          if (existing && existing.timestamp >= change.timestamp) {
-            conflicting.push(existing)
-          } else if (existing) {
-            collection[existingIndex] = change
-          } else {
-            // Not fun but don't really have a better way and it's not worth
-            // finding one until we have a "real" plan for the data storage
-            collection.push(change as any)
-          }
-        }
-      }
-
-      const deleteKeys = Object.keys(input.deletes) as z.infer<
-        typeof schemaKey
-      >[]
-
-      for (const key of deleteKeys) {
-        const collection = db.data[key]
-        for (const dlt of input.deletes[key] || []) {
-          const existingIndex = collection.findIndex(
-            (item) => item.id === dlt.id,
-          )
-
-          const existing = collection[existingIndex]
-          if (existing && existing.timestamp <= dlt.timestamp) {
-            db.data[key][existingIndex] = {
-              ...dlt,
-              isDeleted: true,
-            }
-          } else if (existing && existing.timestamp >= dlt.timestamp) {
-            conflicting.push(existing)
-          }
-        }
-      }
-
-      db.commit()
+      const deleteIds = input.deletes.map((row) => row.id)
+      await db[input.type].deleteItems(deleteIds)
 
       console.log("push", {
         input,
       })
+
       // Should return any conflicting records
-      return conflicting
+      return conflicts
     }),
 
   // This method needs to return any other changes that are not from the current client
@@ -212,8 +149,10 @@ export const appRouter = router({
           name: username,
         }),
       )
-      .query(({ input }) => {
-        return db.data.users.find((user) => user.name === input.name)
+      .query(async ({ input }) => {
+        const users = await db.users.getAll()
+        console.log({ users })
+        return users.find((user) => user.name === input.name)
       }),
     create: publicProcedure
       .input(
@@ -221,7 +160,7 @@ export const appRouter = router({
           name: username,
         }),
       )
-      .mutation(({ input }) => {
+      .mutation(async ({ input }) => {
         const id = input.name.toLowerCase()
 
         const user: User = {
@@ -231,40 +170,37 @@ export const appRouter = router({
           type: "user",
         }
 
-        const existing = db.data.users.find((u) => u.id === id)
+        const users = await db.users.getItems(0, Infinity)
+        const existing = users.find((u) => u.id === id)
         if (existing) {
           return existing
         }
 
-        db.data.users.push(user)
-        db.data.spaces.push({
-          id,
-          name: user.name,
-          isUserSpace: true,
-          timestamp: Date.now(),
-          type: "space",
-        })
-
-        db.data.userSpaces[id] = [
+        await db.users.putItems([user])
+        await db.spaces.putItems([
           {
-            id: id + PUBLIC_SPACE_ID,
-            space: PUBLIC_SPACE_ID,
+            type: "space",
+            id: user.id,
+            name: user.name,
+            owner: user.id,
+            spaceType: "user",
             timestamp: Date.now(),
-            type: "user-space",
           },
-          {
-            id: id + user.name,
-            space: user.name,
-            timestamp: Date.now(),
-            type: "user-space",
-          },
-        ]
+        ])
 
-        db.commit()
+        const publicSpace = await db.spaces.get(PUBLIC_SPACE_ID)
+        if (publicSpace && publicSpace.spaceType === "shared") {
+          await db.spaces.putItems([
+            {
+              ...publicSpace,
+              users: [...(publicSpace.users || []), user.id],
+            },
+          ])
+        }
 
         return user
       }),
-    getAll: publicProcedure.query(() => db.data.users),
+    getAll: publicProcedure.query(() => db.users.getItems(0, Infinity)),
   }),
   spaces: router({
     grantAccess: publicProcedure
@@ -275,17 +211,21 @@ export const appRouter = router({
         }),
       )
       .mutation(async ({ input }) => {
-        const userSpaces = db.data["userSpaces"][input.toUserId] || []
+        const foundSpace = await db.spaces.get(input.spaceId)
+        if (!foundSpace) {
+          throw new Error("Space does not exist")
+        }
 
-        userSpaces.push({
-          id: Date.now().toString(),
-          space: input.spaceId,
-          timestamp: Date.now(),
-          type: "user-space",
-        })
+        if (foundSpace.spaceType !== "shared") {
+          throw new Error("Cannot grant access toa  non-shared space")
+        }
 
-        db.data["userSpaces"][input.toUserId] = userSpaces
-        db.commit()
+        await db.spaces.putItems([
+          {
+            ...foundSpace,
+            users: [...(foundSpace.users || []), input.toUserId],
+          },
+        ])
       }),
   }),
   apps: router({
