@@ -1,5 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
-import { dirname } from "path"
+import { JSONFile } from "./json-file"
 import { Async, Checkpoint, OperationResult, Table, TableRow } from "./types"
 
 interface File<TData> {
@@ -11,109 +10,79 @@ interface File<TData> {
 export class SingleFileTable<ID, T extends TableRow<ID>>
   implements Table<ID, T>
 {
-  private file: File<T>
+  private file: JSONFile<File<T>>
 
-  constructor(
-    private readonly dbPath: string,
-    initial: T[] = [],
-  ) {
-    this.file = this.load(initial)
+  /**
+   * @param dbPath path to the database JSON file
+   * @param initial initial data to be used if DB file is not found
+   */
+  constructor(dbPath: string, initial: T[] = []) {
+    this.file = new JSONFile<File<T>>(dbPath, {
+      checkpoint: Date.now(),
+      data: initial,
+      deletes: [],
+    })
   }
-
   public getCheckpoint() {
     return Date.now()
   }
 
   get(id: ID): Async<T | undefined> {
-    return this.file.data.find((row) => row.id === id)
+    const data = this.file.get().data
+    return data.find((row) => row.id === id)
   }
 
   getAll(): Async<T[]> {
-    return this.file.data
+    const data = this.file.get().data
+    return data
   }
 
   getItems(from: number, to: number): Async<T[]> {
-    return this.file.data.filter(
-      (row) => row.timestamp >= from && row.timestamp <= to,
-    )
+    const data = this.file.get().data
+    return data.filter((row) => row.timestamp >= from && row.timestamp <= to)
   }
 
   putItems(items: T[]): Async<OperationResult<T>> {
     const conflicts: T[] = []
 
+    const data = this.file.get().data
+
     for (let index = 0; index < items.length; index++) {
       const item = items[index]
-      const foundIndex = this.file.data.findIndex((i) => i.id === item.id)
+      const foundIndex = data.findIndex((i) => i.id === item.id)
 
       const exists = foundIndex > 0
 
       if (exists) {
-        const existing = this.file.data[foundIndex]
+        const existing = data[foundIndex]
         if (existing.timestamp <= item.timestamp) {
-          this.file.data[foundIndex] = item
+          data[foundIndex] = item
         } else {
           conflicts.push(existing)
         }
       } else {
-        this.file.data.push(item)
+        data.push(item)
       }
     }
 
-    this.commit()
+    this.file.setField("data", data)
     return { conflicts }
   }
 
   deleteItems(ids: ID[]): Async<OperationResult<T>> {
-    this.file.data = this.file.data.filter((data) => !ids.includes(data.id))
+    const file = this.file.get()
+    const data = file.data.filter((data) => !ids.includes(data.id))
 
-    const deleted = this.file.data
+    const deletes = file.data
       .filter((data) => ids.includes(data.id))
       .map<T>((data) => ({ ...data, isDeleted: true }))
 
-    this.file.deletes.push(...deleted)
-
-    this.commit()
+    this.file.set({
+      ...file,
+      data,
+      deletes: [...file.deletes, ...deletes],
+    })
 
     return {}
-  }
-
-  private commit() {
-    this.persist(this.file)
-  }
-
-  private persist = (data: File<T>) => {
-    const dir = dirname(this.dbPath)
-    const exists = existsSync(dir)
-    if (!exists) {
-      mkdirSync(dir, { recursive: true })
-    }
-
-    writeFileSync(this.dbPath, JSON.stringify(data, null, 2))
-  }
-
-  private read = (): File<T> => {
-    const file = JSON.parse(readFileSync(this.dbPath).toString()) as Partial<
-      File<T>
-    >
-
-    return {
-      checkpoint: file.checkpoint || Date.now(),
-      data: file.data || [],
-      deletes: file.deletes || [],
-    }
-  }
-
-  private load = (initial: T[]): File<T> => {
-    if (!existsSync(this.dbPath)) {
-      this.persist({
-        checkpoint: this.getCheckpoint(),
-        data: initial,
-        deletes: [],
-      })
-    }
-
-    const current = this.read()
-
-    return current
   }
 }
