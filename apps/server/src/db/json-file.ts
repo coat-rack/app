@@ -1,5 +1,6 @@
 import { existsSync } from "fs"
-import { readJsonSync, writeFileSync } from "fs-extra"
+import { ensureDirSync, readJsonSync, writeFileSync } from "fs-extra"
+import path from "path"
 
 /**
  * A simple abstraction over a JSON file that reads once and then
@@ -40,6 +41,7 @@ export class JSONFile<F> {
   private persist() {
     this.file = this.beforeSave(this.file)
 
+    ensureDirSync(path.dirname(this.path))
     writeFileSync(this.path, JSON.stringify(this.file, null, 2))
   }
 
@@ -51,6 +53,8 @@ export class JSONFile<F> {
   private load(initial: F): F {
     if (!existsSync(this.path)) {
       this.file = initial
+
+      ensureDirSync(path.dirname(this.path))
       this.persist()
     }
 
