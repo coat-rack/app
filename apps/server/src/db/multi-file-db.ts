@@ -107,12 +107,11 @@ export class MultiFileTable<ID extends string, T extends TableRow<ID>>
         }
       } else {
         entries.push(item)
+        index[item.id] = item.timestamp
       }
     }
 
     this.meta.setField("index", index)
-
-    console.log(index)
 
     await Promise.all(entries.map((e) => this.putItem(e)))
 

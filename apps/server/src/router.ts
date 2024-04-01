@@ -48,7 +48,7 @@ const init = async () => {
       name: "public",
       spaceType: "shared",
       owner: "admin",
-      users: [],
+      users: ["admin"],
     },
     {
       // Each user has a space defined for them
