@@ -2,7 +2,7 @@ import { ensureDirSync, readJson, writeJson } from "fs-extra"
 import path from "path"
 import { isDefined } from "../array"
 import { JSONFile } from "./json-file"
-import { Async, Checkpoint, OperationResult, Table, TableRow } from "./types"
+import { Checkpoint, OperationResult, Table, TableRow } from "./types"
 
 interface Meta<ID extends string> {
   index: Partial<Record<ID, Checkpoint>>
@@ -37,16 +37,21 @@ export class MultiFileTable<ID extends string, T extends TableRow<ID>>
   }
 
   private getIdPath(id: string) {
-    return path.join(this.dbPath, id)
+    return path.join(this.dbPath, `${id}.json`)
   }
 
   getCheckpoint(): number {
     return Date.now()
   }
 
-  get(id: ID): Async<T | undefined> {
-    const path = this.getIdPath(id)
-    return readJson(path)
+  async get(id: ID): Promise<T | undefined> {
+    try {
+      const path = this.getIdPath(id)
+      const result = await readJson(path)
+      return result
+    } catch {
+      return undefined
+    }
   }
 
   async getAll(): Promise<T[]> {
@@ -106,6 +111,8 @@ export class MultiFileTable<ID extends string, T extends TableRow<ID>>
     }
 
     this.meta.setField("index", index)
+
+    console.log(index)
 
     await Promise.all(entries.map((e) => this.putItem(e)))
 

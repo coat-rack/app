@@ -2,7 +2,7 @@ import { z } from "zod"
 import { publicProcedure, router } from "./trpc"
 
 import { AppData, Push, Schema, Space, User } from "@repo/data/models"
-import { SingleFileTable } from "./db/single-file-db"
+import { MultiFileTable } from "./db/multi-file-db"
 import { Table } from "./db/types"
 
 /**
@@ -34,7 +34,13 @@ type DB = {
 const PUBLIC_SPACE_ID = "public"
 
 const db: DB = {
-  spaces: new SingleFileTable("./database/spaces.json", [
+  spaces: new MultiFileTable("./database/spaces"),
+  users: new MultiFileTable("./database/users"),
+  appData: new MultiFileTable("./database/appData"),
+}
+
+const init = async () => {
+  const spaces: Space[] = [
     {
       type: "space",
       id: PUBLIC_SPACE_ID,
@@ -51,20 +57,32 @@ const db: DB = {
       id: "admin",
       name: "admin",
       owner: "admin",
-      spaceType: "shared",
-      users: ["admin"],
+      spaceType: "user",
+      users: [],
     },
-  ]),
-  users: new SingleFileTable("./database/users.json", [
+  ]
+
+  const users: User[] = [
     {
       id: "admin",
       name: "admin",
       type: "user",
       timestamp: Date.now(),
     },
-  ]),
-  appData: new SingleFileTable("./database/users.json"),
+  ]
+
+  const existingUsers = await db.users.getAll()
+  if (!existingUsers.length) {
+    await db.users.putItems(users)
+  }
+
+  const existingSpaces = await db.spaces.getAll()
+  if (!existingSpaces.length) {
+    await db.spaces.putItems(spaces)
+  }
 }
+
+init()
 
 const username = z.string().regex(/^[a-z]+$/)
 
@@ -85,8 +103,7 @@ export const rxdbRouter = router({
       const allSpaces = await db.spaces.getItems(0, Infinity)
       const userSpaces = allSpaces.filter(
         (space) =>
-          space.owner === input.userId ||
-          (space.spaceType === "shared" && space.users?.includes(input.userId)),
+          space.owner === input.userId || space.users?.includes(input.userId),
       )
 
       if (input.collection === "spaces") {
