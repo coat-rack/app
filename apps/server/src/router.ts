@@ -123,8 +123,8 @@ export const rxdbRouter = router({
         input.changes as any,
       )
 
-      const deleteIds = input.deletes.map((row) => row.id)
-      await db[input.type].deleteItems(deleteIds)
+      const deletes = input.deletes.map((row) => ({ ...row, isDeleted: true }))
+      await db[input.type].putItems(deletes as any)
 
       console.log("push", {
         input,

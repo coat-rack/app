@@ -76,24 +76,4 @@ export class SingleFileTable<ID, T extends TableRow<ID>>
     this.file.setField("data", data)
     return { conflicts }
   }
-
-  deleteItems(ids: ID[]): Async<OperationResult<T>> {
-    const file = this.file.get()
-    const data = file.data.filter((data) => !ids.includes(data.id))
-
-    const deletes = file.data
-      .filter((data) => ids.includes(data.id))
-      .map<T>((data) => ({
-        ...data,
-        isDeleted: true,
-      }))
-
-    this.file.set({
-      ...file,
-      data,
-      deletes: [...file.deletes, ...deletes],
-    })
-
-    return {}
-  }
 }

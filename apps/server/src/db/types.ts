@@ -22,6 +22,4 @@ export interface Table<ID, T extends TableRow<ID>> {
   getItems(from: Checkpoint, to: Checkpoint): Async<T[]>
 
   putItems(items: T[]): Async<OperationResult<T>>
-
-  deleteItems(ids: ID[]): Async<OperationResult<T>>
 }
