@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
-import { dirname } from "path"
+import { existsSync } from "fs"
+import { readJsonSync, writeFileSync } from "fs-extra"
 
 /**
  * A simple abstraction over a JSON file that reads once and then
@@ -13,46 +13,45 @@ export class JSONFile<F> {
   /**
    * @param path path to the file to persist
    * @param initial initial data to be used if DB file is not found
+   * @param beforeSave method to transform input on save
    */
   constructor(
     private readonly path: string,
     initial: F,
+    private readonly beforeSave = (data: F) => data,
   ) {
     this.file = this.load(initial)
   }
 
   public set(data: F) {
     this.file = data
-    this.persist(this.file)
+    this.persist()
   }
 
   public setField<K extends keyof F>(key: K, value: F[K]) {
     this.file[key] = value
-    this.persist(this.file)
+    this.persist()
   }
 
   public get() {
     return this.file
   }
 
-  private persist(data: F) {
-    const dir = dirname(this.path)
-    const exists = existsSync(dir)
-    if (!exists) {
-      mkdirSync(dir, { recursive: true })
-    }
+  private persist() {
+    this.file = this.beforeSave(this.file)
 
-    writeFileSync(this.path, JSON.stringify(data, null, 2))
+    writeFileSync(this.path, JSON.stringify(this.file, null, 2))
   }
 
   private read(): F {
-    const file = JSON.parse(readFileSync(this.path).toString()) as F
+    const file = readJsonSync(this.path)
     return file
   }
 
   private load(initial: F): F {
     if (!existsSync(this.path)) {
-      this.persist(initial)
+      this.file = initial
+      this.persist()
     }
 
     const current = this.read()

@@ -10,19 +10,27 @@ interface File<TData> {
 export class SingleFileTable<ID, T extends TableRow<ID>>
   implements Table<ID, T>
 {
-  private file: JSONFile<File<T>>
+  private readonly file: JSONFile<File<T>>
 
   /**
    * @param dbPath path to the database JSON file
    * @param initial initial data to be used if DB file is not found
    */
   constructor(dbPath: string, initial: T[] = []) {
-    this.file = new JSONFile<File<T>>(dbPath, {
-      checkpoint: Date.now(),
-      data: initial,
-      deletes: [],
-    })
+    this.file = new JSONFile<File<T>>(
+      dbPath,
+      {
+        checkpoint: Date.now(),
+        data: initial,
+        deletes: [],
+      },
+      (file) => {
+        file.checkpoint = this.getCheckpoint()
+        return file
+      },
+    )
   }
+
   public getCheckpoint() {
     return Date.now()
   }
@@ -75,7 +83,10 @@ export class SingleFileTable<ID, T extends TableRow<ID>>
 
     const deletes = file.data
       .filter((data) => ids.includes(data.id))
-      .map<T>((data) => ({ ...data, isDeleted: true }))
+      .map<T>((data) => ({
+        ...data,
+        isDeleted: true,
+      }))
 
     this.file.set({
       ...file,
