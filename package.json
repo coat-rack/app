@@ -2,9 +2,9 @@
   "name": "app",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
+    "build": "turbo build --concurrency 15",
+    "dev": "turbo dev --concurrency 15",
+    "lint": "turbo lint --concurrency 15",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate": "turbo gen"
   },

@@ -1,4 +1,4 @@
-import { KeyValue, Schema, Space } from "@repo/data/models"
+import { KeyValue, Push, Schema } from "@repo/data/models"
 import {
   RxCollection,
   RxDatabase,
@@ -15,7 +15,7 @@ import { trpcClient } from "../trpc"
 import { RxDBUpdatePlugin } from "rxdb/plugins/update"
 import { map } from "rxjs"
 import { useObservable } from "../async"
-import { metaSchema, noteSchema, spaceSchema, todoSchema } from "./schema"
+import { appDataSchema, metaSchema, spaceSchema } from "./schema"
 
 // Enable Dev Mode - this allows us to be a little loose with schemas while we're still figuring things out
 addRxPlugin(RxDBDevModePlugin)
@@ -35,8 +35,8 @@ type LocalSchema = {
 
 type LocalRxSchema = CreateRxSchema<LocalSchema>
 
-type ClientSchema = Schema & {
-  spaces: Space[]
+type ClientSchema = {
+  [K in keyof Schema]: Schema[K][]
 }
 
 export type SyncedRxSchema = CreateRxSchema<ClientSchema>
@@ -65,43 +65,51 @@ const localCollection = <K extends keyof LocalSchema>(
 
 export const metaCollection = await localCollection("meta", metaSchema)
 
+/**
+ * RxDB keys must be lowercased
+ */
+const normalizeCollectionKey = (key: string) => key.toLowerCase()
+
 const replicateCollection =
   (user: string, db: RxDatabase<SyncedRxSchema>) =>
-  async <K extends keyof ClientSchema>(
+  async <K extends keyof ClientSchema, T extends Schema[K]>(
     key: K,
-    schema: RxJsonSchema<ClientSchema[K][number]>,
+    schema: RxJsonSchema<T>,
   ) => {
+    const collectionKey = normalizeCollectionKey(key)
+
     const collection = await db.addCollections({
-      [key]: {
+      [collectionKey]: {
         schema,
       },
     })
 
-    return replicateRxCollection<ClientSchema[K][number], number>({
-      collection: collection[key],
+    return replicateRxCollection<T, number>({
+      collection: collection[collectionKey],
       replicationIdentifier: `${user}-${key}-trpc-replication`,
       push: {
         handler: async (changeRows) => {
           const changes = changeRows
             .filter((row) => !row.newDocumentState._deleted)
             .map((row) => row.newDocumentState)
-            .flat()
+            .flat() as T[]
 
           const deletes = changeRows
             .filter((row) => row.newDocumentState._deleted)
             .map((row) => row.newDocumentState)
-            .flat()
+            .flat() as T[]
 
-          const conflicted = await trpcClient.rxdb.push.mutate({
-            changes: {
-              [key]: changes,
-            },
-            deletes: {
-              [key]: deletes,
-            },
-          })
+          const mutation: Push<K, T> = {
+            type: key,
+            changes,
+            deletes,
+          }
 
-          return conflicted.map((item) => ({
+          // TRPC doesn't support generic operations so we need to cast in
+          // order to keep our typing nice for consumers
+          const conflicted = await trpcClient.rxdb.push.mutate(mutation as any)
+
+          return (conflicted as unknown as T[]).map((item) => ({
             ...item,
             _deleted: item.isDeleted || false,
           }))
@@ -121,13 +129,15 @@ const replicateCollection =
             collection: key,
           })
 
-          const documents = result.documents[key]?.map((doc) => ({
+          const documents = result.documents as T[]
+
+          const withRxdbDeleteIndicator = documents.map((doc) => ({
             ...doc,
             _deleted: doc.isDeleted || false,
           }))
 
           return {
-            documents,
+            documents: withRxdbDeleteIndicator,
             checkpoint: result.checkpoint,
           }
         },
@@ -149,11 +159,9 @@ export const setupUserDB = async (user: string) => {
 
   const replicate = replicateCollection(user, db)
 
-  const todosCollection = await replicate("todos", todoSchema)
-  const notesCollection = await replicate("notes", noteSchema)
+  const appDataCollection = await replicate("appData", appDataSchema)
   const spacesCollection = await replicate("spaces", spaceSchema)
-
-  return { db, todosCollection, notesCollection, spacesCollection }
+  return { db, spacesCollection, appDataCollection }
 }
 
 export const setLocalUser = (username?: string) =>
