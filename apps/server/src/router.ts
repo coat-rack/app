@@ -4,6 +4,7 @@ import { publicProcedure, router } from "./trpc"
 import { AppData, Push, Schema, Space, User } from "@repo/data/models"
 import { MultiFileTable } from "./db/multi-file-db"
 import { Table } from "./db/types"
+import { NonEmptyArray } from "./util"
 
 /**
  * Need to make this somehow managable and installable from the datbase. Not
@@ -38,6 +39,10 @@ const db: DB = {
   users: new MultiFileTable("./database/users"),
   appData: new MultiFileTable("./database/appData"),
 }
+
+type DBKey = keyof typeof db
+
+const dbKeys = Object.keys(db) as NonEmptyArray<DBKey>
 
 const init = async () => {
   const spaces: Space[] = [
@@ -93,7 +98,7 @@ export const rxdbRouter = router({
   pull: publicProcedure
     .input(
       z.object({
-        collection: z.enum(["spaces", "appData", "users"]),
+        collection: z.enum(dbKeys),
         userId: z.string(),
         checkpoint: z.number().optional(),
         batchSize: z.number(),
@@ -234,7 +239,7 @@ export const appRouter = router({
         }
 
         if (foundSpace.spaceType !== "shared") {
-          throw new Error("Cannot grant access toa  non-shared space")
+          throw new Error("Cannot grant access to a non-shared space")
         }
 
         await db.spaces.putItems([

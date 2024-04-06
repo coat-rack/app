@@ -65,20 +65,27 @@ const localCollection = <K extends keyof LocalSchema>(
 
 export const metaCollection = await localCollection("meta", metaSchema)
 
+/**
+ * RxDB keys must be lowercased
+ */
+const normalizeCollectionKey = (key: string) => key.toLowerCase()
+
 const replicateCollection =
   (user: string, db: RxDatabase<SyncedRxSchema>) =>
   async <K extends keyof ClientSchema, T extends Schema[K]>(
     key: K,
     schema: RxJsonSchema<T>,
   ) => {
+    const collectionKey = normalizeCollectionKey(key)
+
     const collection = await db.addCollections({
-      [key.toLowerCase()]: {
+      [collectionKey]: {
         schema,
       },
     })
 
     return replicateRxCollection<T, number>({
-      collection: collection[key.toLowerCase()],
+      collection: collection[collectionKey],
       replicationIdentifier: `${user}-${key}-trpc-replication`,
       push: {
         handler: async (changeRows) => {

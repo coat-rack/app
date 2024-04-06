@@ -1,6 +1,6 @@
 import { ensureDirSync, readJson, writeJson } from "fs-extra"
 import path from "path"
-import { isDefined } from "../array"
+import { isDefined } from "../util"
 import { JSONFile } from "./json-file"
 import { Checkpoint, OperationResult, Table, TableRow } from "./types"
 
