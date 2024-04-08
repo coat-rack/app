@@ -1,18 +1,17 @@
 import { Db, RpcResponse } from "@repo/sdk"
-import { useEffect } from "react"
 import { useApp } from "./dynamic"
 
 const api: Db = {
-  get(_type, _key) {
+  get(_type) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
   upsert(_type, _value) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
-  delete(_type, _key) {
+  delete(_key) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
-  query(_type, _query) {
+  query(_query) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
 }
@@ -42,15 +41,17 @@ function guidGenerator() {
   )
 }
 
-const useRpc = () => {
+const getApi = () => {
   const queryString = new URLSearchParams(window.location.search)
   const host = queryString.get("host") || undefined
   if (!host) {
     throw new Error("Couldn't determine host origin")
   }
 
-  const rpcHost: (message: Object) => Promise<unknown> = (message) => {
-    return new Promise((resolve, _reject) => {
+  const rpcHost: (message: Object) => Promise<unknown | undefined> = (
+    message,
+  ) => {
+    return new Promise<unknown | undefined>((resolve, _reject) => {
       const requestId = guidGenerator()
       const handler = (event: MessageEvent<RpcResponse<unknown>>) => {
         if (event.origin != host || event.data.requestId != requestId) {
@@ -101,41 +102,40 @@ function Sandbox() {
   if (!host) {
     return null
   }
+  const rpc = getApi()
+  // useEffect(() => {
 
-  useEffect(() => {
-    const rpc = useRpc()
+  //   rpc.get("spaces", "1").then((val) => {
+  //     console.log("get returned", val)
+  //   })
 
-    rpc.get("notes", "1").then((val) => {
-      console.log("get returned", val)
-    })
+  //   rpc
+  //     .upsert("spaces", {
+  //       id: "1",
+  //       type: "space",
+  //       name: "test",
+  //       owner: "me",
+  //       spaceType: "user",
+  //       timestamp: new Date().valueOf(),
+  //     })
+  //     .then((val) => {
+  //       console.log("upsert returned", val)
+  //     })
 
-    rpc
-      .upsert("notes", {
-        id: "1",
-        content: "",
-        space: "",
-        type: "note",
-        title: "",
-        timestamp: new Date().valueOf(),
-      })
-      .then((val) => {
-        console.log("upsert returned", val)
-      })
+  //   rpc
+  //     .query("spaces", {
+  //       id: "1",
+  //     })
+  //     .then((val) => {
+  //       console.log("query returned", val)
+  //     })
 
-    rpc
-      .query("notes", {
-        id: "1",
-      })
-      .then((val) => {
-        console.log("query returned", val)
-      })
+  //   rpc.delete("spaces", "1").then(() => {
+  //     console.log("delete returned")
+  //   })
+  // }, [])
 
-    rpc.delete("notes", "1").then(() => {
-      console.log("delete returned")
-    })
-  }, [])
-
-  return App && <App />
+  return App && <App db={rpc} />
 }
 
 export default Sandbox

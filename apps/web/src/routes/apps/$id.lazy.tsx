@@ -1,7 +1,6 @@
 import { useDatabase } from "@/data"
 import { Layout } from "@/layout"
 import { trpcReact } from "@/trpc"
-import { Schema } from "@repo/data/models"
 import { RpcRequest, RpcResponse } from "@repo/sdk"
 import { createLazyFileRoute } from "@tanstack/react-router"
 import { useEffect } from "react"
@@ -18,11 +17,11 @@ function Index() {
   const { db } = useDatabase()
 
   useEffect(() => {
-    const handler = (event: MessageEvent<RpcRequest<keyof Schema>>) => {
+    const handler = (event: MessageEvent<RpcRequest<unknown>>) => {
       if (event.origin != sandboxHost) {
         return
       }
-      const reply = <T,>(response: T) => {
+      const reply = <T,>(response?: T) => {
         const message: RpcResponse<T> = {
           requestId: event.data.requestId,
           value: response,
@@ -31,53 +30,60 @@ function Index() {
         event.source?.postMessage(message, { targetOrigin: event.origin })
       }
       console.log("host", event.data)
-      const collectionName = event.data.args[0]
-      const collection = db[collectionName]
       switch (event.data.op) {
         case "query":
-          collection
-            .find({ selector: event.data.args[1] })
+          db.appData
+            .find({
+              selector: {
+                $and: [{ app: data!.id }, { data: event.data.args[0] }],
+              },
+            })
             .exec()
-            .then((val) => reply(val.map((x) => x.toJSON())))
+            .then((val) => reply(val.map((x) => x.data?.toJSON())))
           return
         case "delete":
-          const deleteOp = event.data
-          collection
-            .findByIds([event.data.args[1]])
+          const deleteRequest = event.data
+          db.appData
+            .findByIds([event.data.args[0]])
             .exec()
             .then((foundItems) => {
-              const foundItem = foundItems.get(deleteOp.args[1])
-              if (foundItem) {
-                return foundItem.update({
-                  $set: {
-                    isDeleted: true,
-                  },
-                })
-              }
               return new Promise<void>((resolve) => {
-                resolve()
+                const foundItem = foundItems.get(deleteRequest.args[0])
+                if (foundItem) {
+                  return foundItem
+                    .update({
+                      $set: {
+                        isDeleted: true,
+                      },
+                    })
+                    .then(() => resolve())
+                } else {
+                  resolve()
+                }
               })
             })
-            .then(() => reply(undefined))
+            .then(() => reply())
           return
         case "get":
-          const getOp = event.data
-          collection
-            .findByIds([event.data.args[1]])
+          const getRequest = event.data
+          db.appData
+            .findByIds([event.data.args[0]])
             .exec()
             .then((foundItems) => {
-              const foundItem = foundItems.get(getOp.args[1])?.toJSON()
+              const foundItem = foundItems.get(getRequest.args[0])?.toJSON()
               reply(foundItem)
             })
           return
         case "upsert":
-          collection.upsert(event.data.args[1]).then(() => reply(undefined))
+          db.appData
+            .upsert({ data: event.data.args[1] })
+            .then(() => reply(undefined))
       }
     }
     window.addEventListener("message", handler)
 
     return () => window.removeEventListener("message", handler)
-  }, [])
+  }, [db])
 
   if (!data) {
     return null

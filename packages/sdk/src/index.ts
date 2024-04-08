@@ -1,4 +1,3 @@
-import { Schema } from "@repo/data/models"
 import React from "react"
 
 export interface App {
@@ -9,57 +8,58 @@ export interface App {
   /**
    *  The Entrypoint for the app
    */
-  Entry: React.ComponentType
+  Entry: React.ComponentType<{ db: Db }>
 }
 
 type PromiseArray<T> = Promise<Array<T>>
-type CollectionType = keyof Schema
 
-export type RpcMessageBase = {
+export type RpcMessage = {
   requestId: string
 }
 
-export type RpcRequest<C extends CollectionType> =
-  | RpcGetRequest<C>
-  | RpcUpsertRequest<C>
-  | RpcUpsertRequest<C>
-  | RpcDeleteRequest<C>
-  | RpcQueryRequest<C>
+export type RpcRequest<T> =
+  | RpcGetRequest
+  | RpcUpsertRequest<T>
+  | RpcDeleteRequest
+  | RpcQueryRequest<T>
 
 // todo: is there a way to constrain the 'op' to keyof Db?
-export type RpcGetRequest<C extends CollectionType> = RpcMessageBase & {
-  op: "get"
-  args: [C, string]
+
+type RpcOperation<O extends keyof Db> = {
+  op: O
 }
 
-export type RpcUpsertRequest<C extends CollectionType> = RpcMessageBase & {
-  op: "upsert"
-  args: [C, Schema[C][0]]
-}
+export type RpcGetRequest = RpcOperation<"get"> &
+  RpcMessage & {
+    op: "get"
+    args: [string]
+  }
 
-export type RpcDeleteRequest<C extends CollectionType> = RpcMessageBase & {
-  op: "delete"
-  args: [C, string]
-}
+export type RpcUpsertRequest<T> = RpcOperation<"upsert"> &
+  RpcMessage & {
+    op: "upsert"
+    args: [string, T]
+  }
 
-export type RpcQueryRequest<C extends CollectionType> = RpcMessageBase & {
-  op: "query"
-  args: [C, Partial<Schema[C][0]>]
-}
+export type RpcDeleteRequest = RpcOperation<"delete"> &
+  RpcMessage & {
+    op: "delete"
+    args: [string]
+  }
 
-export type RpcResponse<T> = RpcMessageBase & {
-  value: T
+export type RpcQueryRequest<T> = RpcOperation<"query"> &
+  RpcMessage & {
+    op: "query"
+    args: [T]
+  }
+
+export type RpcResponse<T> = RpcMessage & {
+  value?: T
 }
 
 export interface Db {
-  get: <C extends keyof Schema>(type: C, key: string) => Promise<Schema[C]>
-  upsert: <C extends keyof Schema>(
-    type: C,
-    value: Schema[C][0],
-  ) => Promise<Schema[C]>
-  delete: <C extends keyof Schema>(type: C, key: string) => Promise<void>
-  query: <C extends keyof Schema>(
-    type: C,
-    query?: Partial<Schema[C][0]>,
-  ) => PromiseArray<Schema[C]>
+  get: <T>(key: string) => Promise<T>
+  upsert: <T>(key: string | null | undefined, value: T) => Promise<T>
+  delete: (key: string) => Promise<void>
+  query: <T>(query?: Partial<T>) => PromiseArray<T>
 }
