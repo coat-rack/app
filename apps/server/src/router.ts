@@ -134,7 +134,7 @@ export const rxdbRouter = router({
     .input(
       z.union([
         Push("spaces", Space),
-        Push("appData", AppData),
+        Push("appdata", AppData),
         Push("users", User),
       ]),
     )

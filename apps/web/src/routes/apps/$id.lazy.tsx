@@ -34,11 +34,15 @@ function Index() {
         db.appdata
           .find({
             selector: {
-              $and: [{ app: data!.id }, { data: event.data.args[0] }],
+              $and: [
+                { app: data!.id },
+                { data: event.data.args[0] },
+                { isDeleted: false },
+              ],
             },
           })
           .exec()
-          .then((val) => reply(val.map((x) => x.data?.toJSON())))
+          .then((val) => reply(val?.map((x) => x?.toJSON()?.data)))
         return
       case "delete":
         const deleteRequest = event.data
@@ -70,13 +74,23 @@ function Index() {
           .exec()
           .then((foundItems) => {
             const foundItem = foundItems.get(getRequest.args[0])?.toJSON()
-            reply(foundItem)
+            reply(foundItem?.data)
           })
         return
       case "upsert":
         db.appdata
-          .upsert({ data: event.data.args[1] })
-          .then(() => reply(undefined))
+          .upsert({
+            id: event.data.args[0],
+            data: event.data.args[1],
+            app: data!.id,
+            timestamp: new Date().valueOf(),
+            type: "app-data",
+            space: "public",
+          })
+          .then((val) => {
+            const v = val.toJSON()
+            reply({ key: v.id, data: v.data })
+          })
     }
   }
   useEffect(() => {

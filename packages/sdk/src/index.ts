@@ -59,7 +59,10 @@ export type RpcResponse<T> = RpcMessage & {
 
 export interface Db {
   get: <T>(key: string) => Promise<T>
-  upsert: <T>(key: string | null | undefined, value: T) => Promise<T>
+  upsert: <T>(
+    key: string | null | undefined,
+    value: T,
+  ) => Promise<{ key: string; data: T }>
   delete: (key: string) => Promise<void>
   query: <T>(query?: Partial<T>) => PromiseArray<T>
 }

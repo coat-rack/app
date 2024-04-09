@@ -159,7 +159,7 @@ export const setupUserDB = async (user: string) => {
 
   const replicate = replicateCollection(user, db)
 
-  const appDataCollection = await replicate("appData", appDataSchema)
+  const appDataCollection = await replicate("appdata", appDataSchema)
   const spacesCollection = await replicate("spaces", spaceSchema)
   return { db, spacesCollection, appDataCollection }
 }
