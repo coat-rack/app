@@ -103,37 +103,6 @@ function Sandbox() {
     return null
   }
   const rpc = getApi()
-  // useEffect(() => {
-
-  //   rpc.get("spaces", "1").then((val) => {
-  //     console.log("get returned", val)
-  //   })
-
-  //   rpc
-  //     .upsert("spaces", {
-  //       id: "1",
-  //       type: "space",
-  //       name: "test",
-  //       owner: "me",
-  //       spaceType: "user",
-  //       timestamp: new Date().valueOf(),
-  //     })
-  //     .then((val) => {
-  //       console.log("upsert returned", val)
-  //     })
-
-  //   rpc
-  //     .query("spaces", {
-  //       id: "1",
-  //     })
-  //     .then((val) => {
-  //       console.log("query returned", val)
-  //     })
-
-  //   rpc.delete("spaces", "1").then(() => {
-  //     console.log("delete returned")
-  //   })
-  // }, [])
 
   return App && <App db={rpc} />
 }
