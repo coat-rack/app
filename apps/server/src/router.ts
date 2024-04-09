@@ -37,7 +37,7 @@ const PUBLIC_SPACE_ID = "public"
 const db: DB = {
   spaces: new MultiFileTable("./database/spaces"),
   users: new MultiFileTable("./database/users"),
-  appData: new MultiFileTable("./database/appData"),
+  appdata: new MultiFileTable("./database/appData"),
 }
 
 type DBKey = keyof typeof db
@@ -121,11 +121,11 @@ export const rxdbRouter = router({
       const userSpaceIds = userSpaces.map((us) => us.id)
       const isUserItem = (item: AppData) => userSpaceIds.includes(item.space)
 
-      const appData = await db.appData.getItems(input.checkpoint || 0, Infinity)
+      const appData = await db.appdata.getItems(input.checkpoint || 0, Infinity)
       const documents = appData.filter(isUserItem)
 
       return {
-        checkpoint: db.appData.getCheckpoint(),
+        checkpoint: db.appdata.getCheckpoint(),
         documents,
       }
     }),

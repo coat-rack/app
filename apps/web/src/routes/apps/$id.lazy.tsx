@@ -16,74 +16,73 @@ function Index() {
   const { data } = trpcReact.apps.get.useQuery({ id })
   const { db } = useDatabase()
 
-  useEffect(() => {
-    const handler = (event: MessageEvent<RpcRequest<unknown>>) => {
-      if (event.origin != sandboxHost) {
-        return
-      }
-      const reply = <T,>(response?: T) => {
-        const message: RpcResponse<T> = {
-          requestId: event.data.requestId,
-          value: response,
-        }
-        console.log("host responding", message)
-        event.source?.postMessage(message, { targetOrigin: event.origin })
-      }
-      console.log("host", event.data)
-      switch (event.data.op) {
-        case "query":
-          db.appData
-            .find({
-              selector: {
-                $and: [{ app: data!.id }, { data: event.data.args[0] }],
-              },
-            })
-            .exec()
-            .then((val) => reply(val.map((x) => x.data?.toJSON())))
-          return
-        case "delete":
-          const deleteRequest = event.data
-          db.appData
-            .findByIds([event.data.args[0]])
-            .exec()
-            .then((foundItems) => {
-              return new Promise<void>((resolve) => {
-                const foundItem = foundItems.get(deleteRequest.args[0])
-                if (foundItem) {
-                  return foundItem
-                    .update({
-                      $set: {
-                        isDeleted: true,
-                      },
-                    })
-                    .then(() => resolve())
-                } else {
-                  resolve()
-                }
-              })
-            })
-            .then(() => reply())
-          return
-        case "get":
-          const getRequest = event.data
-          db.appData
-            .findByIds([event.data.args[0]])
-            .exec()
-            .then((foundItems) => {
-              const foundItem = foundItems.get(getRequest.args[0])?.toJSON()
-              reply(foundItem)
-            })
-          return
-        case "upsert":
-          db.appData
-            .upsert({ data: event.data.args[1] })
-            .then(() => reply(undefined))
-      }
+  const handler = (event: MessageEvent<RpcRequest<unknown>>) => {
+    if (event.origin != sandboxHost) {
+      return
     }
+    const reply = <T,>(response?: T) => {
+      const message: RpcResponse<T> = {
+        requestId: event.data.requestId,
+        value: response,
+      }
+      console.log("host responding", message)
+      event.source?.postMessage(message, { targetOrigin: event.origin })
+    }
+    console.log("host", event.data)
+    switch (event.data.op) {
+      case "query":
+        db.appdata
+          .find({
+            selector: {
+              $and: [{ app: data!.id }, { data: event.data.args[0] }],
+            },
+          })
+          .exec()
+          .then((val) => reply(val.map((x) => x.data?.toJSON())))
+        return
+      case "delete":
+        const deleteRequest = event.data
+        db.appdata
+          .findByIds([event.data.args[0]])
+          .exec()
+          .then((foundItems) => {
+            return new Promise<void>((resolve) => {
+              const foundItem = foundItems.get(deleteRequest.args[0])
+              if (foundItem) {
+                return foundItem
+                  .update({
+                    $set: {
+                      isDeleted: true,
+                    },
+                  })
+                  .then(() => resolve())
+              } else {
+                resolve()
+              }
+            })
+          })
+          .then(() => reply())
+        return
+      case "get":
+        const getRequest = event.data
+        db.appdata
+          .findByIds([event.data.args[0]])
+          .exec()
+          .then((foundItems) => {
+            const foundItem = foundItems.get(getRequest.args[0])?.toJSON()
+            reply(foundItem)
+          })
+        return
+      case "upsert":
+        db.appdata
+          .upsert({ data: event.data.args[1] })
+          .then(() => reply(undefined))
+    }
+  }
+  useEffect(() => {
     window.addEventListener("message", handler)
-
     return () => window.removeEventListener("message", handler)
-  }, [db])
+  })
 
   if (!data) {
     return null
