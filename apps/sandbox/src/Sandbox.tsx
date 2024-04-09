@@ -85,6 +85,7 @@ const getApi = () => {
             },
           })
         }
+        return Reflect.get(target, prop)
       },
     })
   }
