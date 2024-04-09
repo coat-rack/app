@@ -2,16 +2,16 @@ import { Db, RpcResponse } from "@repo/sdk"
 import { useApp } from "./dynamic"
 
 const api: Db = {
-  get(_type) {
+  get(_) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
-  upsert(_type, _value) {
+  upsert(_, __) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
-  delete(_key) {
+  delete(_) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
-  query(_query) {
+  query(_) {
     return new Promise((_resolve, reject) => reject("Not connected to host!"))
   },
 }
@@ -21,28 +21,12 @@ function guidGenerator() {
     return crypto.randomUUID()
   }
 
-  // https://stackoverflow.com/a/6860916/1492861
-  var S4 = function () {
-    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-  }
-  return (
-    S4() +
-    S4() +
-    "-" +
-    S4() +
-    "-" +
-    S4() +
-    "-" +
-    S4() +
-    "-" +
-    S4() +
-    S4() +
-    S4()
-  )
+  return new Date().valueOf()
 }
 
 const getApi = () => {
   const queryString = new URLSearchParams(window.location.search)
+  // TODO: we probably need a more secure way of doing this
   const host = queryString.get("host") || undefined
   if (!host) {
     throw new Error("Couldn't determine host origin")

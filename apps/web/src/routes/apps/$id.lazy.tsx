@@ -25,10 +25,8 @@ function Index() {
         requestId: event.data.requestId,
         value: response,
       }
-      console.log("host responding", message)
       event.source?.postMessage(message, { targetOrigin: event.origin })
     }
-    console.log("host", event.data)
     switch (event.data.op) {
       case "query":
         db.appdata

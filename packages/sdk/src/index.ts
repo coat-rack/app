@@ -17,13 +17,12 @@ export type RpcMessage = {
   requestId: string
 }
 
+// LDAM: do we want to export this? it's more of an internal detail
 export type RpcRequest<T> =
   | RpcGetRequest
   | RpcUpsertRequest<T>
   | RpcDeleteRequest
   | RpcQueryRequest<T>
-
-// todo: is there a way to constrain the 'op' to keyof Db?
 
 type RpcOperation<O extends keyof Db> = {
   op: O
