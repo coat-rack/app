@@ -13,10 +13,13 @@ function Index() {
   const sandboxHost = "http://localhost:5000"
   const host = window.location.origin
   const { id } = Route.useParams()
-  const { data } = trpcReact.apps.get.useQuery({ id })
+  const { data: appInfo } = trpcReact.apps.get.useQuery({ id })
   const { db } = useDatabase()
 
   const handler = (event: MessageEvent<RpcRequest<unknown>>) => {
+    if (!appInfo) {
+      throw new Error("appInfo is missing - is the app id valid?")
+    }
     if (event.origin != sandboxHost) {
       return
     }
@@ -33,7 +36,7 @@ function Index() {
           .find({
             selector: {
               $and: [
-                { app: data!.id },
+                { app: appInfo.id },
                 { data: event.data.args[0] },
                 { isDeleted: false },
               ],
@@ -48,16 +51,10 @@ function Index() {
           .findByIds([event.data.args[0]])
           .exec()
           .then((foundItems) => {
+            const foundItem = foundItems.get(deleteRequest.args[0])
             return new Promise<void>((resolve) => {
-              const foundItem = foundItems.get(deleteRequest.args[0])
               if (foundItem) {
-                return foundItem
-                  .update({
-                    $set: {
-                      isDeleted: true,
-                    },
-                  })
-                  .then(() => resolve())
+                foundItem.remove().then(() => resolve())
               } else {
                 resolve()
               }
@@ -80,14 +77,14 @@ function Index() {
           .upsert({
             id: event.data.args[0],
             data: event.data.args[1],
-            app: data!.id,
-            timestamp: new Date().valueOf(),
+            app: appInfo.id,
+            timestamp: Date.now(),
             type: "app-data",
             space: "public",
           })
-          .then((val) => {
-            const v = val.toJSON()
-            reply({ key: v.id, data: v.data })
+          .then((doc) => {
+            const docUnwrapped = doc.toJSON()
+            reply({ key: docUnwrapped.id, data: docUnwrapped.data })
           })
     }
   }
@@ -96,16 +93,16 @@ function Index() {
     return () => window.removeEventListener("message", handler)
   })
 
-  if (!data) {
+  if (!appInfo) {
     return null
   }
 
   const url = `${sandboxHost}/?host=${encodeURIComponent(
     host,
-  )}&url=${encodeURIComponent(data.url)}`
+  )}&url=${encodeURIComponent(appInfo.url)}`
 
   return (
-    <Layout title={data?.id || "Loading"}>
+    <Layout title={appInfo?.id || "Loading"}>
       <iframe src={url}></iframe>
     </Layout>
   )
