@@ -12,8 +12,8 @@
     "generate": "pnpx @svgr/cli --no-prettier --typescript --out-dir ./src -- ./node_modules/@hackernoon/pixel-icon-library/icons/SVG"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@hackernoon/pixel-icon-library": "^1.0.1",
+    "@repo/typescript-config": "workspace:*",
     "@svgr/cli": "^8.1.0",
     "@turbo/gen": "^1.11.3",
     "@types/node": "^20.10.6",

@@ -1,5 +1,6 @@
 import { App } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
+import { Checkbox } from "@repo/ui/components/checkbox"
 import { Label } from "@repo/ui/components/label"
 import { RadioGroup, RadioGroupItem } from "@repo/ui/components/radio-group"
 import "./styles.css"
@@ -40,6 +41,15 @@ export const Tasks: App = {
                 <Label htmlFor="option-two">Option Two</Label>
               </div>
             </RadioGroup>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h1>Checkbox</h1>
+
+          <div className="flex flex-row items-center gap-2">
+            <Checkbox id="checkbox" />
+            <Label htmlFor="checkbox">Accept</Label>
           </div>
         </div>
       </div>

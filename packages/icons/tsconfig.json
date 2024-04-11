@@ -1,9 +1,26 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
   "compilerOptions": {
+    "jsx": "react-jsx",
     "lib": ["es2022", "DOM", "DOM.Iterable"],
-    "outDir": "dist"
+    "outDir": "dist",
+    "strictNullChecks": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "incremental": false,
+    "isolatedModules": true,
+    "module": "NodeNext",
+    "moduleDetection": "force",
+    "moduleResolution": "NodeNext",
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022"
   },
+
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

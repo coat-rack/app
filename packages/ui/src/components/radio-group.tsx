@@ -1,5 +1,4 @@
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-// import { Check } from "@repo/icons/regular"
 import * as React from "react"
 
 import { cn } from "../lib/utils"
@@ -32,8 +31,7 @@ const RadioGroupItem = React.forwardRef<
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <div className="bg-primary h-3.5 w-3.5"></div>
-        {/* <Check className="fill-primary h-3.5 w-3.5" /> */}
+        <div className="bg-primary h-2 w-2" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
