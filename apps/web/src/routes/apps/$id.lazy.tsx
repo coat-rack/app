@@ -1,7 +1,7 @@
 import { useDatabase } from "@/data"
 import { Layout } from "@/layout"
 import { trpcReact } from "@/trpc"
-import { RpcRequest, RpcResponse } from "@repo/data/rpc"
+import { RpcRequest, RpcResponse, err, ok } from "@repo/data/rpc"
 import { Db } from "@repo/sdk"
 import { createLazyFileRoute } from "@tanstack/react-router"
 import { useEffect } from "react"
@@ -27,10 +27,10 @@ function Index() {
     }
 
     const reply = async <Op extends keyof Db<unknown>>(
-      value: RpcResponse<Db<unknown>, Op>["value"],
+      value: RpcResponse<Db<unknown>, Op>["result"],
     ) => {
       const message = {
-        value,
+        result: value,
         op: event.data.op,
         requestId: event.data.requestId,
       }
@@ -50,7 +50,10 @@ function Index() {
             },
           })
           .exec()
-          .then((val) => reply(val?.map((x) => x?.toJSON()?.data)))
+          .then(
+            (val) => reply(ok(val?.map((x) => x?.toJSON()?.data))),
+            (e) => reply(err(e)),
+          )
         return
       case "delete":
         const deleteRequest = event.data
@@ -67,17 +70,23 @@ function Index() {
               }
             })
           })
-          .then(() => reply(undefined))
+          .then(
+            () => reply(ok(undefined)),
+            (e) => reply(err(e)),
+          )
         return
       case "get":
         const getRequest = event.data
         db.appdata
           .findByIds([event.data.args[0]])
           .exec()
-          .then((foundItems) => {
-            const foundItem = foundItems.get(getRequest.args[0])?.toJSON()
-            reply(foundItem?.data)
-          })
+          .then(
+            (foundItems) => {
+              const foundItem = foundItems.get(getRequest.args[0])?.toJSON()
+              reply(ok(foundItem?.data))
+            },
+            (e) => reply(err(e)),
+          )
         return
       case "create":
         db.appdata
@@ -89,10 +98,13 @@ function Index() {
             type: "app-data",
             space: "public",
           })
-          .then((doc) => {
-            const docUnwrapped = doc.toJSON()
-            reply({ id: docUnwrapped.id, data: docUnwrapped.data })
-          })
+          .then(
+            (doc) => {
+              const docUnwrapped = doc.toJSON()
+              reply(ok({ id: docUnwrapped.id, data: docUnwrapped.data }))
+            },
+            (e) => reply(err(e)),
+          )
         return
       case "update":
         db.appdata
@@ -104,10 +116,13 @@ function Index() {
             type: "app-data",
             space: "public",
           })
-          .then((doc) => {
-            const docUnwrapped = doc.toJSON()
-            reply({ id: docUnwrapped.id, data: docUnwrapped.data })
-          })
+          .then(
+            (doc) => {
+              const docUnwrapped = doc.toJSON()
+              reply(ok({ id: docUnwrapped.id, data: docUnwrapped.data }))
+            },
+            (e) => reply(err(e as Error)),
+          )
         return
     }
   }

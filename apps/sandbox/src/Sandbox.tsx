@@ -34,14 +34,18 @@ const getApi = () => {
   const rpcHost: (message: Object) => Promise<unknown | undefined> = (
     message,
   ) => {
-    return new Promise<unknown | undefined>((resolve, _reject) => {
+    return new Promise<unknown | undefined>((resolve, reject) => {
       const requestId = guidGenerator()
       const handler = (event: MessageEvent<RpcResponse<Db>>) => {
         if (event.origin != host || event.data.requestId != requestId) {
           return
         }
         window.removeEventListener("message", handler)
-        resolve(event.data.value)
+        if (event.data.result.ok) {
+          resolve(event.data.result.value)
+        } else {
+          reject(event.data.result.error)
+        }
       }
       window.addEventListener("message", handler)
       window.parent.postMessage(
