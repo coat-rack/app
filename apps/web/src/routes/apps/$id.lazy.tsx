@@ -1,10 +1,10 @@
 import { useDatabase } from "@/data"
 import { Layout } from "@/layout"
 import { trpcReact } from "@/trpc"
-import { RpcRequest, RpcResponse } from "@repo/sdk"
+import { RpcRequest, RpcResponse } from "@repo/data/rpc"
+import { Db } from "@repo/sdk"
 import { createLazyFileRoute } from "@tanstack/react-router"
 import { useEffect } from "react"
-
 export const Route = createLazyFileRoute("/apps/$id")({
   component: Index,
 })
@@ -16,20 +16,27 @@ function Index() {
   const { data: appInfo } = trpcReact.apps.get.useQuery({ id })
   const { db } = useDatabase()
 
-  const handler = (event: MessageEvent<RpcRequest<unknown>>) => {
-    if (!appInfo) {
-      throw new Error("appInfo is missing - is the app id valid?")
-    }
+  const handler = (
+    event: MessageEvent<RpcRequest<Db<unknown>>>,
+  ): Promise<unknown> | undefined => {
     if (event.origin != sandboxHost) {
       return
     }
-    const reply = <T,>(response?: T) => {
-      const message: RpcResponse<T> = {
+    if (!appInfo) {
+      throw new Error("appInfo is missing - is the app id valid?")
+    }
+
+    const reply = async <Op extends keyof Db<unknown>>(
+      value: RpcResponse<Db<unknown>, Op>["value"],
+    ) => {
+      const message = {
+        value,
+        op: event.data.op,
         requestId: event.data.requestId,
-        value: response,
       }
       event.source?.postMessage(message, { targetOrigin: event.origin })
     }
+
     switch (event.data.op) {
       case "query":
         db.appdata
@@ -38,7 +45,7 @@ function Index() {
               $and: [
                 { app: appInfo.id },
                 { data: event.data.args[0] },
-                { isDeleted: false },
+                { isDeleted: false }, // TODO is this handled by the server?
               ],
             },
           })
@@ -60,7 +67,7 @@ function Index() {
               }
             })
           })
-          .then(() => reply())
+          .then(() => reply(undefined))
         return
       case "get":
         const getRequest = event.data
@@ -72,7 +79,22 @@ function Index() {
             reply(foundItem?.data)
           })
         return
-      case "upsert":
+      case "create":
+        db.appdata
+          .upsert({
+            id: `${appInfo.id}__${Date.now()}`,
+            data: event.data.args[0],
+            app: appInfo.id,
+            timestamp: Date.now(),
+            type: "app-data",
+            space: "public",
+          })
+          .then((doc) => {
+            const docUnwrapped = doc.toJSON()
+            reply({ id: docUnwrapped.id, data: docUnwrapped.data })
+          })
+        return
+      case "update":
         db.appdata
           .upsert({
             id: event.data.args[0],
@@ -84,8 +106,9 @@ function Index() {
           })
           .then((doc) => {
             const docUnwrapped = doc.toJSON()
-            reply({ key: docUnwrapped.id, data: docUnwrapped.data })
+            reply({ id: docUnwrapped.id, data: docUnwrapped.data })
           })
+        return
     }
   }
   useEffect(() => {

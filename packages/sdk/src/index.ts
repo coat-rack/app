@@ -1,3 +1,4 @@
+import { AppData } from "@repo/data/models"
 import React from "react"
 
 export interface App {
@@ -13,55 +14,14 @@ export interface App {
 
 type PromiseArray<T> = Promise<Array<T>>
 
-export type RpcMessage = {
-  requestId: string
+export type Record<T> = Pick<AppData, "id" | "data"> & {
+  data: T
 }
 
-// LDAM: do we want to export this? it's more of an internal detail
-export type RpcRequest<T> =
-  | RpcGetRequest
-  | RpcUpsertRequest<T>
-  | RpcDeleteRequest
-  | RpcQueryRequest<T>
-
-type RpcOperation<O extends keyof Db> = {
-  op: O
-}
-
-export type RpcGetRequest = RpcOperation<"get"> &
-  RpcMessage & {
-    op: "get"
-    args: [string]
-  }
-
-export type RpcUpsertRequest<T> = RpcOperation<"upsert"> &
-  RpcMessage & {
-    op: "upsert"
-    args: [string, T]
-  }
-
-export type RpcDeleteRequest = RpcOperation<"delete"> &
-  RpcMessage & {
-    op: "delete"
-    args: [string]
-  }
-
-export type RpcQueryRequest<T> = RpcOperation<"query"> &
-  RpcMessage & {
-    op: "query"
-    args: [T]
-  }
-
-export type RpcResponse<T> = RpcMessage & {
-  value?: T
-}
-
-export interface Db {
-  get: <T>(key: string) => Promise<T>
-  upsert: <T>(
-    key: string | null | undefined,
-    value: T,
-  ) => Promise<{ key: string; data: T }>
+export interface Db<T = unknown> {
+  get: <O extends T>(key: string) => Promise<Record<O>>
+  update: <O extends T>(key: string, value: O) => Promise<Record<O>>
+  create: <O extends T>(value: O) => Promise<Record<O>>
   delete: (key: string) => Promise<void>
-  query: <T>(query?: Partial<T>) => PromiseArray<T>
+  query: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
 }

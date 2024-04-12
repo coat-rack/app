@@ -23,11 +23,20 @@ export const SampleApp: App = {
         <Button
           onClick={() =>
             db
-              .upsert<any>("1", { something: "cool" })
-              .then((v) => console.log("upsert", v))
+              .create<any>({ something: "cool" })
+              .then((v) => console.log("create", v))
           }
         >
-          Upsert
+          Create
+        </Button>
+        <Button
+          onClick={() =>
+            db
+              .update("", { something: "really cool" })
+              .then((v) => console.log("update", v))
+          }
+        >
+          Update
         </Button>
         <Button
           onClick={() => db.delete("1").then(() => console.log("delete"))}

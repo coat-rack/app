@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./models": "./src/models.ts"
+    "./models": "./src/models.ts",
+    "./rpc": "./src/rpc.ts"
   },
   "scripts": {},
   "devDependencies": {

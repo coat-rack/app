@@ -1,19 +1,18 @@
-import { Db, RpcResponse } from "@repo/sdk"
+import { RpcResponse } from "@repo/data/rpc"
+import { Db } from "@repo/sdk"
 import { useApp } from "./dynamic"
 
 const api: Db = {
-  get(_) {
-    return new Promise((_resolve, reject) => reject("Not connected to host!"))
-  },
-  upsert(_, __) {
-    return new Promise((_resolve, reject) => reject("Not connected to host!"))
-  },
-  delete(_) {
-    return new Promise((_resolve, reject) => reject("Not connected to host!"))
-  },
-  query(_) {
-    return new Promise((_resolve, reject) => reject("Not connected to host!"))
-  },
+  get: (_) =>
+    new Promise((_resolve, reject) => reject("Not connected to host!")),
+  create: (_) =>
+    new Promise((_resolve, reject) => reject("Not connected to host!")),
+  update: (_, __) =>
+    new Promise((_resolve, reject) => reject("Not connected to host!")),
+  delete: (_) =>
+    new Promise((_resolve, reject) => reject("Not connected to host!")),
+  query: (_) =>
+    new Promise((_resolve, reject) => reject("Not connected to host!")),
 }
 
 function guidGenerator() {
@@ -37,7 +36,7 @@ const getApi = () => {
   ) => {
     return new Promise<unknown | undefined>((resolve, _reject) => {
       const requestId = guidGenerator()
-      const handler = (event: MessageEvent<RpcResponse<unknown>>) => {
+      const handler = (event: MessageEvent<RpcResponse<Db>>) => {
         if (event.origin != host || event.data.requestId != requestId) {
           return
         }
