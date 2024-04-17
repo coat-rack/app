@@ -21,10 +21,13 @@ const apps: App[] = [
     id: "sample-app",
     url: "http://localhost:3000/catalog/sample-app/dist/index.mjs",
   },
-
   {
     id: "tasks",
     url: "http://localhost:3000/catalog/tasks/dist/index.mjs",
+  },
+  {
+    id: "kitchen-sink",
+    url: "http://localhost:3000/catalog/kitchen-sink/dist/index.mjs",
   },
 ]
 
