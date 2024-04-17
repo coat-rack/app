@@ -111,6 +111,10 @@ const replicateCollection =
 
           return (conflicted as unknown as T[]).map((item) => ({
             ...item,
+            /**
+             * RxDB uses this to track deletions, we can't store the _value in
+             * our own data though as it creates conflicts
+             */
             _deleted: item.isDeleted || false,
           }))
         },
