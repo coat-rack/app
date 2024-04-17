@@ -1,0 +1,23 @@
+import { App } from "@repo/sdk"
+import { Button } from "@repo/ui/components/button"
+
+import "./styles.css"  
+
+export const {{ pascalCase name }}: App = {
+  /**
+   * Name of the app
+   */
+  name: "{{ kebabCase name }}",
+  /**
+   *  The Entrypoint for the app
+   */
+  Entry: () => {
+    return (<>
+        <h1 className="bg-red-500">Hello {{ name }}</h1>
+        <Button>Click Me</Button>
+      </>
+    )
+  },
+}
+
+export default {{ pascalCase name }} 
