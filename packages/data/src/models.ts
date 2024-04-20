@@ -53,7 +53,7 @@ export type Schema = z.infer<typeof Schema>
 export const Schema = z.object({
   spaces: Space,
   users: User,
-  appData: AppData,
+  appdata: AppData,
 })
 
 export type Push<T extends keyof Schema, S extends Schema[T]> = z.infer<

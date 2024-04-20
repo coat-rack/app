@@ -111,6 +111,10 @@ const replicateCollection =
 
           return (conflicted as unknown as T[]).map((item) => ({
             ...item,
+            /**
+             * RxDB uses this to track deletions, we can't store the _value in
+             * our own data though as it creates conflicts
+             */
             _deleted: item.isDeleted || false,
           }))
         },
@@ -159,7 +163,7 @@ export const setupUserDB = async (user: string) => {
 
   const replicate = replicateCollection(user, db)
 
-  const appDataCollection = await replicate("appData", appDataSchema)
+  const appDataCollection = await replicate("appdata", appDataSchema)
   const spacesCollection = await replicate("spaces", spaceSchema)
   return { db, spacesCollection, appDataCollection }
 }

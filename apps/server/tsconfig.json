@@ -10,7 +10,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "outDir": "dist",
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext"
   },
   "include": ["src"],
   "ts-node": {
