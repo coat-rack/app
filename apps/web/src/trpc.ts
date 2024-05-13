@@ -11,7 +11,7 @@ const config = {
   links: [
     loggerLink(),
     httpBatchLink({
-      url: "http://localhost:3000",
+      url: import.meta.env.VITE_SERVER_URL,
       // We can add additional things like auth headers, etc. here
     }),
   ],

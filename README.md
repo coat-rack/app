@@ -2,7 +2,23 @@
 
 ## Development
 
-Run `pnpm install` then `pnpm dev`
+Run `pnpm install` then `pnpm dev`, the development version runs on port 4000
+
+## Running PWA Build
+
+Since the intention of the application is to work offline, it's useful to be able to test this behaviour. Offline behavior can be tested using the preview command - this will build all of the catalog apps and run the main applications (`web` and `server`) in production mode.
+
+> Note that during preview changes will not automatically be rebuilt. If you need to test your changes you will need to stop and restart the process
+
+To run the preview do the following:
+
+1. Run `pnpm preview`
+2. Visit `http://localhost:4001` to view `web`
+3. Log into the app
+4. (If you are testing offline support) Open the network panel in your browser and swap the network throttling to `Offline` then refresh the page, the app should still be working - you should also be able to load apps using the "preview" version of each application
+5. (To clear your serviceworker cache) In your dev tools go to **Application > Storage** and check of all the options under the **Application** and **Storage** section and then click **Clear site data**
+
+You can then enable offline in your network tab after the first load of the web app
 
 ## Creating a catalog app
 

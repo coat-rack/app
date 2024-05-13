@@ -1,35 +1,10 @@
 import { z } from "zod"
 import { publicProcedure, router } from "./trpc"
 
-import { AppData, Push, Schema, Space, User } from "@repo/data/models"
+import { App, AppData, Push, Schema, Space, User } from "@repo/data/models"
 import { MultiFileTable } from "./db/multi-file-db"
 import { Table } from "./db/types"
 import { NonEmptyArray } from "./util"
-
-/**
- * Need to make this somehow managable and installable from the datbase. Not
- * doing this right now as it will add some complexity as we have not yet
- * determined how we will manage installations more generally
- **/
-interface App {
-  id: string
-  url: string
-}
-
-const apps: App[] = [
-  {
-    id: "sample-app",
-    url: "http://localhost:3000/catalog/sample-app/dist/index.mjs",
-  },
-  {
-    id: "tasks",
-    url: "http://localhost:3000/catalog/tasks/dist/index.mjs",
-  },
-  {
-    id: "kitchen-sink",
-    url: "http://localhost:3000/catalog/kitchen-sink/dist/index.mjs",
-  },
-]
 
 type DB = {
   [K in keyof Schema]: Table<string, Schema[K]>
@@ -41,6 +16,7 @@ const db: DB = {
   spaces: new MultiFileTable("./database/spaces"),
   users: new MultiFileTable("./database/users"),
   appdata: new MultiFileTable("./database/appData"),
+  apps: new MultiFileTable("./database/apps"),
 }
 
 type DBKey = keyof typeof db
@@ -79,6 +55,27 @@ const init = async () => {
     },
   ]
 
+  const apps: App[] = [
+    {
+      id: "sample-app",
+      url: "http://localhost:3000/catalog/sample-app/dist/index.mjs",
+      type: "app",
+      timestamp: Date.now(),
+    },
+    {
+      id: "tasks",
+      url: "http://localhost:3000/catalog/tasks/dist/index.mjs",
+      type: "app",
+      timestamp: Date.now(),
+    },
+    {
+      id: "kitchen-sink",
+      url: "http://localhost:3000/catalog/kitchen-sink/dist/index.mjs",
+      type: "app",
+      timestamp: Date.now(),
+    },
+  ]
+
   const existingUsers = await db.users.getAll()
   if (!existingUsers.length) {
     await db.users.putItems(users)
@@ -88,11 +85,25 @@ const init = async () => {
   if (!existingSpaces.length) {
     await db.spaces.putItems(spaces)
   }
+
+  const existingApps = await db.apps.getAll()
+  if (!existingApps.length) {
+    await db.apps.putItems(apps)
+  }
 }
 
 init()
 
 const username = z.string().regex(/^[a-z]+$/)
+
+/**
+ * Tables whose data is not scoped by user access
+ */
+type NonScopedTable = (typeof nonScopedTables)[number]
+
+const nonScopedTables = ["apps", "users"] as const satisfies (keyof DB)[]
+const isNonScopedTable = (key: keyof DB): key is NonScopedTable =>
+  (nonScopedTables as string[]).includes(key)
 
 /**
  * Implements handling for https://rxdb.info/replication-http.html
@@ -108,6 +119,17 @@ export const rxdbRouter = router({
       }),
     )
     .query(async ({ input }) => {
+      const collection = input.collection
+      const isNonScoped = isNonScopedTable(collection)
+
+      if (isNonScoped) {
+        const documents = await db[collection].getAll()
+        return {
+          documents,
+          checkpoint: db[collection].getCheckpoint(),
+        }
+      }
+
       const allSpaces = await db.spaces.getItems(0, Infinity)
       const userSpaces = allSpaces.filter(
         (space) =>
@@ -134,13 +156,7 @@ export const rxdbRouter = router({
     }),
 
   push: publicProcedure
-    .input(
-      z.union([
-        Push("spaces", Space),
-        Push("appdata", AppData),
-        Push("users", User),
-      ]),
-    )
+    .input(z.union([Push("spaces", Space), Push("appdata", AppData)]))
     .mutation(async ({ input }) => {
       const { conflicts } = await db[input.type].putItems(
         // Would be nice to not do this but I don't think the inference at this
@@ -225,7 +241,6 @@ export const appRouter = router({
 
         return user
       }),
-    getAll: publicProcedure.query(() => db.users.getItems(0, Infinity)),
   }),
   spaces: router({
     grantAccess: publicProcedure
@@ -252,11 +267,5 @@ export const appRouter = router({
           },
         ])
       }),
-  }),
-  apps: router({
-    list: publicProcedure.query(() => apps),
-    get: publicProcedure
-      .input(z.object({ id: z.string() }))
-      .query(({ input }) => apps.find((app) => app.id === input.id)),
   }),
 })

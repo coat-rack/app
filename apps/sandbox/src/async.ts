@@ -6,10 +6,11 @@ export const usePromise = <T>(
   deps: DependencyList = [],
 ) => {
   const [value, setValue] = useState<T>()
+  const [error, setError] = useState<unknown>()
 
   useEffect(() => {
-    task().then(setValue)
+    task().then(setValue).catch(setError)
   }, deps)
 
-  return value
+  return [value, error] as const
 }

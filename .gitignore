@@ -41,3 +41,6 @@ yarn-error.log*
 
 database.json
 database/
+
+# Generated Service Workers
+dev-dist/

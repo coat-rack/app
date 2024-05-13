@@ -84,12 +84,24 @@ function Sandbox() {
   const queryString = new URLSearchParams(window.location.search)
   const host = queryString.get("host") || undefined
   const url = queryString.get("url") || undefined
-  const app = useApp(url)
+  const [app, error] = useApp(url)
   const App = app?.Entry
 
   if (!host) {
     return null
   }
+
+  if (error) {
+    return (
+      <div>
+        <h1>Error Loading App</h1>
+        <p>
+          <code>{`${error}`}</code>
+        </p>
+      </div>
+    )
+  }
+
   const rpc = getApi()
 
   return App && <App db={rpc} />

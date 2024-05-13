@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "nodemon --watch src src/index.ts "
+    "dev": "nodemon --watch src src/index.ts",
+    "preview": "nodemon src/index.ts"
   },
   "keywords": [],
   "author": "",

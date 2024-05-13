@@ -11,7 +11,15 @@ const queryClient = new QueryClient()
 // Import the generated route tree
 
 // Create a new router instance
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  /** Currently the route will be loaded on hover but when supported we should
+   * be able to upgrade this to preload when in the viewport
+   *
+   * https://tanstack.com/router/v1/docs/framework/react/guide/preloading
+   */
+  defaultPreload: "intent",
+})
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

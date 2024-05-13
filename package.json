@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo build --concurrency 15",
     "dev": "turbo dev --concurrency 15",
+    "preview": "turbo build && turbo preview --concurrency 15",
     "lint": "turbo lint --concurrency 15",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate": "turbo gen"
