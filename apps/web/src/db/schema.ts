@@ -1,4 +1,4 @@
-import { App, AppData, KeyValue, Space } from "@repo/data/models"
+import { App, AppData, KeyValue, Space, User } from "@repo/data/models"
 import { PrimaryKey, RxJsonSchema } from "rxdb"
 import { type ZodType } from "zod"
 import { zodToJsonSchema } from "zod-to-json-schema"
@@ -21,3 +21,4 @@ export const metaSchema = inferRxJsonSchemaFromZod(KeyValue, 0)
 export const spaceSchema = inferRxJsonSchemaFromZod(Space, 0)
 export const appDataSchema = inferRxJsonSchemaFromZod(AppData, 0)
 export const appSchema = inferRxJsonSchemaFromZod(App, 0)
+export const userSchema = inferRxJsonSchemaFromZod(User, 0)

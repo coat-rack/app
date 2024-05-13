@@ -97,6 +97,15 @@ init()
 const username = z.string().regex(/^[a-z]+$/)
 
 /**
+ * Tables whose data is not scoped by user access
+ */
+type NonScopedTable = (typeof nonScopedTables)[number]
+
+const nonScopedTables = ["apps", "users"] as const satisfies (keyof DB)[]
+const isNonScopedTable = (key: keyof DB): key is NonScopedTable =>
+  (nonScopedTables as string[]).includes(key)
+
+/**
  * Implements handling for https://rxdb.info/replication-http.html
  */
 export const rxdbRouter = router({
@@ -110,6 +119,17 @@ export const rxdbRouter = router({
       }),
     )
     .query(async ({ input }) => {
+      const collection = input.collection
+      const isNonScoped = isNonScopedTable(collection)
+
+      if (isNonScoped) {
+        const documents = await db[collection].getAll()
+        return {
+          documents,
+          checkpoint: db[collection].getCheckpoint(),
+        }
+      }
+
       const allSpaces = await db.spaces.getItems(0, Infinity)
       const userSpaces = allSpaces.filter(
         (space) =>
@@ -120,15 +140,6 @@ export const rxdbRouter = router({
         return {
           checkpoint: db.spaces.getCheckpoint(),
           documents: userSpaces,
-        }
-      }
-
-      if (input.collection === "apps") {
-        const apps = await db.apps.getItems(0, Infinity)
-
-        return {
-          checkpoint: db.apps.getCheckpoint(),
-          documents: apps,
         }
       }
 
@@ -149,7 +160,6 @@ export const rxdbRouter = router({
       z.union([
         Push("spaces", Space),
         Push("appdata", AppData),
-        Push("users", User),
         Push("apps", App),
       ]),
     )
@@ -237,7 +247,6 @@ export const appRouter = router({
 
         return user
       }),
-    getAll: publicProcedure.query(() => db.users.getItems(0, Infinity)),
   }),
   spaces: router({
     grantAccess: publicProcedure
