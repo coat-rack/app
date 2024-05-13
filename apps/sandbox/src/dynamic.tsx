@@ -8,7 +8,7 @@ window["React"] = React
 window["ReactDOM"] = ReactDOM
 
 export const useApp = (url?: string) => {
-  const dynamic = usePromise(async () => {
+  const [dynamic, error] = usePromise(async () => {
     if (!url) {
       return undefined
     }
@@ -16,5 +16,5 @@ export const useApp = (url?: string) => {
     return import(url)
   }, [url])
 
-  return dynamic?.default as App | undefined
+  return [dynamic?.default as App | undefined, error] as const
 }
