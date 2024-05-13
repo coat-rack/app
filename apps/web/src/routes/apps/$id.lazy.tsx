@@ -9,7 +9,7 @@ export const Route = createLazyFileRoute("/apps/$id")({
 const PUBLIC_SPACE = "public"
 
 function Index() {
-  const sandboxHost = "http://localhost:5000" // TODO: this should be config
+  const sandboxHost = import.meta.env.VITE_SANDBOX_URL
   const { id } = Route.useParams()
 
   const { db } = useDatabase()
