@@ -22,10 +22,10 @@ export default defineConfig({
   build: {
     target: "esnext",
   },
-  preview: {
-    port: 5000,
-  },
   server: {
     port: 4000,
+  },
+  preview: {
+    port: 4001,
   },
 })

@@ -15,7 +15,7 @@ import { trpcClient } from "../trpc"
 import { RxDBUpdatePlugin } from "rxdb/plugins/update"
 import { map } from "rxjs"
 import { useObservable } from "../async"
-import { appDataSchema, metaSchema, spaceSchema } from "./schema"
+import { appDataSchema, appSchema, metaSchema, spaceSchema } from "./schema"
 
 // Enable Dev Mode - this allows us to be a little loose with schemas while we're still figuring things out
 addRxPlugin(RxDBDevModePlugin)
@@ -165,6 +165,7 @@ export const setupUserDB = async (user: string) => {
 
   const appDataCollection = await replicate("appdata", appDataSchema)
   const spacesCollection = await replicate("spaces", spaceSchema)
+  const appsCollection = await replicate("apps", appSchema)
   return { db, spacesCollection, appDataCollection }
 }
 

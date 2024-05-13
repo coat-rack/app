@@ -49,11 +49,17 @@ export const AppData = RowWithSpace("app-data").extend({
   data: z.any(),
 })
 
+export type App = z.infer<typeof App>
+export const App = Row("app").extend({
+  url: z.string(),
+})
+
 export type Schema = z.infer<typeof Schema>
 export const Schema = z.object({
   spaces: Space,
   users: User,
   appdata: AppData,
+  apps: App,
 })
 
 export type Push<T extends keyof Schema, S extends Schema[T]> = z.infer<

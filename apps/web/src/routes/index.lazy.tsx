@@ -1,14 +1,16 @@
 import { Link, createLazyFileRoute } from "@tanstack/react-router"
 
+import { useObservable } from "@/async"
+import { useDatabase } from "@/data"
 import { Layout } from "@/layout"
-import { trpcReact } from "@/trpc"
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 })
 
 function Index() {
-  const { data: apps } = trpcReact.apps.list.useQuery()
+  const { db } = useDatabase()
+  const apps = useObservable(db.apps.find({}).$)
 
   return (
     <Layout title="Home">

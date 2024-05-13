@@ -11,7 +11,7 @@ Since the intention of the application is to work offline, it's useful to be abl
 To run the preview do the following:
 
 1. Run `pnpm preview`
-2. Visit `http://localhost:5000` to view `web`
+2. Visit `http://localhost:4001` to view `web`
 3. Log into the app
 4. (If you are testing offline support) Open the network panel in your browser and swap the network throttling to `Offline` then refresh the page, the app should still be working
 5. (To clear your serviceworker cache) In your dev tools go to **Application > Storage** and check of all the options under the **Application** and **Storage** section and then click **Clear site data**
