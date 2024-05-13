@@ -156,13 +156,7 @@ export const rxdbRouter = router({
     }),
 
   push: publicProcedure
-    .input(
-      z.union([
-        Push("spaces", Space),
-        Push("appdata", AppData),
-        Push("apps", App),
-      ]),
-    )
+    .input(z.union([Push("spaces", Space), Push("appdata", AppData)]))
     .mutation(async ({ input }) => {
       const { conflicts } = await db[input.type].putItems(
         // Would be nice to not do this but I don't think the inference at this
