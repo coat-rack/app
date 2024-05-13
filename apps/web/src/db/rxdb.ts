@@ -166,7 +166,7 @@ export const setupUserDB = async (user: string) => {
   const appDataCollection = await replicate("appdata", appDataSchema)
   const spacesCollection = await replicate("spaces", spaceSchema)
   const appsCollection = await replicate("apps", appSchema)
-  return { db, spacesCollection, appDataCollection }
+  return { db, spacesCollection, appDataCollection, appsCollection }
 }
 
 export const setLocalUser = (username?: string) =>
