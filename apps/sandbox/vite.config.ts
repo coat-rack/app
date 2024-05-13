@@ -12,8 +12,33 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       strategies: "generateSW",
+      /**
+       * The Sandbox caches all URLs, this enables us to work offline in
+       * cases where we don't know what we're loading up. Effectively
+       * everything loaded here should be cached and managed by workbox
+       */
       workbox: {
+        /** Cache normal static assets */
         globPatterns: ["**"],
+        runtimeCaching: [
+          {
+            /**
+             * Runtime caching is needed to cache the data for dynamically
+             * loaded apps
+             *
+             * The `cachebaleResponse` config is needed to store cross-origin
+             * resources by workbox
+             */
+            handler: "StaleWhileRevalidate",
+            urlPattern: (_options) => true,
+            options: {
+              cacheName: "app-cache",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
       },
     }),
   ],
