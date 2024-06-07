@@ -1,27 +1,72 @@
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
+import { useObservable } from "./async"
 import { useDatabase } from "./data"
 
 type Props = PropsWithChildren<{
   title?: string
 }>
 
+const Navigation = ({
+  signOut,
+  title = "",
+  Links,
+  children,
+}: React.PropsWithChildren<{
+  Links?: React.ReactNode
+  signOut: () => void
+  title?: string
+}>) => (
+  <div
+    className="grid h-screen w-screen"
+    style={{
+      gridTemplateRows: "auto 1fr",
+      gridTemplateColumns: "auto 1fr",
+    }}
+  >
+    <nav className="col-span-2 row-auto flex flex-row justify-between bg-white p-2">
+      <div>{title}</div>
+      <button onClick={signOut}>Sign Out</button>
+    </nav>
+    <nav
+      className="col-span-1 flex flex-1 rotate-180 justify-between gap-4 bg-white"
+      style={{
+        writingMode: "vertical-rl",
+      }}
+    >
+      {Links}
+    </nav>
+
+    <main>{children}</main>
+  </div>
+)
+
 export const Layout = ({ title, children }: Props) => {
-  const { user, signOut } = useDatabase()
+  const { signOut, db } = useDatabase()
+  const apps = useObservable(db.apps.find({}).$)
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex flex-row justify-between">
-        <Link to="/">Home</Link>
-
-        <button onClick={signOut}>Sign out</button>
-      </div>
-      {title && <h1 className="font-title text-5xl">{title}</h1>}
-      <p>
-        <span>User: {user}</span>
-      </p>
-
-      <div>{children}</div>
-    </div>
+    <Navigation
+      signOut={signOut}
+      title={title}
+      Links={
+        <>
+          <Link to="/">Home</Link>
+          {apps?.map((app) => (
+            <Link
+              key={app.id}
+              to="/apps/$id"
+              params={{
+                id: app.id,
+              }}
+            >
+              {app.id}
+            </Link>
+          ))}
+        </>
+      }
+    >
+      {children}
+    </Navigation>
   )
 }

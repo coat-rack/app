@@ -1,12 +1,13 @@
 import { SynchronizedIframe } from "@/SynchronizedIFrame"
 import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
-import { Layout } from "@/layout"
 import { createLazyFileRoute } from "@tanstack/react-router"
+
+const PUBLIC_SPACE = "public"
+
 export const Route = createLazyFileRoute("/apps/$id")({
   component: Index,
 })
-const PUBLIC_SPACE = "public"
 
 function Index() {
   const sandboxHost = import.meta.env.VITE_SANDBOX_URL
@@ -19,12 +20,14 @@ function Index() {
         id,
       },
     }).$,
+    [id],
   )
 
   return (
-    <Layout title={app?.id || "Loading"}>
+    <div className="h-full w-full" id={id} key={id}>
       {app && (
         <SynchronizedIframe
+          className="h-full w-full"
           appId={app.id}
           appUrl={app.url}
           manifestUrl={app.manifestUrl}
@@ -32,6 +35,6 @@ function Index() {
           space={PUBLIC_SPACE}
         />
       )}
-    </Layout>
+    </div>
   )
 }

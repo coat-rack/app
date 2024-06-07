@@ -114,6 +114,7 @@ interface SynchronizedIframeProps {
   manifestUrl: string
   sandboxHost: string
   space: string
+  className?: string
 }
 
 export function SynchronizedIframe({
@@ -122,11 +123,18 @@ export function SynchronizedIframe({
   manifestUrl,
   sandboxHost,
   space,
+  className,
 }: SynchronizedIframeProps) {
   useIframeSynchronization(appId, sandboxHost, space)
   const url = `${sandboxHost}/?appUrl=${encodeURIComponent(
     appUrl,
   )}&manifestUrl=${encodeURIComponent(manifestUrl)}`
 
-  return <iframe src={url} referrerPolicy="strict-origin"></iframe>
+  return (
+    <iframe
+      className={className}
+      src={url}
+      referrerPolicy="strict-origin"
+    ></iframe>
+  )
 }
