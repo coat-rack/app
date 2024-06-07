@@ -26,7 +26,9 @@ export const useApp = (
       return undefined
     }
 
-    return (await fetch(manifestUrl)).json()
+    const response = await fetch(manifestUrl)
+    const result = (await response.json()) as Manifest
+    return result
   })
 
   if (errorManifest) {
@@ -37,9 +39,5 @@ export const useApp = (
     return [undefined, undefined, { type: "app", error: errorApp }]
   }
 
-  return [
-    dynamicApp?.default as App | undefined,
-    manifest?.default as Manifest | undefined,
-    undefined,
-  ] as const
+  return [dynamicApp?.default as App | undefined, manifest, undefined] as const
 }
