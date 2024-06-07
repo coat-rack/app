@@ -17,28 +17,28 @@ const Navigation = ({
   signOut: () => void
   title?: string
 }>) => (
-  <nav
+  <div
     className="grid h-screen w-screen"
     style={{
       gridTemplateRows: "auto 1fr",
       gridTemplateColumns: "auto 1fr",
     }}
   >
-    <section className="col-span-2 row-auto flex flex-row justify-between bg-white p-2">
+    <nav className="col-span-2 row-auto flex flex-row justify-between bg-white p-2">
       <div>{title}</div>
       <button onClick={signOut}>Sign Out</button>
-    </section>
-    <section
+    </nav>
+    <nav
       className="col-span-1 flex flex-1 rotate-180 justify-between gap-4 bg-white"
       style={{
         writingMode: "vertical-rl",
       }}
     >
       {Links}
-    </section>
+    </nav>
 
-    <div>{children}</div>
-  </nav>
+    <main>{children}</main>
+  </div>
 )
 
 export const Layout = ({ title, children }: Props) => {
