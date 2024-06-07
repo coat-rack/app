@@ -30,6 +30,7 @@ function Index() {
           className="h-full w-full"
           appId={app.id}
           appUrl={app.url}
+          manifestUrl={app.manifestUrl}
           sandboxHost={sandboxHost}
           space={PUBLIC_SPACE}
         />

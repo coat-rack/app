@@ -1,4 +1,4 @@
-import { App } from "@repo/sdk"
+import { App, Manifest } from "@repo/sdk"
 import React from "react"
 import ReactDOM from "react-dom"
 import { usePromise } from "./async"
@@ -7,14 +7,44 @@ import { usePromise } from "./async"
 window["React"] = React
 window["ReactDOM"] = ReactDOM
 
-export const useApp = (url?: string) => {
-  const [dynamic, error] = usePromise(async () => {
-    if (!url) {
+type AppError = { type: "manifest" | "app"; error: unknown }
+type AppResult = { app?: App; manifest?: Manifest }
+type UseAppResult = [result: AppResult, error?: AppError]
+export const useApp = (
+  entryPointUrl?: string,
+  manifestUrl?: string,
+): UseAppResult => {
+  const [app, appError] = usePromise(async () => {
+    if (!entryPointUrl) {
       return undefined
     }
 
-    return import(url)
-  }, [url])
+    return import(entryPointUrl)
+  }, [entryPointUrl])
 
-  return [dynamic?.default as App | undefined, error] as const
+  const [manifest, manifestError] = usePromise(async () => {
+    if (!manifestUrl) {
+      return undefined
+    }
+
+    const response = await fetch(manifestUrl)
+    if (!response.ok) {
+      throw `manifest is not ok: ${response.status}`
+    }
+    const result = await response.json()
+    return result as Manifest
+  })
+
+  if (manifestError) {
+    return [{}, { type: "manifest", error: manifestError }]
+  }
+
+  if (appError) {
+    return [{}, { type: "app", error: appError }]
+  }
+
+  return [
+    { app: app?.default as App | undefined, manifest },
+    undefined,
+  ] as const
 }

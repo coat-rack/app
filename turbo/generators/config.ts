@@ -8,6 +8,7 @@ const catalogAppFiles = [
   "vite.config.ts",
   "tailwind.config.ts",
   "postcss.config.js",
+  "public/manifest.json",
 ]
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {

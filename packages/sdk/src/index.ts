@@ -3,13 +3,16 @@ import React from "react"
 
 export interface App {
   /**
-   * Name of the app
-   */
-  name: string
-  /**
    *  The Entrypoint for the app
    */
   Entry: React.ComponentType<{ db: Db }>
+}
+
+export interface Manifest {
+  /**
+   * The name of the app
+   */
+  name: string
 }
 
 type PromiseArray<T> = Promise<Array<T>>
