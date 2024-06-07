@@ -52,6 +52,7 @@ export const AppData = RowWithSpace("app-data").extend({
 export type App = z.infer<typeof App>
 export const App = Row("app").extend({
   url: z.string(),
+  manifestUrl: z.string(),
 })
 
 export type Schema = z.infer<typeof Schema>

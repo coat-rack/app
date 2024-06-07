@@ -27,6 +27,7 @@ function Index() {
         <SynchronizedIframe
           appId={app.id}
           appUrl={app.url}
+          manifestUrl={app.manifestUrl}
           sandboxHost={sandboxHost}
           space={PUBLIC_SPACE}
         />

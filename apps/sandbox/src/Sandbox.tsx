@@ -24,9 +24,10 @@ function guidGenerator() {
 }
 
 const getApi = () => {
-  const queryString = new URLSearchParams(window.location.search)
-  // TODO: we probably need a more secure way of doing this
-  const host = queryString.get("host") || undefined
+  const host = document.referrer.slice(
+    0,
+    document.referrer.endsWith("/") ? -1 : 0,
+  )
   if (!host) {
     throw new Error("Couldn't determine host origin")
   }
@@ -82,21 +83,17 @@ const getApi = () => {
 
 function Sandbox() {
   const queryString = new URLSearchParams(window.location.search)
-  const host = queryString.get("host") || undefined
-  const url = queryString.get("url") || undefined
-  const [app, error] = useApp(url)
+  const appUrl = queryString.get("appUrl") || undefined
+  const manifestUrl = queryString.get("manifestUrl") || undefined
+  const [app, manifest, error] = useApp(appUrl, manifestUrl)
   const App = app?.Entry
-
-  if (!host) {
-    return null
-  }
 
   if (error) {
     return (
       <div>
         <h1>Error Loading App</h1>
         <p>
-          <code>{`${error}`}</code>
+          <code>{`${JSON.stringify(error)}`}</code>
         </p>
       </div>
     )
