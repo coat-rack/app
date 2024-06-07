@@ -54,7 +54,6 @@ export const Layout = ({ title, children }: Props) => {
           <Link to="/">Home</Link>
           {apps?.map((app) => (
             <Link
-              onClick={(e) => console.log(e, app.id)}
               key={app.id}
               to="/apps/$id"
               params={{
