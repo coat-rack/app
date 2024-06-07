@@ -88,7 +88,7 @@ function getAppUrlsFromQueryString() {
 
 function Sandbox() {
   const [appUrl, manifestUrl] = getAppUrlsFromQueryString()
-  const [app, _manifest, error] = useApp(appUrl, manifestUrl)
+  const [{ app }, error] = useApp(appUrl, manifestUrl)
   const App = app?.Entry
 
   if (error) {

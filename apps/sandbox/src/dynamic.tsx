@@ -7,13 +7,14 @@ import { usePromise } from "./async"
 window["React"] = React
 window["ReactDOM"] = ReactDOM
 
-type UseAppError = { type: "manifest" | "app"; error: unknown }
-
+type AppError = { type: "manifest" | "app"; error: unknown }
+type AppResult = { app?: App; manifest?: Manifest }
+type UseAppResult = [result: AppResult, error?: AppError]
 export const useApp = (
   entryPointUrl?: string,
   manifestUrl?: string,
-): [App | undefined, Manifest | undefined, UseAppError | undefined] => {
-  const [dynamicApp, errorApp] = usePromise(async () => {
+): UseAppResult => {
+  const [app, appError] = usePromise(async () => {
     if (!entryPointUrl) {
       return undefined
     }
@@ -21,23 +22,29 @@ export const useApp = (
     return import(entryPointUrl)
   }, [entryPointUrl])
 
-  const [manifest, errorManifest] = usePromise(async () => {
+  const [manifest, manifestError] = usePromise(async () => {
     if (!manifestUrl) {
       return undefined
     }
 
     const response = await fetch(manifestUrl)
-    const result = (await response.json()) as Manifest
-    return result
+    if (!response.ok) {
+      throw `manifest is not ok: ${response.status}`
+    }
+    const result = await response.json()
+    return result as Manifest
   })
 
-  if (errorManifest) {
-    return [undefined, undefined, { type: "manifest", error: errorManifest }]
+  if (manifestError) {
+    return [{}, { type: "manifest", error: manifestError }]
   }
 
-  if (errorApp) {
-    return [undefined, undefined, { type: "app", error: errorApp }]
+  if (appError) {
+    return [{}, { type: "app", error: appError }]
   }
 
-  return [dynamicApp?.default as App | undefined, manifest, undefined] as const
+  return [
+    { app: app?.default as App | undefined, manifest },
+    undefined,
+  ] as const
 }
