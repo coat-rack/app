@@ -61,18 +61,23 @@ const init = async () => {
       url: "http://localhost:3000/catalog/sample-app/dist/index.mjs",
       type: "app",
       timestamp: Date.now(),
+      manifestUrl:
+        "http://localhost:3000/catalog/sample-app/dist/manifest.json",
     },
     {
       id: "tasks",
       url: "http://localhost:3000/catalog/tasks/dist/index.mjs",
       type: "app",
       timestamp: Date.now(),
+      manifestUrl: "http://localhost:3000/catalog/tasks/dist/manifest.json",
     },
     {
       id: "kitchen-sink",
       url: "http://localhost:3000/catalog/kitchen-sink/dist/index.mjs",
       type: "app",
       timestamp: Date.now(),
+      manifestUrl:
+        "http://localhost:3000/catalog/kitchen-sink/dist/manifest.json",
     },
   ]
 

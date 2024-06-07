@@ -24,9 +24,7 @@ function guidGenerator() {
 }
 
 const getApi = () => {
-  const queryString = new URLSearchParams(window.location.search)
-  // TODO: we probably need a more secure way of doing this
-  const host = queryString.get("host") || undefined
+  const host = document.referrer.replace(/\/$/, "")
   if (!host) {
     throw new Error("Couldn't determine host origin")
   }
@@ -80,23 +78,25 @@ const getApi = () => {
   return constructRpcProxy(api)
 }
 
-function Sandbox() {
+function getAppUrlsFromQueryString() {
   const queryString = new URLSearchParams(window.location.search)
-  const host = queryString.get("host") || undefined
-  const url = queryString.get("url") || undefined
-  const [app, error] = useApp(url)
-  const App = app?.Entry
+  const appUrl = queryString.get("appUrl") || undefined
+  const manifestUrl = queryString.get("manifestUrl") || undefined
 
-  if (!host) {
-    return null
-  }
+  return [appUrl, manifestUrl]
+}
+
+function Sandbox() {
+  const [appUrl, manifestUrl] = getAppUrlsFromQueryString()
+  const [{ app }, error] = useApp(appUrl, manifestUrl)
+  const App = app?.Entry
 
   if (error) {
     return (
       <div>
         <h1>Error Loading App</h1>
         <p>
-          <code>{`${error}`}</code>
+          <code>{`${JSON.stringify(error, null, 2)}`}</code>
         </p>
       </div>
     )
