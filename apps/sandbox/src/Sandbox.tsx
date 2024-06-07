@@ -85,7 +85,7 @@ function Sandbox() {
   const queryString = new URLSearchParams(window.location.search)
   const appUrl = queryString.get("appUrl") || undefined
   const manifestUrl = queryString.get("manifestUrl") || undefined
-  const [app, manifest, error] = useApp(appUrl, manifestUrl)
+  const [app, _manifest, error] = useApp(appUrl, manifestUrl)
   const App = app?.Entry
 
   if (error) {
