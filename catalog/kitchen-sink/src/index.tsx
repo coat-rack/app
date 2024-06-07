@@ -15,7 +15,7 @@ export const Tasks: App = {
    */
   Entry: () => {
     return (
-      <div className="flex flex-col gap-6 p-4">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-4">
           <h1>Button</h1>
 

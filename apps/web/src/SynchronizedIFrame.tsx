@@ -113,6 +113,7 @@ interface SynchronizedIframeProps {
   appUrl: string
   sandboxHost: string
   space: string
+  className?: string
 }
 
 export function SynchronizedIframe({
@@ -120,6 +121,7 @@ export function SynchronizedIframe({
   appUrl,
   sandboxHost,
   space,
+  className,
 }: SynchronizedIframeProps) {
   useIframeSynchronization(appId, sandboxHost, space)
   const host = window.location.origin
@@ -127,5 +129,5 @@ export function SynchronizedIframe({
     host,
   )}&url=${encodeURIComponent(appUrl)}`
 
-  return <iframe src={url}></iframe>
+  return <iframe className={className} src={url}></iframe>
 }

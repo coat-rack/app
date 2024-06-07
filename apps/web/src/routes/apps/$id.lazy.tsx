@@ -25,6 +25,7 @@ function Index() {
     <Layout title={app?.id || "Loading"}>
       {app && (
         <SynchronizedIframe
+          className="h-full w-full"
           appId={app.id}
           appUrl={app.url}
           sandboxHost={sandboxHost}
