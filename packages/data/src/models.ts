@@ -75,3 +75,12 @@ export const Push = <T extends keyof Schema, S extends Schema[T]>(
     changes: Schema.array(),
     deletes: Schema.array(),
   })
+
+export type Manifest = z.infer<typeof Manifest>
+
+export const Manifest = z.object({
+  name: z.string(),
+  id: z.string(),
+  version: z.string(),
+  timestamp: z.number(),
+})

@@ -1,3 +1,6 @@
 {
-  "name": "sample-app"
+  "name": "sample-app",
+  "id": "sample-app",
+  "version": "0.0.0",
+  "timestamp": 1718541294906
 }

@@ -8,6 +8,7 @@ import cors from "cors"
 import express from "express"
 import { resolve } from "path"
 import { db } from "./db"
+import { watchAppDirectory } from "./sync-apps"
 
 const app = express()
 
@@ -30,4 +31,7 @@ app.use(
 
 app.listen(3000, () => {
   console.info("Server started on port 3000")
+  watchAppDirectory(catalog, db.apps, (changes) => {
+    console.log("got changes!", changes)
+  })
 })

@@ -21,10 +21,15 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         message: "What is the name of the app?",
       },
     ],
+
     actions: catalogAppFiles.map((file) => ({
       type: "add",
       path: `catalog/{{ kebabCase name }}/${file}`,
       templateFile: `catalog-app/${file}.hbs`,
+      data: {
+        timestamp: Date.now(),
+        version: "0.0.0",
+      },
     })),
   })
 }

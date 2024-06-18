@@ -1,18 +1,11 @@
 import { AppData } from "@repo/data/models"
 import React from "react"
-
+export type { Manifest } from "@repo/data/models"
 export interface App {
   /**
    *  The Entrypoint for the app
    */
   Entry: React.ComponentType<{ db: Db }>
-}
-
-export interface Manifest {
-  /**
-   * The name of the app
-   */
-  name: string
 }
 
 type PromiseArray<T> = Promise<Array<T>>
