@@ -69,6 +69,22 @@ export const Tasks: App = {
         </div>
 
         <div className="flex flex-col gap-4">
+          <h1>Input</h1>
+
+          <div className="flex flex-row items-center gap-2">
+            <Input />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h1>Textarea</h1>
+
+          <div className="flex flex-row items-center gap-2">
+            <Textarea />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
           <h1>Radio Group</h1>
 
           <div className="flex flex-row gap-2">
@@ -96,27 +112,32 @@ export const Tasks: App = {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h1>Alert Dialog</h1>
+          <h1>Select</h1>
 
           <div className="flex flex-row items-center gap-2">
-            <AlertDialog>
-              <AlertDialogTrigger>Open</AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                </AlertDialogHeader>
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Theme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="system">System</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </AlertDialogDescription>
+        <div className="flex flex-col gap-4">
+          <h1>Calendar</h1>
 
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+          <div className="flex flex-row items-center gap-2">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              className="rounded-md border"
+            />
           </div>
         </div>
 
@@ -158,19 +179,6 @@ export const Tasks: App = {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h1>Calendar</h1>
-
-          <div className="flex flex-row items-center gap-2">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              className="rounded-md border"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
           <h1>Sonner</h1>
 
           <div className="flex flex-row items-center gap-2">
@@ -192,44 +200,13 @@ export const Tasks: App = {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h1>Input</h1>
-
-          <div className="flex flex-row items-center gap-2">
-            <Input />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <h1>Textarea</h1>
-
-          <div className="flex flex-row items-center gap-2">
-            <Textarea />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <h1>Select</h1>
-
-          <div className="flex flex-row items-center gap-2">
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Theme" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
           <h1>Dialog</h1>
 
           <div className="flex flex-row items-center gap-2">
             <Dialog>
-              <DialogTrigger>Open</DialogTrigger>
+              <DialogTrigger asChild>
+                <Button>Open Dialog</Button>
+              </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -240,6 +217,33 @@ export const Tasks: App = {
                 </DialogHeader>
               </DialogContent>
             </Dialog>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h1>Alert Dialog</h1>
+
+          <div className="flex flex-row items-center gap-2">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button>Open Alert Dialog</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                </AlertDialogHeader>
+
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </AlertDialogDescription>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>
