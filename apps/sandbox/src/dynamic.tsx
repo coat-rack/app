@@ -19,7 +19,7 @@ export const useApp = (
       return undefined
     }
 
-    return import(entryPointUrl)
+    return import(/* @vite-ignore */ entryPointUrl)
   }, [entryPointUrl])
 
   const [manifest, manifestError] = usePromise(async () => {

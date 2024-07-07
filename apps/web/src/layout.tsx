@@ -1,3 +1,4 @@
+import { Button } from "@repo/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
 import { useObservable } from "./async"
@@ -18,7 +19,7 @@ const Navigation = ({
   title?: string
 }>) => (
   <div
-    className="grid h-screen w-screen"
+    className="relative grid h-screen w-screen"
     style={{
       gridTemplateRows: "auto 1fr",
       gridTemplateColumns: "auto 1fr",
@@ -26,7 +27,9 @@ const Navigation = ({
   >
     <nav className="col-span-2 row-auto flex flex-row justify-between bg-white p-2">
       <div>{title}</div>
-      <button onClick={signOut}>Sign Out</button>
+      <Button variant="ghost" size="sm" onClick={signOut}>
+        sign out
+      </Button>
     </nav>
     <nav
       className="col-span-1 flex flex-1 rotate-180 justify-between gap-4 bg-white"
@@ -51,17 +54,21 @@ export const Layout = ({ title, children }: Props) => {
       title={title}
       Links={
         <>
-          <Link to="/">Home</Link>
+          <Button asChild variant="link" size="sm">
+            <Link to="/">Home</Link>
+          </Button>
           {apps?.map((app) => (
-            <Link
-              key={app.id}
-              to="/apps/$id"
-              params={{
-                id: app.id,
-              }}
-            >
-              {app.id}
-            </Link>
+            <Button asChild variant="link" size="sm">
+              <Link
+                key={app.id}
+                to="/apps/$id"
+                params={{
+                  id: app.id,
+                }}
+              >
+                {app.id}
+              </Link>
+            </Button>
           ))}
         </>
       }
