@@ -25,14 +25,14 @@ const Navigation = ({
       gridTemplateColumns: "auto 1fr",
     }}
   >
-    <nav className="col-span-2 row-auto flex flex-row justify-between bg-white p-2">
+    <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2">
       <div>{title}</div>
       <Button variant="ghost" size="sm" onClick={signOut}>
         sign out
       </Button>
     </nav>
     <nav
-      className="col-span-1 flex flex-1 rotate-180 justify-between gap-4 bg-white"
+      className="bg-background col-span-1 flex flex-1 rotate-180 justify-between gap-4"
       style={{
         writingMode: "vertical-rl",
       }}

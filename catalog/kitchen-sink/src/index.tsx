@@ -47,6 +47,9 @@ import {
 import { Toaster, toast } from "@repo/ui/components/sonner"
 import { Textarea } from "@repo/ui/components/textarea"
 import { useState } from "react"
+
+import { ChartConfig, ChartContainer } from "@repo/ui/components/chart"
+import { Bar, BarChart, Legend } from "recharts"
 import "./styles.css"
 
 export const Tasks: App = {
@@ -55,6 +58,26 @@ export const Tasks: App = {
    */
   Entry: () => {
     const [date, setDate] = useState<Date | undefined>(new Date())
+
+    const chartData = [
+      { month: "January", desktop: 186, mobile: 80 },
+      { month: "February", desktop: 305, mobile: 200 },
+      { month: "March", desktop: 237, mobile: 120 },
+      { month: "April", desktop: 73, mobile: 190 },
+      { month: "May", desktop: 209, mobile: 130 },
+      { month: "June", desktop: 214, mobile: 140 },
+    ]
+
+    const chartConfig = {
+      desktop: {
+        label: "Desktop",
+        color: "hsl(var(--chart-1))",
+      },
+      mobile: {
+        label: "Mobile",
+        color: "hsl(var(--chart-2))",
+      },
+    } satisfies ChartConfig
 
     return (
       <div className="flex flex-col gap-4">
@@ -244,6 +267,32 @@ export const Tasks: App = {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h1>Chart</h1>
+
+          <div className="flex flex-row items-center gap-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Example Chart</CardTitle>
+                <CardDescription>Data rendered using recharts</CardDescription>
+              </CardHeader>
+
+              <CardContent>
+                <ChartContainer
+                  config={chartConfig}
+                  className="min-h-[200px] w-full"
+                >
+                  <BarChart accessibilityLayer data={chartData}>
+                    <Legend verticalAlign="top" align="right" />
+                    <Bar dataKey="desktop" fill="var(--color-desktop)" />
+                    <Bar dataKey="mobile" fill="var(--color-mobile)" />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
