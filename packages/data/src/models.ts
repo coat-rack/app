@@ -83,4 +83,5 @@ export const Manifest = z.object({
   id: z.string(),
   version: z.string(),
   timestamp: z.number(),
+  port: z.number(),
 })

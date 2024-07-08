@@ -9,6 +9,7 @@ const MANIFEST_NAME = "manifest.json"
 type ManifestSyncResult = {
   appId: string
   changeType: "new" | "update" | "remove" | "none"
+  manifest: Manifest | undefined
 }
 
 async function syncManifest(
@@ -47,6 +48,7 @@ async function syncManifest(
     return {
       appId: manifest.id,
       changeType: "new",
+      manifest,
     }
   } else {
     console.log(
@@ -59,12 +61,14 @@ async function syncManifest(
       return {
         appId: manifest.id,
         changeType: "update",
+        manifest,
       }
     }
   }
   return {
     appId: manifest.id,
     changeType: "none",
+    manifest,
   }
 }
 
