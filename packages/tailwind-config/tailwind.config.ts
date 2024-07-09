@@ -17,6 +17,10 @@ const config: Omit<Config, "content"> = {
       sans: ["var(--font-sans)", ...fontFamily.sans],
     },
     extend: {
+      boxShadow: {
+        retro: "4px 4px 0px black",
+        "retro-lg": "8px 8px 0px black",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

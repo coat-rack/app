@@ -21,6 +21,7 @@
     "@repo/ui": "workspace:*",
     "@rollup/plugin-replace": "^5.0.5",
     "@vitejs/plugin-react": "^4.2.1",
+    "recharts": "^2.12.7",
     "rollup-plugin-external-globals": "^0.9.2",
     "tailwindcss": "^3.4.1",
     "vite": "^5.0.8",
