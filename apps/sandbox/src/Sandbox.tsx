@@ -78,12 +78,23 @@ const getApi = () => {
   return constructRpcProxy(api)
 }
 
+const MANIFEST_FILE = "manifest.json"
+const INDEX_FILE = "index.mjs"
+
 function getAppUrlsFromQueryString() {
   const queryString = new URLSearchParams(window.location.search)
-  const appUrl = queryString.get("appUrl") || undefined
-  const manifestUrl = queryString.get("manifestUrl") || undefined
+  const appUrl = queryString.get("appUrl")
 
-  return [appUrl, manifestUrl]
+  if (!appUrl) {
+    throw new Error("App URL is not defined")
+  }
+
+  const baseUrl = new URL(appUrl)
+
+  const manifestUrl = new URL(MANIFEST_FILE, baseUrl)
+  const indexUrl = new URL(INDEX_FILE, baseUrl)
+
+  return [indexUrl, manifestUrl]
 }
 
 function Sandbox() {

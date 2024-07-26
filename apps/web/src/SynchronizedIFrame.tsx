@@ -109,9 +109,7 @@ function useIframeSynchronization(
 
 interface SynchronizedIframeProps {
   appId: string
-  // TODO: maybe make these URLs
-  appUrl: string
-  manifestUrl: string
+  appUrl: URL
   sandboxHost: string
   space: string
   className?: string
@@ -120,15 +118,12 @@ interface SynchronizedIframeProps {
 export function SynchronizedIframe({
   appId,
   appUrl,
-  manifestUrl,
   sandboxHost,
   space,
   className,
 }: SynchronizedIframeProps) {
   useIframeSynchronization(appId, sandboxHost, space)
-  const url = `${sandboxHost}/?appUrl=${encodeURIComponent(
-    appUrl,
-  )}&manifestUrl=${encodeURIComponent(manifestUrl)}`
+  const url = `${sandboxHost}/?appUrl=${encodeURIComponent(appUrl.toString())}`
 
   return (
     <iframe

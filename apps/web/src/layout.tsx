@@ -58,9 +58,8 @@ export const Layout = ({ title, children }: Props) => {
             <Link to="/">Home</Link>
           </Button>
           {apps?.map((app) => (
-            <Button asChild variant="link" size="sm">
+            <Button asChild variant="link" size="sm" key={app.id}>
               <Link
-                key={app.id}
                 to="/apps/$id"
                 params={{
                   id: app.id,

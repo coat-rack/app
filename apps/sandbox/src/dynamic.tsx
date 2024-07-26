@@ -11,16 +11,16 @@ type AppError = { type: "manifest" | "app"; error: unknown }
 type AppResult = { app?: App; manifest?: Manifest }
 type UseAppResult = [result: AppResult, error?: AppError]
 export const useApp = (
-  entryPointUrl?: string,
-  manifestUrl?: string,
+  entryPointUrl?: URL,
+  manifestUrl?: URL,
 ): UseAppResult => {
   const [app, appError] = usePromise(async () => {
     if (!entryPointUrl) {
       return undefined
     }
 
-    return import(/* @vite-ignore */ entryPointUrl)
-  }, [entryPointUrl])
+    return import(/* @vite-ignore */ entryPointUrl.toString())
+  }, [entryPointUrl?.toString()])
 
   const [manifest, manifestError] = usePromise(async () => {
     if (!manifestUrl) {
@@ -33,7 +33,7 @@ export const useApp = (
     }
     const result = await response.json()
     return result as Manifest
-  })
+  }, [manifestUrl?.toString()])
 
   if (manifestError) {
     return [{}, { type: "manifest", error: manifestError }]

@@ -1,19 +1,14 @@
 import { PropsWithChildren, createContext, useContext, useState } from "react"
-import { RxDatabase } from "rxdb"
 import { usePromise } from "./async"
-import {
-  SyncedRxSchema,
-  setLocalUser,
-  setupUserDB,
-  useLocalUser,
-} from "./db/rxdb"
+import { setLocalUser, setupUserDB, useLocalUser } from "./db/rxdb"
 import { trpcClient } from "./trpc"
 
 import { Button } from "@repo/ui/components/button"
 
-interface Context {
+type ConfiguredDB = Awaited<ReturnType<typeof setupUserDB>>
+
+interface Context extends ConfiguredDB {
   user: string
-  db: RxDatabase<SyncedRxSchema>
   signOut: () => void
 }
 
@@ -91,8 +86,6 @@ export const DatabaseProvider = ({ children }: PropsWithChildren) => {
     return <LoginScreen onLogin={login} />
   }
 
-  const { db } = dbSetup
-
   const signOut = () => {
     // For now we're just logging out the user but we may want to cleanup the DB here in the future
     setLocalUser(undefined)
@@ -101,8 +94,8 @@ export const DatabaseProvider = ({ children }: PropsWithChildren) => {
   return (
     <Context.Provider
       value={{
+        ...dbSetup,
         user,
-        db,
         signOut,
       }}
     >
