@@ -8,18 +8,15 @@ const catalogDirName = "catalog"
 const manifestFileName = "manifest.json"
 const indexFileName = "index.mjs"
 
-async function ensureCatalogFolder(rootDir: string) {
-  const catalogDir = path.join(rootDir, catalogDirName)
-
-  if (!existsSync(catalogDir)) {
-    await mkdir(catalogDir, { recursive: true })
+async function ensureFolder(dir: string) {
+  if (!existsSync(dir)) {
+    await mkdir(dir, { recursive: true })
   }
 }
 
 export async function addToCatalog(rootDir: string, url: URL) {
-  await ensureCatalogFolder(rootDir)
-
   const destDir = path.join(rootDir, catalogDirName)
+  await ensureFolder(destDir)
 
   const manifestUrl = new URL(manifestFileName, url)
   const jsUrl = new URL(indexFileName, url)
@@ -31,13 +28,12 @@ export async function addToCatalog(rootDir: string, url: URL) {
   const [manifest, index] = await Promise.all([manifestTask, jsTask])
 
   const name = manifest.name
+  const appDir = path.join(destDir, name)
+  await ensureFolder(appDir)
 
   await Promise.all([
-    writeFile(
-      path.join(destDir, name, manifestFileName),
-      JSON.stringify(manifest),
-    ),
-    writeFile(path.join(destDir, name, indexFileName), index),
+    writeFile(path.join(appDir, manifestFileName), JSON.stringify(manifest)),
+    writeFile(path.join(appDir, indexFileName), index),
   ])
 
   return manifest

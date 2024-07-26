@@ -5,6 +5,7 @@ import cors from "cors"
 
 import express from "express"
 import { resolve } from "path"
+import serveIndex from "serve-index"
 import { initDb } from "./db"
 
 async function main() {
@@ -16,11 +17,13 @@ async function main() {
   const db = initDb(root)
   await seedDb(db)
 
-  // app.use(
-  //   "/catalog",
-  //   express.static(catalog, {}),
-  //   serveIndex(catalog, { icons: true }),
-  // )
+  // delete me!
+  const oldCatalogDir = resolve(__dirname, "../../../catalog")
+  app.use(
+    "/catalog",
+    express.static(oldCatalogDir, {}),
+    serveIndex(oldCatalogDir, { icons: true }),
+  )
 
   app.use(
     "/",

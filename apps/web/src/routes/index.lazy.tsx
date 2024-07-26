@@ -2,6 +2,10 @@ import { Link, createLazyFileRoute } from "@tanstack/react-router"
 
 import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
+import { trpcClient } from "@/trpc"
+import { Button } from "@repo/ui/components/button"
+import { Input } from "@repo/ui/components/input"
+import { useState } from "react"
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -10,6 +14,12 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   const { db } = useDatabase()
   const apps = useObservable(db.apps.find({}).$)
+  const [url, setUrl] = useState("")
+  const installApp = async () => {
+    const result = await trpcClient.apps.install.mutate(url)
+    setUrl("")
+    console.log(result)
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -18,6 +28,11 @@ function Index() {
         <div className="flex flex-col gap-1">
           <Link to="/spaces">Spaces</Link>
         </div>
+      </div>
+
+      <div>
+        <Input value={url} onChange={(ev) => setUrl(ev.target.value)}></Input>
+        <Button onClick={installApp}>Install app</Button>
       </div>
 
       <div>
