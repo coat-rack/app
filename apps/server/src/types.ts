@@ -1,3 +1,3 @@
 import { appRouter } from "./router"
 
-export type AppRouter = typeof appRouter
+export type AppRouter = ReturnType<typeof appRouter>

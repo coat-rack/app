@@ -7,7 +7,7 @@ import cors from "cors"
 
 import express from "express"
 import { resolve } from "path"
-
+import { db } from "./db"
 const app = express()
 
 app.use(cors())
@@ -23,7 +23,7 @@ app.use(
 app.use(
   "/",
   trpcExpress.createExpressMiddleware({
-    router: appRouter,
+    router: appRouter(db),
   }),
 )
 
