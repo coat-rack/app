@@ -1,27 +1,9 @@
+import { App, AppData, Push, Space, User } from "@repo/data/models"
 import { z } from "zod"
+import { DB, db, dbKeys } from "./db"
 import { publicProcedure, router } from "./trpc"
 
-import { App, AppData, Push, Schema, Space, User } from "@repo/data/models"
-import { MultiFileTable } from "./db/multi-file-db"
-import { Table } from "./db/types"
-import { NonEmptyArray } from "./util"
-
-type DB = {
-  [K in keyof Schema]: Table<string, Schema[K]>
-}
-
 const PUBLIC_SPACE_ID = "public"
-
-const db: DB = {
-  spaces: new MultiFileTable("./database/spaces"),
-  users: new MultiFileTable("./database/users"),
-  appdata: new MultiFileTable("./database/appData"),
-  apps: new MultiFileTable("./database/apps"),
-}
-
-type DBKey = keyof typeof db
-
-const dbKeys = Object.keys(db) as NonEmptyArray<DBKey>
 
 const init = async () => {
   const spaces: Space[] = [
@@ -186,91 +168,92 @@ export const rxdbRouter = router({
   }),
 })
 
-export const appRouter = router({
-  rxdb: rxdbRouter,
-  users: router({
-    login: publicProcedure
-      .input(
-        z.object({
-          name: username,
+export const appRouter = (db: DB) =>
+  router({
+    rxdb: rxdbRouter,
+    users: router({
+      login: publicProcedure
+        .input(
+          z.object({
+            name: username,
+          }),
+        )
+        .query(async ({ input }) => {
+          const users = await db.users.getAll()
+          console.log({ users })
+          return users.find((user) => user.name === input.name)
         }),
-      )
-      .query(async ({ input }) => {
-        const users = await db.users.getAll()
-        console.log({ users })
-        return users.find((user) => user.name === input.name)
-      }),
-    create: publicProcedure
-      .input(
-        z.object({
-          name: username,
-        }),
-      )
-      .mutation(async ({ input }) => {
-        const id = input.name.toLowerCase()
+      create: publicProcedure
+        .input(
+          z.object({
+            name: username,
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const id = input.name.toLowerCase()
 
-        const user: User = {
-          id,
-          name: id,
-          timestamp: Date.now(),
-          type: "user",
-        }
-
-        const users = await db.users.getItems(0, Infinity)
-        const existing = users.find((u) => u.id === id)
-        if (existing) {
-          return existing
-        }
-
-        await db.users.putItems([user])
-        await db.spaces.putItems([
-          {
-            type: "space",
-            id: user.id,
-            name: user.name,
-            owner: user.id,
-            spaceType: "user",
+          const user: User = {
+            id,
+            name: id,
             timestamp: Date.now(),
-          },
-        ])
+            type: "user",
+          }
 
-        const publicSpace = await db.spaces.get(PUBLIC_SPACE_ID)
-        if (publicSpace && publicSpace.spaceType === "shared") {
+          const users = await db.users.getItems(0, Infinity)
+          const existing = users.find((u) => u.id === id)
+          if (existing) {
+            return existing
+          }
+
+          await db.users.putItems([user])
           await db.spaces.putItems([
             {
-              ...publicSpace,
-              users: [...(publicSpace.users || []), user.id],
+              type: "space",
+              id: user.id,
+              name: user.name,
+              owner: user.id,
+              spaceType: "user",
+              timestamp: Date.now(),
             },
           ])
-        }
 
-        return user
-      }),
-  }),
-  spaces: router({
-    grantAccess: publicProcedure
-      .input(
-        z.object({
-          spaceId: z.string(),
-          toUserId: z.string(),
+          const publicSpace = await db.spaces.get(PUBLIC_SPACE_ID)
+          if (publicSpace && publicSpace.spaceType === "shared") {
+            await db.spaces.putItems([
+              {
+                ...publicSpace,
+                users: [...(publicSpace.users || []), user.id],
+              },
+            ])
+          }
+
+          return user
         }),
-      )
-      .mutation(async ({ input }) => {
-        const foundSpace = await db.spaces.get(input.spaceId)
-        if (!foundSpace) {
-          throw new Error("Space does not exist")
-        }
+    }),
+    spaces: router({
+      grantAccess: publicProcedure
+        .input(
+          z.object({
+            spaceId: z.string(),
+            toUserId: z.string(),
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const foundSpace = await db.spaces.get(input.spaceId)
+          if (!foundSpace) {
+            throw new Error("Space does not exist")
+          }
 
-        if (foundSpace.spaceType !== "shared") {
-          throw new Error("Cannot grant access to a non-shared space")
-        }
+          if (foundSpace.spaceType !== "shared") {
+            throw new Error("Cannot grant access to a non-shared space")
+          }
 
-        await db.spaces.putItems([
-          {
-            ...foundSpace,
-            users: [...(foundSpace.users || []), input.toUserId],
-          },
-        ])
-      }),
-  }),
-})
+          await db.spaces.putItems([
+            {
+              ...foundSpace,
+              users: [...(foundSpace.users || []), input.toUserId],
+            },
+          ])
+        }),
+    }),
+  })
