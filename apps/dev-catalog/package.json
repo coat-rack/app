@@ -1,0 +1,15 @@
+{
+  "name": "dev-catalog",
+  "version": "1.0.0",
+  "description": "Serves the catalog directory so local apps can be installed",
+  "scripts": {
+    "serve": "serve",
+    "dev": "serve ../../catalog -p 3005"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serve": "^14.2.3"
+  }
+}

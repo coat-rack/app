@@ -1,4 +1,11 @@
-import { App, AppData, Push, Space, User } from "@repo/data/models"
+import {
+  App,
+  AppData,
+  appPortRange,
+  Push,
+  Space,
+  User,
+} from "@repo/data/models"
 import { z } from "zod"
 import { DB, dbKeys } from "./db"
 import { addToCatalog } from "./persistence/fs"
@@ -43,6 +50,7 @@ export const seedDb = async (db: DB) => {
       id: "kitchen-sink",
       type: "app",
       timestamp: Date.now(),
+      port: 40_000,
     },
   ]
 
@@ -109,6 +117,15 @@ export const rxdbRouter = (db: DB) =>
           return {
             checkpoint: db.spaces.getCheckpoint(),
             documents: userSpaces,
+          }
+        }
+
+        if (input.collection === "apps") {
+          const allApps = db.apps.getAll()
+
+          return {
+            checkpoint: db.apps.getCheckpoint(),
+            documents: allApps,
           }
         }
 
@@ -249,10 +266,33 @@ export const appRouter = (rootDir: string, db: DB) =>
         .input(z.string().url())
         .mutation(async ({ input }) => {
           const manifest = await addToCatalog(rootDir, new URL(input))
+
+          const apps = await db.apps.getAll()
+          const usedPorts = apps.map((app) => app.port)
+
+          const port = getNextAvailablePort(appPortRange, usedPorts)
+
           const item = await db.apps.putItems([
-            { type: "app", id: manifest.id, timestamp: Date.now() },
+            { type: "app", id: manifest.id, timestamp: Date.now(), port },
           ])
+
           return item
         }),
     }),
   })
+
+function getNextAvailablePort(
+  [min, max]: readonly [number, number],
+  used: number[],
+): number {
+  let port = min
+  while (port <= max) {
+    if (!used.includes(port)) {
+      return port
+    }
+
+    port++
+  }
+
+  throw new Error("No ports available")
+}

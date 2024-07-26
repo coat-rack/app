@@ -12,13 +12,18 @@ export const Route = createLazyFileRoute("/")({
 })
 
 function Index() {
-  const { db } = useDatabase()
+  const { db, appsCollection } = useDatabase()
   const apps = useObservable(db.apps.find({}).$)
+
   const [url, setUrl] = useState("")
   const installApp = async () => {
     const result = await trpcClient.apps.install.mutate(url)
     setUrl("")
-    console.log(result)
+
+    console.log("Installation Result", result)
+
+    const synced = await appsCollection.reSync()
+    console.log("Synced Result", synced)
   }
 
   return (
