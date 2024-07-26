@@ -38,9 +38,7 @@ yarn-error.log*
 *.pem
 
 # Data
-
-database.json
-database/
+_data/
 
 # Generated Service Workers
 dev-dist/

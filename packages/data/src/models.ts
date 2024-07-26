@@ -50,10 +50,7 @@ export const AppData = RowWithSpace("app-data").extend({
 })
 
 export type App = z.infer<typeof App>
-export const App = Row("app").extend({
-  url: z.string(),
-  manifestUrl: z.string(),
-})
+export const App = Row("app")
 
 export type Schema = z.infer<typeof Schema>
 export const Schema = z.object({
@@ -81,7 +78,4 @@ export type Manifest = z.infer<typeof Manifest>
 export const Manifest = z.object({
   name: z.string(),
   id: z.string(),
-  version: z.string(),
-  timestamp: z.number(),
-  port: z.number(),
 })
