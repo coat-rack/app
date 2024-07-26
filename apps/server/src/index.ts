@@ -1,32 +1,36 @@
 import * as trpcExpress from "@trpc/server/adapters/express"
-import { appRouter } from "./router"
-
-import serveIndex from "serve-index"
+import { appRouter, seedDb } from "./router"
 
 import cors from "cors"
 
 import express from "express"
 import { resolve } from "path"
-import { db } from "./db"
-const app = express()
+import { initDb } from "./db"
 
-app.use(cors())
+async function main() {
+  const app = express()
 
-const catalog = resolve(__dirname, "../../../catalog")
+  app.use(cors())
 
-app.use(
-  "/catalog",
-  express.static(catalog, {}),
-  serveIndex(catalog, { icons: true }),
-)
+  const root = resolve("_data")
+  const db = initDb(root)
+  await seedDb(db)
 
-app.use(
-  "/",
-  trpcExpress.createExpressMiddleware({
-    router: appRouter(db),
-  }),
-)
+  // app.use(
+  //   "/catalog",
+  //   express.static(catalog, {}),
+  //   serveIndex(catalog, { icons: true }),
+  // )
 
-app.listen(3000, () => {
-  console.info("Server started on port 3000")
-})
+  app.use(
+    "/",
+    trpcExpress.createExpressMiddleware({
+      router: appRouter(root, db),
+    }),
+  )
+
+  app.listen(3000, () => {
+    console.info("Server started on port 3000")
+  })
+}
+main()

@@ -1,11 +1,12 @@
 import { App, AppData, Push, Space, User } from "@repo/data/models"
 import { z } from "zod"
-import { DB, db, dbKeys } from "./db"
+import { DB, dbKeys } from "./db"
+import { addToCatalog } from "./persistence/fs"
 import { publicProcedure, router } from "./trpc"
 
 const PUBLIC_SPACE_ID = "public"
 
-const init = async () => {
+export const seedDb = async (db: DB) => {
   const spaces: Space[] = [
     {
       type: "space",
@@ -39,27 +40,9 @@ const init = async () => {
 
   const apps: App[] = [
     {
-      id: "sample-app",
-      url: "http://localhost:3000/catalog/sample-app/dist/index.mjs",
-      type: "app",
-      timestamp: Date.now(),
-      manifestUrl:
-        "http://localhost:3000/catalog/sample-app/dist/manifest.json",
-    },
-    {
-      id: "tasks",
-      url: "http://localhost:3000/catalog/tasks/dist/index.mjs",
-      type: "app",
-      timestamp: Date.now(),
-      manifestUrl: "http://localhost:3000/catalog/tasks/dist/manifest.json",
-    },
-    {
       id: "kitchen-sink",
-      url: "http://localhost:3000/catalog/kitchen-sink/dist/index.mjs",
       type: "app",
       timestamp: Date.now(),
-      manifestUrl:
-        "http://localhost:3000/catalog/kitchen-sink/dist/manifest.json",
     },
   ]
 
@@ -79,8 +62,6 @@ const init = async () => {
   }
 }
 
-init()
-
 const username = z.string().regex(/^[a-z]+$/)
 
 /**
@@ -95,82 +76,89 @@ const isNonScopedTable = (key: keyof DB): key is NonScopedTable =>
 /**
  * Implements handling for https://rxdb.info/replication-http.html
  */
-export const rxdbRouter = router({
-  pull: publicProcedure
-    .input(
-      z.object({
-        collection: z.enum(dbKeys),
-        userId: z.string(),
-        checkpoint: z.number().optional(),
-        batchSize: z.number(),
-      }),
-    )
-    .query(async ({ input }) => {
-      const collection = input.collection
-      const isNonScoped = isNonScopedTable(collection)
-
-      if (isNonScoped) {
-        const documents = await db[collection].getAll()
-        return {
-          documents,
-          checkpoint: db[collection].getCheckpoint(),
-        }
-      }
-
-      const allSpaces = await db.spaces.getItems(0, Infinity)
-      const userSpaces = allSpaces.filter(
-        (space) =>
-          space.owner === input.userId || space.users?.includes(input.userId),
-      )
-
-      if (input.collection === "spaces") {
-        return {
-          checkpoint: db.spaces.getCheckpoint(),
-          documents: userSpaces,
-        }
-      }
-
-      const userSpaceIds = userSpaces.map((us) => us.id)
-      const isUserItem = (item: AppData) => userSpaceIds.includes(item.space)
-
-      const appData = await db.appdata.getItems(input.checkpoint || 0, Infinity)
-      const documents = appData.filter(isUserItem)
-
-      return {
-        checkpoint: db.appdata.getCheckpoint(),
-        documents,
-      }
-    }),
-
-  push: publicProcedure
-    .input(z.union([Push("spaces", Space), Push("appdata", AppData)]))
-    .mutation(async ({ input }) => {
-      const { conflicts } = await db[input.type].putItems(
-        // Would be nice to not do this but I don't think the inference at this
-        // point matters since we're already so generic
-        input.changes as any,
-      )
-
-      const deletes = input.deletes.map((row) => ({ ...row, isDeleted: true }))
-      await db[input.type].putItems(deletes as any)
-
-      console.log("push", {
-        input,
-      })
-
-      // Should return any conflicting records
-      return conflicts
-    }),
-
-  // This method needs to return any other changes that are not from the current client
-  pullStream: publicProcedure.subscription((sub) => {
-    console.log("Subscription", sub)
-  }),
-})
-
-export const appRouter = (db: DB) =>
+export const rxdbRouter = (db: DB) =>
   router({
-    rxdb: rxdbRouter,
+    pull: publicProcedure
+      .input(
+        z.object({
+          collection: z.enum(dbKeys),
+          userId: z.string(),
+          checkpoint: z.number().optional(),
+          batchSize: z.number(),
+        }),
+      )
+      .query(async ({ input }) => {
+        const collection = input.collection
+        const isNonScoped = isNonScopedTable(collection)
+
+        if (isNonScoped) {
+          const documents = await db[collection].getAll()
+          return {
+            documents,
+            checkpoint: db[collection].getCheckpoint(),
+          }
+        }
+
+        const allSpaces = await db.spaces.getItems(0, Infinity)
+        const userSpaces = allSpaces.filter(
+          (space) =>
+            space.owner === input.userId || space.users?.includes(input.userId),
+        )
+
+        if (input.collection === "spaces") {
+          return {
+            checkpoint: db.spaces.getCheckpoint(),
+            documents: userSpaces,
+          }
+        }
+
+        const userSpaceIds = userSpaces.map((us) => us.id)
+        const isUserItem = (item: AppData) => userSpaceIds.includes(item.space)
+
+        const appData = await db.appdata.getItems(
+          input.checkpoint || 0,
+          Infinity,
+        )
+        const documents = appData.filter(isUserItem)
+
+        return {
+          checkpoint: db.appdata.getCheckpoint(),
+          documents,
+        }
+      }),
+
+    push: publicProcedure
+      .input(z.union([Push("spaces", Space), Push("appdata", AppData)]))
+      .mutation(async ({ input }) => {
+        const { conflicts } = await db[input.type].putItems(
+          // Would be nice to not do this but I don't think the inference at this
+          // point matters since we're already so generic
+          input.changes as any,
+        )
+
+        const deletes = input.deletes.map((row) => ({
+          ...row,
+          isDeleted: true,
+        }))
+        await db[input.type].putItems(deletes as any)
+
+        console.log("push", {
+          input,
+        })
+
+        // Should return any conflicting records
+        return conflicts
+      }),
+
+    // This method needs to return any other changes that are not from the current client
+    pullStream: publicProcedure.subscription((sub) => {
+      console.log("Subscription", sub)
+    }),
+  })
+
+export const appRouter = (rootDir: string, db: DB) =>
+  router({
+    rxdb: rxdbRouter(db),
     users: router({
       login: publicProcedure
         .input(
@@ -254,6 +242,17 @@ export const appRouter = (db: DB) =>
               users: [...(foundSpace.users || []), input.toUserId],
             },
           ])
+        }),
+    }),
+    apps: router({
+      install: publicProcedure
+        .input(z.string().url())
+        .mutation(async ({ input }) => {
+          const manifest = await addToCatalog(rootDir, new URL(input))
+          const item = await db.apps.putItems([
+            { type: "app", id: manifest.id, timestamp: Date.now() },
+          ])
+          return item
         }),
     }),
   })
