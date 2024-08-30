@@ -23,7 +23,8 @@
     "./components/sonner": "./src/components/sonner.tsx",
     "./components/dialog": "./src/components/dialog.tsx",
     "./components/select": "./src/components/select.tsx",
-    "./components/form": "./src/components/form.tsx"
+    "./components/form": "./src/components/form.tsx",
+    "./components/collapsible": "./src/components/collapsible.tsx"
   },
   "scripts": {
     "generate:component": "turbo gen react-component",
@@ -44,6 +45,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-collapsible": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.0.2",
