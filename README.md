@@ -39,3 +39,7 @@ pnpm run generate workspace
 ```
 
 You will thereafter be prompted to create either an `app` or `package` and can select as appropriate.
+
+## Installing Apps
+
+When working on the catalog the `dev-catalog` will host the root directory, this means that you can view the catalog directory apps using the `http://localhost:3005`. Each app can be "installed" via the `app-name/dist` directory
