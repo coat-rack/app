@@ -9,6 +9,13 @@ export const Route = createLazyFileRoute("/apps/$id")({
   component: Index,
 })
 
+function resolveAppUrl(port: number) {
+  const base = new URL("/", window.location.toString())
+  base.port = port.toString()
+
+  return base
+}
+
 function Index() {
   const sandboxHost = import.meta.env.VITE_SANDBOX_URL
   const { id } = Route.useParams()
@@ -29,8 +36,7 @@ function Index() {
         <SynchronizedIframe
           className="h-full w-full"
           appId={app.id}
-          appUrl={app.url}
-          manifestUrl={app.manifestUrl}
+          appUrl={resolveAppUrl(app.port)}
           sandboxHost={sandboxHost}
           space={PUBLIC_SPACE}
         />
