@@ -3,16 +3,24 @@ import { Db } from "@repo/sdk"
 import { useApp } from "./dynamic"
 
 const api: Db = {
-  get: (_) =>
-    new Promise((_resolve, reject) => reject("Not connected to host!")),
-  create: (_) =>
-    new Promise((_resolve, reject) => reject("Not connected to host!")),
-  update: (_, __) =>
-    new Promise((_resolve, reject) => reject("Not connected to host!")),
-  delete: (_) =>
-    new Promise((_resolve, reject) => reject("Not connected to host!")),
-  query: (_) =>
-    new Promise((_resolve, reject) => reject("Not connected to host!")),
+  get: async () => {
+    throw new Error("Not connected to host!")
+  },
+  create: async () => {
+    throw new Error("Not connected to host!")
+  },
+  update: async () => {
+    throw new Error("Not connected to host!")
+  },
+  delete: async () => {
+    throw new Error("Not connected to host!")
+  },
+  query: async () => {
+    throw new Error("Not connected to host!")
+  },
+  subscribe: async () => {
+    throw new Error("Not connected to host!")
+  },
 }
 
 function guidGenerator() {
