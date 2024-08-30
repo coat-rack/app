@@ -4,6 +4,7 @@ import { setLocalUser, setupUserDB, useLocalUser } from "./db/rxdb"
 import { trpcClient } from "./trpc"
 
 import { Button } from "@repo/ui/components/button"
+import { Input } from "@repo/ui/components/input"
 
 type ConfiguredDB = Awaited<ReturnType<typeof setupUserDB>>
 
@@ -55,11 +56,7 @@ const LoginScreen = ({ onLogin }: Props) => {
     <div className="flex flex-col gap-4 p-4">
       <h1 className="font-title text-5xl">Login</h1>
 
-      <input
-        className="border-4 border-solid border-black p-4"
-        onChange={(e) => setName(e.target.value)}
-        value={name}
-      />
+      <Input onChange={(e) => setName(e.target.value)} value={name} />
 
       <Button onClick={logIn}>Log In</Button>
       <Button onClick={signUp}>Sign Up</Button>
