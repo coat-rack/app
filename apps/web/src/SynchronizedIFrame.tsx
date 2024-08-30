@@ -3,13 +3,18 @@ import { RpcRequest, RpcResponse, err, ok } from "@repo/data/rpc"
 import { Db } from "@repo/sdk"
 import { useEffect } from "react"
 
-function createDataQuery(data?: Record<string, unknown>) {
-  return Object.assign(
-    {},
-    ...Object.entries(data as Record<string, unknown>).map(([k, v]) => ({
-      [`data.${k}`]: v,
-    })),
-  )
+type DataKey = `data.${string}`
+type DataQuery = Record<DataKey, unknown>
+
+function createDataQuery(data?: Record<string, unknown>): DataQuery {
+  const result: DataQuery = {}
+  const entries = Object.entries(data as Record<string, unknown>)
+
+  for (const [k, value] of entries) {
+    result[`data.${k}`] = value
+  }
+
+  return result
 }
 
 function useIframeSynchronization(

@@ -29,5 +29,6 @@ export interface Db<T = unknown> {
   create: <O extends T>(value: O) => Promise<Record<O>>
   delete: (key: string) => Promise<void>
   query: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
+
   subscribe: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
 }
