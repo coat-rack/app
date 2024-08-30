@@ -19,16 +19,16 @@ export interface Manifest {
 
 type PromiseArray<T> = Promise<Array<T>>
 
-export type Record<T> = Pick<AppData, "id" | "data" | "space"> & {
+export type DbRecord<T> = Pick<AppData, "id" | "space"> & {
   data: T
 }
 
 export interface Db<T = unknown> {
-  get: <O extends T>(key: string) => Promise<Record<O>>
-  update: <O extends T>(key: string, value: O) => Promise<Record<O>>
-  create: <O extends T>(value: O) => Promise<Record<O>>
+  get: <O extends T = T>(key: string) => Promise<DbRecord<O> | undefined>
+  update: <O extends T = T>(key: string, value: O) => Promise<DbRecord<O>>
+  create: <O extends T = T>(value: O) => Promise<DbRecord<O>>
   delete: (key: string) => Promise<void>
-  query: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
+  query: <O extends T = T>(query?: Partial<O>) => PromiseArray<DbRecord<O>>
 
-  subscribe: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
+  subscribe: <O extends T = T>(query?: Partial<O>) => PromiseArray<DbRecord<O>>
 }
