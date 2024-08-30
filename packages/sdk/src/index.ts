@@ -1,11 +1,13 @@
 import { AppData } from "@repo/data/models"
 import React from "react"
 
-export interface App {
+export type Entry<D = unknown> = React.ComponentType<{ db: Db<D> }>
+
+export interface App<D = unknown> {
   /**
    *  The Entrypoint for the app
    */
-  Entry: React.ComponentType<{ db: Db }>
+  Entry: Entry<D>
 }
 
 export interface Manifest {
@@ -17,7 +19,7 @@ export interface Manifest {
 
 type PromiseArray<T> = Promise<Array<T>>
 
-export type Record<T> = Pick<AppData, "id" | "data"> & {
+export type Record<T> = Pick<AppData, "id" | "data" | "space"> & {
   data: T
 }
 
@@ -27,4 +29,6 @@ export interface Db<T = unknown> {
   create: <O extends T>(value: O) => Promise<Record<O>>
   delete: (key: string) => Promise<void>
   query: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
+
+  subscribe: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
 }

@@ -3,6 +3,20 @@ import { RpcRequest, RpcResponse, err, ok } from "@repo/data/rpc"
 import { Db } from "@repo/sdk"
 import { useEffect } from "react"
 
+type DataKey = `data.${string}`
+type DataQuery = Record<DataKey, unknown>
+
+function createDataQuery(data?: Record<string, unknown>): DataQuery {
+  const result: DataQuery = {}
+  const entries = Object.entries(data as Record<string, unknown>)
+
+  for (const [k, value] of entries) {
+    result[`data.${k}`] = value
+  }
+
+  return result
+}
+
 function useIframeSynchronization(
   appId: string,
   sandboxHost: string,
@@ -30,15 +44,31 @@ function useIframeSynchronization(
 
     if (event.data.op === "query") {
       const [data] = event.data.args
+
+      const dataQuery = createDataQuery(data)
+
+      console.log(dataQuery)
       db.appdata
         .find({
           selector: {
-            $and: [{ app: appId }, { data }, { space }],
+            ...dataQuery,
+            app: appId,
           },
         })
         .exec()
         .then((documents) =>
-          reply(ok(documents?.map((doc) => doc?.toJSON()?.data))),
+          reply(
+            ok(
+              documents?.map((doc) => {
+                const docUnwrapped = doc.toJSON()
+                return {
+                  id: docUnwrapped.id,
+                  space: docUnwrapped.space,
+                  data: docUnwrapped.data,
+                }
+              }),
+            ),
+          ),
         )
         .catch(replyError)
     } else if (event.data.op === "delete") {
@@ -79,7 +109,13 @@ function useIframeSynchronization(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(ok({ id: docUnwrapped.id, data: docUnwrapped.data }))
+          reply(
+            ok({
+              id: docUnwrapped.id,
+              data: docUnwrapped.data,
+              space: docUnwrapped.space,
+            }),
+          )
         })
         .catch(replyError)
     } else if (event.data.op === "update") {
@@ -95,7 +131,13 @@ function useIframeSynchronization(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(ok({ id: docUnwrapped.id, data: docUnwrapped.data }))
+          reply(
+            ok({
+              id: docUnwrapped.id,
+              data: docUnwrapped.data,
+              space: docUnwrapped.space,
+            }),
+          )
         })
         .catch(replyError)
     }
