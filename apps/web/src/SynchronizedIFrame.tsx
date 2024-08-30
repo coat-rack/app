@@ -54,10 +54,14 @@ function useIframeSynchronization(
         .then((documents) =>
           reply(
             ok(
-              documents?.map((doc) => ({
-                id: doc.id,
-                data: doc?.toJSON()?.data,
-              })),
+              documents?.map((doc) => {
+                const docUnwrapped = doc.toJSON()
+                return {
+                  id: docUnwrapped.id,
+                  space: docUnwrapped.space,
+                  data: docUnwrapped.data,
+                }
+              }),
             ),
           ),
         )
@@ -100,7 +104,13 @@ function useIframeSynchronization(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(ok({ id: docUnwrapped.id, data: docUnwrapped.data }))
+          reply(
+            ok({
+              id: docUnwrapped.id,
+              data: docUnwrapped.data,
+              space: docUnwrapped.space,
+            }),
+          )
         })
         .catch(replyError)
     } else if (event.data.op === "update") {
@@ -116,7 +126,13 @@ function useIframeSynchronization(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(ok({ id: docUnwrapped.id, data: docUnwrapped.data }))
+          reply(
+            ok({
+              id: docUnwrapped.id,
+              data: docUnwrapped.data,
+              space: docUnwrapped.space,
+            }),
+          )
         })
         .catch(replyError)
     }

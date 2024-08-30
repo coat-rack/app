@@ -19,7 +19,7 @@ export interface Manifest {
 
 type PromiseArray<T> = Promise<Array<T>>
 
-export type Record<T> = Pick<AppData, "id" | "data"> & {
+export type Record<T> = Pick<AppData, "id" | "data" | "space"> & {
   data: T
 }
 
@@ -29,4 +29,5 @@ export interface Db<T = unknown> {
   create: <O extends T>(value: O) => Promise<Record<O>>
   delete: (key: string) => Promise<void>
   query: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
+  subscribe: <O extends T>(query?: Partial<O>) => PromiseArray<Record<O>>
 }
