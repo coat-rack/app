@@ -1,11 +1,13 @@
 import { AppData } from "@repo/data/models"
 import React from "react"
 
-export interface App {
+export type Entry<D = unknown> = React.ComponentType<{ db: Db<D> }>
+
+export interface App<D = unknown> {
   /**
    *  The Entrypoint for the app
    */
-  Entry: React.ComponentType<{ db: Db }>
+  Entry: Entry<D>
 }
 
 export interface Manifest {

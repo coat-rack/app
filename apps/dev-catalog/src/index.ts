@@ -4,8 +4,11 @@ import { cp, mkdir, watch } from "fs/promises"
 import { join, resolve, sep } from "path"
 import serveIndex from "serve-index"
 
+const DB_PATH = resolve("../server/_data")
+
 const INSTALLED_CATALOG_PATH = resolve("../server/_data/catalog")
 const DEV_CATALOG_PATH = resolve("../../catalog")
+
 const CHANGE_DEBOUNCE_TIME = 1000
 
 const app = express()
@@ -14,6 +17,13 @@ app.use(
   "/",
   express.static(DEV_CATALOG_PATH, {}),
   serveIndex(DEV_CATALOG_PATH, { icons: true }),
+)
+
+app.use(
+  "/db",
+
+  express.static(DB_PATH),
+  serveIndex(DB_PATH, { icons: true }),
 )
 
 app.listen(3005, () => {

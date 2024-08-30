@@ -3,6 +3,15 @@ import { RpcRequest, RpcResponse, err, ok } from "@repo/data/rpc"
 import { Db } from "@repo/sdk"
 import { useEffect } from "react"
 
+function createDataQuery(data?: Record<string, unknown>) {
+  return Object.assign(
+    {},
+    ...Object.entries(data as Record<string, unknown>).map(([k, v]) => ({
+      [`data.${k}`]: v,
+    })),
+  )
+}
+
 function useIframeSynchronization(
   appId: string,
   sandboxHost: string,
@@ -30,15 +39,27 @@ function useIframeSynchronization(
 
     if (event.data.op === "query") {
       const [data] = event.data.args
+
+      const dataQuery = createDataQuery(data)
+
+      console.log(dataQuery)
       db.appdata
         .find({
           selector: {
-            $and: [{ app: appId }, { data }, { space }],
+            ...dataQuery,
+            app: appId,
           },
         })
         .exec()
         .then((documents) =>
-          reply(ok(documents?.map((doc) => doc?.toJSON()?.data))),
+          reply(
+            ok(
+              documents?.map((doc) => ({
+                id: doc.id,
+                data: doc?.toJSON()?.data,
+              })),
+            ),
+          ),
         )
         .catch(replyError)
     } else if (event.data.op === "delete") {
