@@ -6,7 +6,7 @@ import { useEffect } from "react"
 type DataKey = `data.${string}`
 type DataQuery = Record<DataKey, unknown>
 
-function createDataQuery(data?: Record<string, unknown>): DataQuery {
+function createDataQuery(data: Record<string, unknown> = {}): DataQuery {
   const result: DataQuery = {}
   const entries = Object.entries(data as Record<string, unknown>)
 
@@ -65,6 +65,7 @@ function useIframeSynchronization(
                   id: docUnwrapped.id,
                   space: docUnwrapped.space,
                   data: docUnwrapped.data,
+                  timestamp: docUnwrapped.timestamp,
                 }
               }),
             ),
@@ -93,7 +94,18 @@ function useIframeSynchronization(
         .exec()
         .then((foundItems) => {
           const foundItem = foundItems.get(id)?.toJSON()
-          reply(ok(foundItem?.data))
+          if (!foundItem) {
+            reply(ok(undefined))
+          } else {
+            reply(
+              ok({
+                id: foundItem.id,
+                space: foundItem.space,
+                data: foundItem.data,
+                timestamp: foundItem.timestamp,
+              }),
+            )
+          }
         })
         .catch(replyError)
     } else if (event.data.op === "create") {
@@ -114,6 +126,7 @@ function useIframeSynchronization(
               id: docUnwrapped.id,
               data: docUnwrapped.data,
               space: docUnwrapped.space,
+              timestamp: docUnwrapped.timestamp,
             }),
           )
         })
@@ -136,6 +149,7 @@ function useIframeSynchronization(
               id: docUnwrapped.id,
               data: docUnwrapped.data,
               space: docUnwrapped.space,
+              timestamp: docUnwrapped.timestamp,
             }),
           )
         })

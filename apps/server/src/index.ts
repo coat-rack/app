@@ -4,25 +4,27 @@ import { appRouter, seedDb } from "./router"
 import cors from "cors"
 
 import { App } from "@repo/data/models"
-import express, { Express } from "express"
+import express from "express"
+import { Server } from "http"
 import { join, resolve } from "path"
 import { initDb } from "./db"
 
-const appServers: Partial<Record<string, Express>> = {}
+const appServers: Partial<Record<string, Server>> = {}
 
 function setupAppServer(app: App) {
   const existing = appServers[app.id]
   if (existing) {
-    return
+    console.log("Stopping app server", app)
+    existing.close()
   }
 
   const appPath = resolve(join("_data", "catalog", app.id))
 
-  const server = express()
-  server.use(cors())
-  server.use("/", express.static(appPath))
+  const expressApp = express()
+  expressApp.use(cors())
+  expressApp.use("/", express.static(appPath))
 
-  server.listen(app.port, () => {
+  const server = expressApp.listen(app.port, () => {
     console.log("App server started", app)
   })
 
