@@ -3,6 +3,7 @@ import { useRefresh } from "@repo/sdk/hooks"
 import { Button } from "@repo/ui/components/button"
 import { useEffect, useState } from "react"
 import { NoteEditor } from "./NoteEditor"
+import { NoteList } from "./NoteList"
 import { Note } from "./note"
 import "./styles.css"
 
@@ -14,17 +15,27 @@ export const Notes: App<Note> = {
     const [notes, setNotes] = useState([] as DbRecord<Note>[])
     const [signal, doRefresh] = useRefresh()
     const getNotes = () => db.query<Note>().then((res) => setNotes(res))
+    const [activeNote, setActiveNote] = useState<DbRecord<Note> | undefined>(
+      undefined,
+    )
+
+    const noteChanged = (isDelete: boolean) => {
+      if (isDelete) {
+        setActiveNote(undefined)
+      }
+      doRefresh()
+    }
 
     const newNote = async () => {
-      await db.create({
+      const note = await db.create({
         title: "New note",
         contents: "",
       })
-      getNotes()
+      await getNotes()
+      setActiveNote(note)
     }
 
     useEffect(() => {
-      console.log(signal)
       getNotes()
     }, [signal])
 
@@ -32,20 +43,16 @@ export const Notes: App<Note> = {
       <>
         <h1>notes</h1>
         <Button onClick={newNote}>New note</Button>
-        <div className="md:grid-cols:3 grid grid-cols-1 gap-4">
-          <div>
-            {notes.length ? (
-              notes.map((note) => (
-                <NoteEditor
-                  db={db}
-                  noteId={note.id}
-                  key={note.id}
-                  onNoteChanged={doRefresh}
-                />
-              ))
-            ) : (
-              <div>No notes yet</div>
-            )}
+        <div className="grid grid-cols-3 grid-rows-1 gap-4 py-2">
+          <NoteList notes={notes} onNoteSelected={setActiveNote} />
+          <div className="col-span-2">
+            {(activeNote && (
+              <NoteEditor
+                db={db}
+                noteId={activeNote.id}
+                onNoteChanged={noteChanged}
+              ></NoteEditor>
+            )) || <p>Select a note</p>}
           </div>
         </div>
       </>

@@ -19,7 +19,7 @@ export interface Manifest {
 
 type PromiseArray<T> = Promise<Array<T>>
 
-export type DbRecord<T> = Pick<AppData, "id" | "space"> & {
+export type DbRecord<T> = Pick<AppData, "id" | "space" | "timestamp"> & {
   data: T
 }
 
