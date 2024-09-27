@@ -337,6 +337,9 @@ importers:
 
   catalog/notes:
     dependencies:
+      '@repo/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       '@repo/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk

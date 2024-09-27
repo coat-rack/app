@@ -1,3 +1,4 @@
+import { Save, Trash } from "@repo/icons/regular"
 import { Db } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import { Input } from "@repo/ui/components/input"
@@ -13,15 +14,23 @@ type NoteEditorProps = {
 export function NoteEditor({ noteId, db, onNoteChanged }: NoteEditorProps) {
   const [note, setNote] = useState<Note | undefined>(undefined)
   useEffect(() => {
-    db.get(noteId).then((res) => setNote(res.data))
+    db.get(noteId).then((res) => res && setNote(res.data))
   }, [])
 
-  const save = () => {
+  const save = async () => {
     if (note) {
       db.update(noteId, note)
       onNoteChanged?.()
     }
   }
+
+  const remove = async () => {
+    if (note) {
+      await db.delete(noteId)
+      onNoteChanged?.()
+    }
+  }
+
   if (!note) {
     return undefined
   }
@@ -36,7 +45,14 @@ export function NoteEditor({ noteId, db, onNoteChanged }: NoteEditorProps) {
         value={note?.contents}
         onChange={(e) => setNote({ ...note, contents: e.target.value })}
       />
-      <Button onClick={save}>Save</Button>
+      <div className="flex flex-row justify-end">
+        <Button onClick={save}>
+          <Save className="h-4 w-4 fill-current"></Save>
+        </Button>
+        <Button onClick={remove}>
+          <Trash className="h-4 w-4 fill-current"></Trash>
+        </Button>
+      </div>
     </div>
   )
 }
