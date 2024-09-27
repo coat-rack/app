@@ -1,7 +1,6 @@
-import { createLazyFileRoute } from "@tanstack/react-router"
-
-import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
+import { useObservable } from "@repo/sdk/hooks"
+import { createLazyFileRoute } from "@tanstack/react-router"
 
 export const Route = createLazyFileRoute("/spaces/")({
   component: Index,

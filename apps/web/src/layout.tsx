@@ -1,7 +1,7 @@
+import { useObservable } from "@repo/sdk/hooks"
 import { Button } from "@repo/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
-import { useObservable } from "./async"
 import { useDatabase } from "./data"
 
 type Props = PropsWithChildren<{

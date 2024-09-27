@@ -1,5 +1,6 @@
 import { ChevronDown, Plus } from "@repo/icons/regular"
 import { App, type Entry } from "@repo/sdk"
+import { usePromise, useRefresh } from "@repo/sdk/hooks"
 import { Button } from "@repo/ui/components/button"
 import {
   Card,
@@ -16,7 +17,7 @@ import {
 } from "@repo/ui/components/collapsible"
 import { Input } from "@repo/ui/components/input"
 import { Label } from "@repo/ui/components/label"
-import { ComponentProps, DependencyList, useEffect, useState } from "react"
+import { ComponentProps, useState } from "react"
 import "./styles.css"
 
 interface Task {
@@ -27,29 +28,12 @@ interface Task {
 
 type TaskData = Task
 
-function usePromise<T>(task: () => Promise<T>, deps: DependencyList = []) {
-  const [value, setValue] = useState<T>()
-
-  useEffect(() => {
-    task().then(setValue)
-  }, deps)
-
-  return value
-}
-
-function useRefresh() {
-  const [key, setKey] = useState(Date.now())
-  const refresh = () => setKey(Date.now())
-
-  return [key, refresh] as const
-}
-
 function Entry({ db }: ComponentProps<Entry<TaskData>>) {
   const [title, setTitle] = useState("")
 
   const [key, refresh] = useRefresh()
 
-  const todo = usePromise(
+  const [todo] = usePromise(
     () =>
       db.query({
         completed: false,
@@ -57,7 +41,7 @@ function Entry({ db }: ComponentProps<Entry<TaskData>>) {
     [key],
   )
 
-  const completed = usePromise(
+  const [completed] = usePromise(
     () =>
       db.query({
         completed: true,

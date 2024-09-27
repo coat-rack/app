@@ -1,10 +1,9 @@
-import { PropsWithChildren, createContext, useContext, useState } from "react"
-import { usePromise } from "./async"
-import { setLocalUser, setupUserDB, useLocalUser } from "./db/rxdb"
-import { trpcClient } from "./trpc"
-
+import { usePromise } from "@repo/sdk/hooks"
 import { Button } from "@repo/ui/components/button"
 import { Input } from "@repo/ui/components/input"
+import { PropsWithChildren, createContext, useContext, useState } from "react"
+import { setLocalUser, setupUserDB, useLocalUser } from "./db/rxdb"
+import { trpcClient } from "./trpc"
 
 type ConfiguredDB = Awaited<ReturnType<typeof setupUserDB>>
 
@@ -71,7 +70,7 @@ export const DatabaseProvider = ({ children }: PropsWithChildren) => {
 
   const login = (username: string) => setLocalUser(username)
 
-  const dbSetup = usePromise(async () => {
+  const [dbSetup] = usePromise(async () => {
     if (!user) {
       return
     }

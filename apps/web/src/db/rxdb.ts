@@ -12,9 +12,9 @@ import { replicateRxCollection } from "rxdb/plugins/replication"
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie"
 import { trpcClient } from "../trpc"
 
+import { useObservable } from "@repo/sdk/hooks"
 import { RxDBUpdatePlugin } from "rxdb/plugins/update"
 import { map } from "rxjs"
-import { useObservable } from "../async"
 import {
   appDataSchema,
   appSchema,

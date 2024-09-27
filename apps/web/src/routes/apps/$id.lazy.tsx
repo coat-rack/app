@@ -1,6 +1,6 @@
 import { SynchronizedIframe } from "@/SynchronizedIFrame"
-import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
+import { useObservable } from "@repo/sdk/hooks"
 import { createLazyFileRoute } from "@tanstack/react-router"
 
 const PUBLIC_SPACE = "public"
