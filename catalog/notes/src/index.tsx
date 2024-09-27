@@ -1,11 +1,17 @@
 import { App, DbRecord } from "@repo/sdk"
-import { useRefresh } from "@repo/sdk/hooks"
 import { Button } from "@repo/ui/components/button"
 import { useEffect, useState } from "react"
 import { NoteEditor } from "./NoteEditor"
 import { NoteList } from "./NoteList"
 import { Note } from "./note"
 import "./styles.css"
+
+function useRefresh() {
+  const [key, setKey] = useState(Date.now())
+  const refresh = () => setKey(Date.now())
+
+  return [key, refresh] as const
+}
 
 export const Notes: App<Note> = {
   /**
