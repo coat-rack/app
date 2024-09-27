@@ -65,6 +65,7 @@ function useIframeSynchronization(
                   id: docUnwrapped.id,
                   space: docUnwrapped.space,
                   data: docUnwrapped.data,
+                  timestamp: docUnwrapped.timestamp,
                 }
               }),
             ),
@@ -101,6 +102,7 @@ function useIframeSynchronization(
                 id: foundItem.id,
                 space: foundItem.space,
                 data: foundItem.data,
+                timestamp: foundItem.timestamp,
               }),
             )
           }
@@ -124,6 +126,7 @@ function useIframeSynchronization(
               id: docUnwrapped.id,
               data: docUnwrapped.data,
               space: docUnwrapped.space,
+              timestamp: docUnwrapped.timestamp,
             }),
           )
         })
@@ -146,6 +149,7 @@ function useIframeSynchronization(
               id: docUnwrapped.id,
               data: docUnwrapped.data,
               space: docUnwrapped.space,
+              timestamp: docUnwrapped.timestamp,
             }),
           )
         })
