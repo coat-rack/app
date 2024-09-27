@@ -28,6 +28,7 @@ export function NoteEditor({ noteId, db, onNoteChanged }: NoteEditorProps) {
     if (note) {
       await db.update(noteId, note)
       onNoteChanged?.(false)
+      setDirty(false)
     }
   }
 
@@ -35,7 +36,6 @@ export function NoteEditor({ noteId, db, onNoteChanged }: NoteEditorProps) {
     if (note) {
       await db.delete(noteId)
       onNoteChanged?.(true)
-      setDirty(false)
     }
   }
 
