@@ -344,10 +344,7 @@ function Index() {
 
   const upsertSpace = async (space: Space) => {
     setCreateKey(Date.now())
-    await db.spaces.upsert({
-      ...space,
-      type: "space",
-    })
+    await db.spaces.upsert(space)
   }
 
   return (
@@ -365,7 +362,7 @@ function Index() {
             />
           )}
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col">
           {spaces
             ?.filter((s) => s.owner === user)
             ?.map((space) => (
@@ -383,7 +380,11 @@ function Index() {
           <ol>
             {spaces
               ?.filter((s) => s.owner !== user)
-              ?.map((space) => <li key={space.id}>{space.name}</li>)}
+              ?.map((s) => (
+                <li key={s.id} style={{ color: s.color }}>
+                  {s.name}
+                </li>
+              ))}
           </ol>
         </div>
       </div>
