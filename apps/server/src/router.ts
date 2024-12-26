@@ -225,6 +225,7 @@ export const appRouter = (
               owner: user.id,
               spaceType: "user",
               timestamp: Date.now(),
+              color: "#f59e0b",
             },
           ])
 
