@@ -26,18 +26,23 @@ const Navigation = ({
     }}
   >
     <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2">
+      <Button asChild variant="link" size="sm">
+        <Link to="/">Home</Link>
+      </Button>
       <div>{title}</div>
       <Button variant="ghost" size="sm" onClick={signOut}>
         sign out
       </Button>
     </nav>
     <nav
-      className="bg-background col-span-1 flex flex-1 rotate-180 justify-between gap-4"
+      className="bg-background col-span-1"
       style={{
         writingMode: "vertical-rl",
       }}
     >
-      {Links}
+      <div className="flex flex-1 rotate-180 justify-between gap-4">
+        {Links}
+      </div>
     </nav>
 
     <main>{children}</main>
@@ -54,12 +59,10 @@ export const Layout = ({ title, children }: Props) => {
       title={title}
       Links={
         <>
-          <Button asChild variant="link" size="sm">
-            <Link to="/">Home</Link>
-          </Button>
           {apps?.map((app) => (
             <Button asChild variant="link" size="sm" key={app.id}>
               <Link
+                className="block"
                 to="/apps/$id"
                 params={{
                   id: app.id,
