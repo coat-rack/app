@@ -1,3 +1,4 @@
+import { HomeSolid, OctagonTimesSolid } from "@repo/icons/solid"
 import { Button } from "@repo/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
@@ -25,19 +26,41 @@ const Navigation = ({
       gridTemplateColumns: "auto 1fr",
     }}
   >
-    <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2">
+    <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2 pl-0">
+      <Button asChild variant="link" size="sm">
+        <Link
+          className="flex flex-row gap-2"
+          to="/"
+          activeProps={{
+            className: "text-primary",
+          }}
+          title="Home"
+        >
+          <HomeSolid className="h-4 w-4 fill-current" />
+          Home
+        </Link>
+      </Button>
       <div>{title}</div>
-      <Button variant="ghost" size="sm" onClick={signOut}>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="align-center flex flex-row gap-2"
+        onClick={signOut}
+        title="Sign out"
+      >
         sign out
+        <OctagonTimesSolid className="h-4 w-4 fill-current" />
       </Button>
     </nav>
     <nav
-      className="bg-background col-span-1 flex flex-1 rotate-180 justify-between gap-4"
+      className="bg-background col-span-1 py-4"
       style={{
         writingMode: "vertical-rl",
       }}
     >
-      {Links}
+      <div className="flex flex-1 rotate-180 justify-between gap-4">
+        {Links}
+      </div>
     </nav>
 
     <main>{children}</main>
@@ -52,25 +75,22 @@ export const Layout = ({ title, children }: Props) => {
     <Navigation
       signOut={signOut}
       title={title}
-      Links={
-        <>
-          <Button asChild variant="link" size="sm">
-            <Link to="/">Home</Link>
-          </Button>
-          {apps?.map((app) => (
-            <Button asChild variant="link" size="sm" key={app.id}>
-              <Link
-                to="/apps/$id"
-                params={{
-                  id: app.id,
-                }}
-              >
-                {app.id}
-              </Link>
-            </Button>
-          ))}
-        </>
-      }
+      Links={apps?.map((app) => (
+        <Button asChild variant="link" size="sm" key={app.id}>
+          <Link
+            to="/apps/$id"
+            className="block"
+            activeProps={{
+              className: "underline",
+            }}
+            params={{
+              id: app.id,
+            }}
+          >
+            {app.id}
+          </Link>
+        </Button>
+      ))}
     >
       {children}
     </Navigation>
