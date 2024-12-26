@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@repo/data": "workspace:*",
+    "@repo/icons": "workspace:*",
     "@repo/sdk": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/ui": "workspace:*",

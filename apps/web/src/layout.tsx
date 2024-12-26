@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
 import { useObservable } from "./async"
 import { useDatabase } from "./data"
+import { HomeSolid, OctagonTimesSolid } from "@repo/icons/solid"
 
 type Props = PropsWithChildren<{
   title?: string
@@ -25,17 +26,25 @@ const Navigation = ({
       gridTemplateColumns: "auto 1fr",
     }}
   >
-    <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2">
+    <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2 pl-0">
       <Button asChild variant="link" size="sm">
-        <Link to="/">Home</Link>
+        <Link to="/"
+          activeProps={{
+            className: "text-primary"
+          }}
+          title="Home"
+        >
+          <HomeSolid className="h-4 w-4 fill-current" />
+        </Link>
       </Button>
       <div>{title}</div>
-      <Button variant="ghost" size="sm" onClick={signOut}>
+      <Button variant="ghost" size="sm" className="flex flex-row gap-2 align-center" onClick={signOut} title="Sign out">
         sign out
+        <OctagonTimesSolid className="h-4 w-4 fill-current" />
       </Button>
     </nav>
     <nav
-      className="bg-background col-span-1"
+      className="bg-background col-span-1 pb-4"
       style={{
         writingMode: "vertical-rl",
       }}
@@ -57,23 +66,22 @@ export const Layout = ({ title, children }: Props) => {
     <Navigation
       signOut={signOut}
       title={title}
-      Links={
-        <>
-          {apps?.map((app) => (
-            <Button asChild variant="link" size="sm" key={app.id}>
-              <Link
-                className="block"
-                to="/apps/$id"
-                params={{
-                  id: app.id,
-                }}
-              >
-                {app.id}
-              </Link>
-            </Button>
-          ))}
-        </>
-      }
+      Links={apps?.map((app) => (
+        <Button asChild variant="link" size="sm" key={app.id}>
+          <Link
+            to="/apps/$id"
+            className="block"
+            activeProps={{
+              className: "underline"
+            }}
+            params={{
+              id: app.id,
+            }}
+          >
+            {app.id}
+          </Link>
+        </Button>
+      ))}
     >
       {children}
     </Navigation>
