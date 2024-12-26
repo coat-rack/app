@@ -29,6 +29,7 @@ const Navigation = ({
     <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2 pl-0">
       <Button asChild variant="link" size="sm">
         <Link
+          className="flex flex-row gap-2"
           to="/"
           activeProps={{
             className: "text-primary",
@@ -36,6 +37,7 @@ const Navigation = ({
           title="Home"
         >
           <HomeSolid className="h-4 w-4 fill-current" />
+          Home
         </Link>
       </Button>
       <div>{title}</div>
@@ -51,7 +53,7 @@ const Navigation = ({
       </Button>
     </nav>
     <nav
-      className="bg-background col-span-1 pb-4"
+      className="bg-background col-span-1 py-4"
       style={{
         writingMode: "vertical-rl",
       }}
