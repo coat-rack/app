@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@repo/ui/components/select"
 
-import { Check, Pencil, Save } from "@repo/icons/regular"
+import { Check, Pencil, Plus, Save } from "@repo/icons/regular"
 import { Input } from "@repo/ui/components/input"
 import { createLazyFileRoute } from "@tanstack/react-router"
 
@@ -29,8 +29,7 @@ import { useDatabase } from "@/data"
 import { useLocalUser } from "@/db/rxdb"
 import { Space, User } from "@repo/data/models"
 import { Button } from "@repo/ui/components/button"
-import { useState } from "react"
-import { isValid } from "zod"
+import { useEffect, useState } from "react"
 
 export const Route = createLazyFileRoute("/spaces/")({
   component: Index,
@@ -52,6 +51,8 @@ const COLORS = [
   "#ec4899",
 ]
 
+const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)]
+
 function SpaceProvider({
   space,
   children,
@@ -67,21 +68,27 @@ function SpaceForm({
   space,
   appUsers,
   onChange,
+  onSubmit,
 }: {
   space: Space
   appUsers: User[]
   onChange: (space: Space) => void
+  onSubmit: () => void
 }) {
   const [name, setName] = useState(space.name)
   const [color, setColor] = useState(space.color || "")
   const [users, setUsers] = useState(space.users || [])
 
-  const updatedSpace: Space = {
-    ...space,
-    name,
-    color,
-    users,
-  }
+  useEffect(() => {
+    const updatedSpace: Space = {
+      ...space,
+      name,
+      color,
+      users,
+    }
+
+    onChange(updatedSpace)
+  }, [name, color, users])
 
   const toggleUser = (user: User, selected: boolean) => {
     if (selected) {
@@ -98,7 +105,12 @@ function SpaceForm({
   const editableUsers = appUsers.filter((u) => u.id !== space.owner)
 
   return (
-    <form onChange={() => onChange(updatedSpace)}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSubmit()
+      }}
+    >
       <Label htmlFor="name">name</Label>
       <Input
         name="name"
@@ -148,21 +160,107 @@ function SpaceForm({
   )
 }
 
+function SpaceCreator({
+  onSubmit,
+  appUsers,
+  user,
+}: {
+  onSubmit: (space: Space) => void
+  appUsers: User[]
+  user: string
+}) {
+  const [changed, setChanged] = useState(false)
+  const [space, setSpace] = useState<Space>({
+    id: "space-" + Date.now().toString(),
+    type: "space",
+    spaceType: "shared",
+    name: "",
+    owner: user,
+    timestamp: Date.now(),
+    users: [user],
+    color: randomColor(),
+  })
+
+  const isValid = space.color && space.name
+
+  const handleSubmit = () => {
+    if (!isValid) {
+      return
+    }
+
+    onSubmit(space)
+    setChanged(false)
+  }
+
+  const handleChange = (space: Space) => {
+    setSpace(space)
+    setChanged(true)
+  }
+
+  return (
+    <>
+      <Dialog>
+        <div className="flex flex-row items-center gap-2">
+          <DialogTrigger asChild>
+            <Button variant="link" className="flex flex-row items-center gap-2">
+              create space
+              <Plus className="h-4 w-4 fill-current" />
+            </Button>
+          </DialogTrigger>
+        </div>
+        <DialogContent>
+          <SpaceProvider space={space}>
+            <DialogHeader>
+              <DialogTitle className="text-primary">
+                create {space.name || "new space"}
+              </DialogTitle>
+              <DialogDescription>create a new shared space</DialogDescription>
+            </DialogHeader>
+
+            <SpaceForm
+              space={space}
+              appUsers={appUsers}
+              onChange={handleChange}
+              onSubmit={handleSubmit}
+            />
+
+            <DialogFooter className="mt-4">
+              <Button
+                disabled={!changed || !isValid}
+                variant="default"
+                className="flex flex-row items-center gap-2"
+                onClick={handleSubmit}
+              >
+                create
+                <Plus className="h-4 w-4 fill-current" />
+              </Button>
+            </DialogFooter>
+          </SpaceProvider>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
+
 function SpaceEditor({
   space,
   onSubmit,
   appUsers,
-  editable,
 }: {
   space: Space
   onSubmit: (space: Space) => void
   appUsers: User[]
-  editable: boolean
 }) {
   const [changed, setChanged] = useState(false)
   const [updated, setUpdated] = useState(space)
 
+  const isValid = updated.color && updated.name
+
   const handleSubmit = () => {
+    if (!isValid) {
+      return
+    }
+
     onSubmit(updated)
     setChanged(false)
   }
@@ -172,41 +270,30 @@ function SpaceEditor({
     setUpdated(space)
   }
 
-  const ownerName =
-    appUsers.find((u) => u.id === space.owner)?.name || space.owner
-
-  if (!editable) {
-    return (
-      <SpaceProvider space={space}>
-        {space.name} - owned by {ownerName}
-      </SpaceProvider>
-    )
-  }
-
   return (
     <>
       <Dialog>
-        <SpaceProvider space={space}>
-          <div className="flex flex-row items-center gap-2">
-            {space.name}
-            <DialogTrigger asChild>
-              <Button
-                style={{
-                  color: space.color,
-                }}
-                variant="link"
-                className="flex flex-row items-center gap-2"
-              >
-                edit
-                <Pencil className="h-4 w-4 fill-current" />
-              </Button>
-            </DialogTrigger>
-          </div>
-        </SpaceProvider>
+        <div className="flex flex-row items-center gap-2">
+          <DialogTrigger asChild>
+            <Button
+              style={{
+                color: space.color,
+              }}
+              variant="link"
+              className="flex flex-row items-center gap-2 p-0"
+              title={"edit space " + space.name}
+            >
+              <Pencil className="h-4 w-4 fill-current" />
+              {space.name}
+            </Button>
+          </DialogTrigger>
+        </div>
         <DialogContent>
           <SpaceProvider space={updated}>
             <DialogHeader>
-              <DialogTitle>editing {space.name}</DialogTitle>
+              <DialogTitle className="text-primary">
+                editing {updated.name}
+              </DialogTitle>
               <DialogDescription>
                 config is shared for all users of the space.
               </DialogDescription>
@@ -216,6 +303,7 @@ function SpaceEditor({
               space={space}
               appUsers={appUsers}
               onChange={handleChange}
+              onSubmit={handleSubmit}
             />
 
             <DialogFooter className="mt-4">
@@ -250,37 +338,53 @@ function Index() {
   const users = useObservable(db.users.find({}).$)
   const spaces = useObservable(db.spaces.find({}).$)
 
+  const [createKey, setCreateKey] = useState(Date.now())
+
   const user = useLocalUser()
 
-  const updateSpace = async (space: Space) => {
-    console.log("updating", space)
-    const result = await db.spaces.upsert({
+  const upsertSpace = async (space: Space) => {
+    setCreateKey(Date.now())
+    await db.spaces.upsert({
       ...space,
       type: "space",
     })
-
-    console.log("updated space", result)
   }
 
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h2 className="text-xl">Users</h2>
-        <ol>{users?.map((user) => <li key={user.id}>{user.name}</li>)}</ol>
-      </div>
+        <div className="flex flex-row items-center justify-between">
+          <h2 className="text-xl">Your Spaces</h2>
 
-      <div>
-        <h2 className="text-xl">Spaces</h2>
-        <div className="flex flex-col gap-2">
-          {spaces?.map((space) => (
-            <SpaceEditor
-              key={space.id}
-              space={space._data}
-              onSubmit={updateSpace}
+          {user && (
+            <SpaceCreator
+              key={createKey}
               appUsers={users || []}
-              editable={user === space.owner}
+              user={user}
+              onSubmit={upsertSpace}
             />
-          ))}
+          )}
+        </div>
+        <div className="flex flex-col gap-2">
+          {spaces
+            ?.filter((s) => s.owner === user)
+            ?.map((space) => (
+              <SpaceEditor
+                key={space.id}
+                space={space._data}
+                onSubmit={upsertSpace}
+                appUsers={users || []}
+              />
+            ))}
+        </div>
+
+        <div>
+          <h2 className="text-xl">Shared Spaces</h2>
+          <ol>
+            {spaces
+              ?.filter((s) => s.owner !== user)
+              ?.map((space) => <li key={space.id}>{space.name}</li>)}
+          </ol>
         </div>
       </div>
     </div>
