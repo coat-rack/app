@@ -1,9 +1,9 @@
+import { HomeSolid, OctagonTimesSolid } from "@repo/icons/solid"
 import { Button } from "@repo/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
 import { useObservable } from "./async"
 import { useDatabase } from "./data"
-import { HomeSolid, OctagonTimesSolid } from "@repo/icons/solid"
 
 type Props = PropsWithChildren<{
   title?: string
@@ -28,9 +28,10 @@ const Navigation = ({
   >
     <nav className="bg-background col-span-2 row-auto flex flex-row justify-between p-2 pl-0">
       <Button asChild variant="link" size="sm">
-        <Link to="/"
+        <Link
+          to="/"
           activeProps={{
-            className: "text-primary"
+            className: "text-primary",
           }}
           title="Home"
         >
@@ -38,7 +39,13 @@ const Navigation = ({
         </Link>
       </Button>
       <div>{title}</div>
-      <Button variant="ghost" size="sm" className="flex flex-row gap-2 align-center" onClick={signOut} title="Sign out">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="align-center flex flex-row gap-2"
+        onClick={signOut}
+        title="Sign out"
+      >
         sign out
         <OctagonTimesSolid className="h-4 w-4 fill-current" />
       </Button>
@@ -72,7 +79,7 @@ export const Layout = ({ title, children }: Props) => {
             to="/apps/$id"
             className="block"
             activeProps={{
-              className: "underline"
+              className: "underline",
             }}
             params={{
               id: app.id,
