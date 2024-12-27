@@ -167,10 +167,6 @@ function Entry({ db }: ComponentProps<Entry<TaskData>>) {
           </CollapsibleContent>
         </Card>
       </Collapsible>
-
-      <section className="flex flex-col gap-2">
-        <h1>Completed</h1>
-      </section>
     </main>
   )
 }
