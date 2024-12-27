@@ -27,6 +27,7 @@ import { createLazyFileRoute } from "@tanstack/react-router"
 import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
 import { useLocalUser } from "@/db/rxdb"
+import { SpaceProvider } from "@/layout"
 import { Space, User } from "@repo/data/models"
 import { Button } from "@repo/ui/components/button"
 import { useEffect, useState } from "react"
@@ -52,17 +53,6 @@ const COLORS = [
 ]
 
 const randomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)]
-
-function SpaceProvider({
-  space,
-  children,
-}: React.PropsWithChildren<{ space: Space }>) {
-  return (
-    <div style={{ "--primary": space.color } as React.CSSProperties}>
-      {children}
-    </div>
-  )
-}
 
 function SpaceForm({
   space,
