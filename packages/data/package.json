@@ -4,7 +4,8 @@
   "private": true,
   "exports": {
     "./models": "./src/models.ts",
-    "./rpc": "./src/rpc.ts"
+    "./rpc": "./src/rpc.ts",
+    "./messaging": "./src/messaging.ts"
   },
   "scripts": {},
   "devDependencies": {

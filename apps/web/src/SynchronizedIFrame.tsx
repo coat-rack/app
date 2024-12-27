@@ -1,7 +1,10 @@
 import { useDatabase } from "@/data"
+import { RPCResponseMessage, SpacesMessage } from "@repo/data/messaging"
 import { RpcRequest, RpcResponse, err, ok } from "@repo/data/rpc"
 import { Db } from "@repo/sdk"
-import { useEffect } from "react"
+import { RefObject, useEffect, useRef, useState } from "react"
+import { useObservable } from "./async"
+import { useActiveSpace, useFilterSpaces } from "./db/rxdb"
 
 type DataKey = `data.${string}`
 type DataQuery = Record<DataKey, unknown>
@@ -17,10 +20,11 @@ function createDataQuery(data: Record<string, unknown> = {}): DataQuery {
   return result
 }
 
-function useIframeSynchronization(
+function useIFrameRPC(
   appId: string,
   sandboxHost: string,
   space: string,
+  filtered: boolean,
 ) {
   const { db } = useDatabase()
 
@@ -32,7 +36,8 @@ function useIframeSynchronization(
     const reply = async <Op extends keyof Db<unknown>>(
       value: RpcResponse<Db<unknown>, Op>["result"],
     ) => {
-      const message = {
+      const message: RPCResponseMessage = {
+        type: "rpc.response",
         result: value,
         op: event.data.op,
         requestId: event.data.requestId,
@@ -47,11 +52,13 @@ function useIframeSynchronization(
 
       const dataQuery = createDataQuery(data)
 
-      console.log(dataQuery)
+      const filterSelector = filtered ? { space } : {}
+
       db.appdata
         .find({
           selector: {
             ...dataQuery,
+            ...filterSelector,
             app: appId,
           },
         })
@@ -163,11 +170,48 @@ function useIframeSynchronization(
   })
 }
 
+const useIFrameSpaces = (
+  sandboxHost: string,
+  ref: RefObject<HTMLIFrameElement | undefined>,
+) => {
+  const [source, setSource] = useState<MessageEventSource>()
+  const { db } = useDatabase()
+  const spaces = useObservable(db.spaces.find({}).$)
+  const active = useActiveSpace()
+  const filtered = useFilterSpaces()
+
+  const origin = new URL(sandboxHost).origin
+
+  const handler = (ev: MessageEvent<unknown>) => {
+    if (ev.origin === origin && ev.source) {
+      setSource(ev.source)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("message", handler)
+
+    return () => window.removeEventListener("message", handler)
+  }, [ref.current])
+
+  useEffect(() => {
+    const message: SpacesMessage = {
+      type: "meta.spaces",
+      active,
+      filtered: filtered || false,
+      all: spaces?.map((space) => space._data) || [],
+    }
+
+    source?.postMessage(message, { targetOrigin: origin })
+  }, [spaces, active, source, filtered])
+}
+
 interface SynchronizedIframeProps {
   appId: string
   appUrl: URL
   sandboxHost: string
   space: string
+  filteredSpaces: boolean
   className?: string
 }
 
@@ -176,13 +220,19 @@ export function SynchronizedIframe({
   appUrl,
   sandboxHost,
   space,
+  filteredSpaces,
   className,
 }: SynchronizedIframeProps) {
-  useIframeSynchronization(appId, sandboxHost, space)
   const url = `${sandboxHost}/?appUrl=${encodeURIComponent(appUrl.toString())}`
+
+  const ref = useRef<HTMLIFrameElement>(null)
+
+  useIFrameRPC(appId, sandboxHost, space, filteredSpaces)
+  useIFrameSpaces(sandboxHost, ref)
 
   return (
     <iframe
+      ref={ref}
       className={className}
       src={url}
       referrerPolicy="strict-origin"

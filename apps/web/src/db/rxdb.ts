@@ -1,4 +1,4 @@
-import { KeyValue, Push, Schema } from "@repo/data/models"
+import { KeyValue, Push, Schema, Space } from "@repo/data/models"
 import {
   RxCollection,
   RxDatabase,
@@ -157,6 +157,10 @@ const replicateCollection =
 
 export const USER_META_KEY = "user"
 
+export const ACTIVE_SPACE_META_KEY = "space"
+
+export const FILTER_SPACES_META_KEY = "filter-spaces"
+
 /**
  * Initialize database for a user that can be synchronized independently
  */
@@ -183,8 +187,12 @@ export const setupUserDB = async (user: string) => {
   }
 }
 
+interface Meta<T> extends KeyValue {
+  value: T
+}
+
 export const setLocalUser = (username?: string) =>
-  localDB.meta.upsertLocal<KeyValue>(USER_META_KEY, {
+  localDB.meta.upsertLocal<Meta<string | undefined>>(USER_META_KEY, {
     id: USER_META_KEY,
     value: username,
   })
@@ -192,7 +200,35 @@ export const setLocalUser = (username?: string) =>
 export const useLocalUser = () =>
   useObservable(
     localDB.meta
-      .getLocal$<KeyValue>(USER_META_KEY)
+      .getLocal$<Meta<string | undefined>>(USER_META_KEY)
       .pipe(map((result) => result?._data.data.value)),
+    [],
+  )
+
+export const setActiveSpace = (space: Space) =>
+  localDB.meta.upsertLocal<Meta<Space>>(ACTIVE_SPACE_META_KEY, {
+    id: ACTIVE_SPACE_META_KEY,
+    value: space,
+  })
+
+export const useActiveSpace = () =>
+  useObservable(
+    localDB.meta
+      .getLocal$<Meta<Space>>(ACTIVE_SPACE_META_KEY)
+      .pipe(map((result) => result?._data.data.value)),
+    [],
+  )
+
+export const setFilterSpaces = (active: boolean) =>
+  localDB.meta.upsertLocal<Meta<boolean>>(FILTER_SPACES_META_KEY, {
+    id: FILTER_SPACES_META_KEY,
+    value: active,
+  })
+
+export const useFilterSpaces = () =>
+  useObservable(
+    localDB.meta
+      .getLocal$<Meta<boolean>>(FILTER_SPACES_META_KEY)
+      .pipe(map((result) => result?._data.data.value || false)),
     [],
   )

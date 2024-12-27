@@ -39,7 +39,7 @@ export const Space = Row("space").extend({
 
 export const KeyValue = z.object({
   id: z.string().max(100),
-  value: z.string().optional(),
+  value: z.any().optional(),
 })
 export type KeyValue = z.infer<typeof KeyValue>
 

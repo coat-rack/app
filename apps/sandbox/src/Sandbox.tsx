@@ -1,6 +1,9 @@
 import { RpcResponse } from "@repo/data/rpc"
 import { Db } from "@repo/sdk"
+import { useEffect, useState } from "react"
 import { useApp } from "./dynamic"
+
+import { SpacesMessage } from "@repo/data/messaging"
 
 const api: Db = {
   get: async () => {
@@ -105,9 +108,37 @@ function getAppUrlsFromQueryString() {
   return [indexUrl, manifestUrl]
 }
 
+/**
+ * Spaces are communicated as updates via the host using the `meta.space` update
+ */
+const useSpaces = () => {
+  const [spaces, setSpaces] = useState<SpacesMessage>({
+    type: "meta.spaces",
+    filtered: false,
+    all: [],
+  })
+
+  useEffect(() => {
+    const listener = (ev: MessageEvent<SpacesMessage>) => {
+      if (ev.data?.type !== "meta.spaces") {
+        return
+      }
+
+      setSpaces(ev.data)
+    }
+
+    window.addEventListener("message", listener)
+
+    return () => window.removeEventListener("message", listener)
+  })
+
+  return spaces
+}
+
 function Sandbox() {
   const [appUrl, manifestUrl] = getAppUrlsFromQueryString()
   const [{ app }, error] = useApp(appUrl, manifestUrl)
+  const spaces = useSpaces()
   const App = app?.Entry
 
   if (error) {
@@ -123,7 +154,7 @@ function Sandbox() {
 
   const rpc = getApi()
 
-  return App && <App db={rpc} />
+  return App && <App db={rpc} spaces={spaces} />
 }
 
 export default Sandbox

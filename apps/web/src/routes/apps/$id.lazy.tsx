@@ -1,9 +1,8 @@
 import { SynchronizedIframe } from "@/SynchronizedIFrame"
 import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
+import { useActiveSpace, useFilterSpaces, useLocalUser } from "@/db/rxdb"
 import { createLazyFileRoute } from "@tanstack/react-router"
-
-const PUBLIC_SPACE = "public"
 
 export const Route = createLazyFileRoute("/apps/$id")({
   component: Index,
@@ -20,6 +19,12 @@ function Index() {
   const sandboxHost = import.meta.env.VITE_SANDBOX_URL
   const { id } = Route.useParams()
 
+  const user = useLocalUser()
+  const activeSpace = useActiveSpace()
+  const filtered = useFilterSpaces()
+
+  const space = activeSpace?.id || user
+
   const { db } = useDatabase()
   const app = useObservable(
     db.apps.findOne({
@@ -32,13 +37,14 @@ function Index() {
 
   return (
     <div className="h-full w-full" id={id} key={id}>
-      {app && (
+      {space && app && (
         <SynchronizedIframe
           className="h-full w-full"
           appId={app.id}
           appUrl={resolveAppUrl(app.port)}
           sandboxHost={sandboxHost}
-          space={PUBLIC_SPACE}
+          filteredSpaces={filtered || false}
+          space={space}
         />
       )}
     </div>
