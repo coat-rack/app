@@ -37,10 +37,10 @@ export const Space = Row("space").extend({
   users: z.string().array().optional(),
 
   /**
-   * Primary color used when defining a space. Other colours will be
+   * Primary color used when defining a space. Other colors will be
    * determined based on this value
    */
-  color: z.string().startsWith("#").optional(),
+  color: z.string().startsWith("#"),
 })
 
 export const KeyValue = z.object({
