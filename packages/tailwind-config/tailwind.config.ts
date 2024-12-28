@@ -18,42 +18,50 @@ const config: Omit<Config, "content"> = {
     },
     extend: {
       boxShadow: {
-        retro: "4px 4px 0px black",
-        "retro-lg": "8px 8px 0px black",
+        retro: "4px 4px 0px var(--mix-bg)",
+        "retro-lg": "8px 8px 0px var(--mix-bg)",
       },
       colors: {
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring)",
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        border: "color-mix(in oklab, var(--space) 10%, var(--mix-fg) 90%)",
+        input: "color-mix(in oklab, var(--space) 10%, var(--mix-fg) 90%)",
+        ring: "color-mix(in oklab, var(--space) 10%, var(--mix-bg) 90%)",
+        background: "color-mix(in oklab, var(--space) 20%, var(--mix-fg) 80%)",
+        foreground: "color-mix(in oklab, var(--space) 20%, var(--mix-bg) 80%)",
         primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
+          DEFAULT: "var(--space)",
+          foreground:
+            "color-mix(in oklab, var(--space) 10%, var(--mix-fg) 90%)",
         },
         secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "var(--secondary-foreground)",
+          DEFAULT:
+            "color-mix(in oklab, var(--space) 80%, lch(from var(--space) l c calc(h + 120)) 20%)",
+          foreground:
+            "color-mix(in oklab, var(--secondary) 10%, var(--mix-fg) 90%)",
         },
         destructive: {
-          DEFAULT: "var(--destructive)",
-          foreground: "var(--destructive-foreground)",
+          DEFAULT: "color-mix(in oklab, var(--space) 10%, red 90%)",
+          foreground:
+            "color-mix(in oklab, var(--space) 10%, var(--mix-fg) 90%)",
         },
         muted: {
-          DEFAULT: "var(--muted)",
-          foreground: "var(--muted-foreground)",
+          DEFAULT: "color-mix(in oklab, var(--space) 30%, var(--mix-fg) 70%)",
+          foreground:
+            "color-mix(in oklab, var(--space) 10%, var(--mix-bg) 70%)",
         },
         accent: {
-          DEFAULT: "var(--accent)",
-          foreground: "var(--accent-foreground)",
+          DEFAULT: "lch(from var(--space) l c calc(h - 120))",
+          foreground:
+            "color-mix(in oklab, var(--accent) 10%, var(--mix-bg) 90%)",
         },
         popover: {
-          DEFAULT: "var(--popover)",
-          foreground: "var(--popover-foreground)",
+          DEFAULT: "color-mix(in oklab, var(--space) 10%, var(--mix-fg) 90%)",
+          foreground:
+            "color-mix(in oklab, var(--space) 10%, var(--mix-bg) 90%)",
         },
         card: {
-          DEFAULT: "var(--card)",
-          foreground: "var(--card-foreground)",
+          DEFAULT: "color-mix(in oklab, var(--space) 15%, var(--mix-fg) 85%)",
+          foreground:
+            "color-mix(in oklab, var(--space) 10%, var(--mix-bg) 90%)",
         },
       },
       borderRadius: {
