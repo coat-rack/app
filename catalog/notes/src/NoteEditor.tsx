@@ -5,13 +5,20 @@ import { Input } from "@repo/ui/components/input"
 import { Textarea } from "@repo/ui/components/textarea"
 import { useEffect, useState } from "react"
 import { Note } from "./note"
+
 interface NoteEditorProps {
   noteId: string
+  noteSpace: string
   db: Db<Note>
   onNoteChanged?: (isDelete: boolean) => void
 }
 
-export function NoteEditor({ noteId, db, onNoteChanged }: NoteEditorProps) {
+export function NoteEditor({
+  noteId,
+  noteSpace,
+  db,
+  onNoteChanged,
+}: NoteEditorProps) {
   const [note, setNote] = useState<Note | undefined>(undefined)
   const [dirty, setDirty] = useState<boolean>(false)
 
@@ -26,7 +33,7 @@ export function NoteEditor({ noteId, db, onNoteChanged }: NoteEditorProps) {
 
   const save = async () => {
     if (note) {
-      await db.update(noteId, note)
+      await db.update(noteId, noteSpace, note)
       onNoteChanged?.(false)
       setDirty(false)
     }

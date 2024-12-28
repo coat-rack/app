@@ -45,7 +45,6 @@ function useRefresh() {
 }
 
 function Entry({ db, spaces }: ComponentProps<Entry<TaskData>>) {
-  console.log(spaces)
   const [title, setTitle] = useState("")
 
   const [key, refresh] = useRefresh()
@@ -77,8 +76,8 @@ function Entry({ db, spaces }: ComponentProps<Entry<TaskData>>) {
     refresh()
   }
 
-  const updateTask = async (id: string, task: Task) => {
-    await db.update(id, task)
+  const updateTask = async (id: string, space: string, task: Task) => {
+    await db.update(id, space, task)
 
     setTitle("")
     refresh()
@@ -116,20 +115,23 @@ function Entry({ db, spaces }: ComponentProps<Entry<TaskData>>) {
           <CardContent>
             <ul className="flex flex-col gap-4">
               {todo?.map((task) => (
-                <SpaceTheme space={task.space}>
-                  <li
-                    className="flex flex-row items-center gap-2"
-                    key={task.id}
-                  >
-                    <Checkbox
-                      id={task.id}
-                      checked={task.data.completed}
-                      onClick={() =>
-                        updateTask(task.id, { ...task.data, completed: true })
-                      }
-                    />
-                    <Label htmlFor={task.id}>{task.data?.title}</Label>
-                  </li>
+                <SpaceTheme
+                  space={task.space}
+                  as="li"
+                  className="flex flex-row items-center gap-2"
+                  key={task.id}
+                >
+                  <Checkbox
+                    id={task.id}
+                    checked={task.data.completed}
+                    onClick={() =>
+                      updateTask(task.id, task.space, {
+                        ...task.data,
+                        completed: true,
+                      })
+                    }
+                  />
+                  <Label htmlFor={task.id}>{task.data?.title}</Label>
                 </SpaceTheme>
               ))}
             </ul>
@@ -155,7 +157,9 @@ function Entry({ db, spaces }: ComponentProps<Entry<TaskData>>) {
               <CardContent>
                 <ul className="flex flex-col gap-4">
                   {completed?.map((task) => (
-                    <li
+                    <SpaceTheme
+                      as="li"
+                      space={task.space}
                       className="flex flex-row items-center gap-2"
                       key={task.id}
                     >
@@ -163,14 +167,14 @@ function Entry({ db, spaces }: ComponentProps<Entry<TaskData>>) {
                         id={task.id}
                         checked={task.data.completed}
                         onClick={() =>
-                          updateTask(task.id, {
+                          updateTask(task.id, task.space, {
                             ...task.data,
                             completed: false,
                           })
                         }
                       />
                       <Label htmlFor={task.id}>{task.data?.title}</Label>
-                    </li>
+                    </SpaceTheme>
                   ))}
                 </ul>
               </CardContent>

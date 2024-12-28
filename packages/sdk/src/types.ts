@@ -32,7 +32,11 @@ export type DbRecord<T> = Pick<AppData, "id" | "space" | "timestamp"> & {
 
 export interface Db<T = unknown> {
   get: <O extends T = T>(key: string) => Promise<DbRecord<O> | undefined>
-  update: <O extends T = T>(key: string, value: O) => Promise<DbRecord<O>>
+  update: <O extends T = T>(
+    key: string,
+    space: string,
+    value: O,
+  ) => Promise<DbRecord<O>>
   create: <O extends T = T>(value: O) => Promise<DbRecord<O>>
   delete: (key: string) => Promise<void>
   query: <O extends T = T>(query?: Partial<O>) => PromiseArray<DbRecord<O>>

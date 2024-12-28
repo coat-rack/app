@@ -32,28 +32,37 @@ export function ProvideSpaces({
   )
 }
 
-export function SpaceTheme({
+export function SpaceTheme<
+  El extends keyof HTMLElementTagNameMap | undefined = undefined,
+>({
   space,
   children,
+  as: tagName,
   ...props
-}: HTMLAttributes<HTMLDivElement> & {
-  /**
-   * ID of space to use. Will be resolved from the {@link ProvideSpaces}
-   */
-  space: string
-}) {
+}: El extends keyof HTMLElementTagNameMap
+  ? HTMLAttributes<HTMLElementTagNameMap[El]> & {
+      as?: El
+      /**
+       * ID of space to use. Will be resolved from the {@link ProvideSpaces}
+       */
+      space: string
+    }
+  : HTMLAttributes<HTMLDivElement> & {
+      space: string
+      as?: undefined
+    }) {
   const { all: spaces } = useSpaces()
 
   const found = spaces.find((s) => s.id === space)
 
   const styles = getSpaceStyles(found)
 
-  console.log("use spaces", useSpaces())
+  const Tag = tagName || "div"
 
   return (
-    <div {...props} style={{ ...styles, ...props.style }}>
+    <Tag {...(props as any)} style={{ ...styles, ...props.style }}>
       {children}
-    </div>
+    </Tag>
   )
 }
 /**

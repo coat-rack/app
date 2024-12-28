@@ -1,12 +1,17 @@
+import { IFrameMessage } from "./messaging"
+
 type RpcMessage = {
   requestId: string
 }
+
+type RpcResponseMessage = RpcMessage & IFrameMessage<"rpc", "response">
+type RpcRequestMessage = RpcMessage & IFrameMessage<"rpc", "request">
 
 type Fn = (...args: any[]) => any
 
 type RpcRequestShape<I> = {
   [K in keyof I]: I[K] extends Fn
-    ? RpcMessage & {
+    ? RpcRequestMessage & {
         op: K
         args: Parameters<I[K]>
       }
@@ -32,7 +37,7 @@ export function err<E>(error: E) {
 
 type RpcResponseShape<I> = {
   [K in keyof I]: I[K] extends Fn
-    ? RpcMessage & {
+    ? RpcResponseMessage & {
         op: K
         result: Result<Awaited<ReturnType<I[K]>>, unknown>
       }

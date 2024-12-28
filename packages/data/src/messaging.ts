@@ -1,14 +1,10 @@
 import { Space } from "./models"
 
-interface IFrameMessage<Scope extends string, Type extends string> {
+/**
+ * Base message type for communication across IFrame boundary between web and sandbox
+ */
+export interface IFrameMessage<Scope extends string, Type extends string> {
   type: `${Scope}.${Type}`
-}
-
-// TODO: consolidate this and the RPCResponse in ./rpc.ts
-export interface RPCResponseMessage extends IFrameMessage<"rpc", "response"> {
-  op: string
-  result: unknown
-  requestId: string
 }
 
 export interface SpacesMessage extends IFrameMessage<"meta", "spaces"> {
@@ -16,5 +12,3 @@ export interface SpacesMessage extends IFrameMessage<"meta", "spaces"> {
   all: Space[]
   filtered: boolean
 }
-
-export type IFrameMessageTypes = RPCResponseMessage | SpacesMessage

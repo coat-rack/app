@@ -56,11 +56,10 @@ export const Tasks: App = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: () => {
+  Entry: ({ spaces }) => {
+    console.log(spaces)
     const [date, setDate] = useState<Date | undefined>(new Date())
-    const [spaceColor, setSpaceColor] = useState<string>(
-      window.getComputedStyle(document.body).getPropertyValue("--space"),
-    )
+    const [spaceColor, setSpaceColor] = useState<string>()
 
     const chartData = [
       { month: "January", desktop: 186, mobile: 80 },
@@ -85,7 +84,11 @@ export const Tasks: App = {
     return (
       <div
         style={
-          spaceColor ? ({ "--space": spaceColor } as CSSProperties) : undefined
+          spaceColor
+            ? ({
+                "--space": spaceColor || spaces.active?.color,
+              } as CSSProperties)
+            : undefined
         }
         className="bg-background flex flex-col gap-4"
       >
