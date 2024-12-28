@@ -546,6 +546,12 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.18
         version: 18.2.18
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
 
   packages/tailwind-config:
     devDependencies:
