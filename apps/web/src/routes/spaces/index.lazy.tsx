@@ -3,10 +3,10 @@ import { createLazyFileRoute } from "@tanstack/react-router"
 import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
 import { useLocalUser } from "@/db/rxdb"
+import { SpaceCreator } from "@/ui/spaces/create"
+import { SpaceEditor } from "@/ui/spaces/edit"
 import { Space } from "@repo/data/models"
 import { useState } from "react"
-import { SpaceCreator } from "../components/spaces/create"
-import { SpaceEditor } from "../components/spaces/edit"
 
 export const Route = createLazyFileRoute("/spaces/")({
   component: Index,
