@@ -35,6 +35,12 @@ export const Space = Row("space").extend({
    * complex union type
    */
   users: z.string().array().optional(),
+
+  /**
+   * Primary color used when defining a space. Other colors will be
+   * determined based on this value
+   */
+  color: z.string().startsWith("#"),
 })
 
 export const KeyValue = z.object({

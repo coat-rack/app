@@ -23,6 +23,7 @@ export const seedDb = async (db: DB) => {
       spaceType: "shared",
       owner: "admin",
       users: ["admin"],
+      color: "#f43f5e",
     },
     {
       // Each user has a space defined for them
@@ -33,6 +34,7 @@ export const seedDb = async (db: DB) => {
       owner: "admin",
       spaceType: "user",
       users: [],
+      color: "#d946ef",
     },
   ]
 
@@ -223,6 +225,7 @@ export const appRouter = (
               owner: user.id,
               spaceType: "user",
               timestamp: Date.now(),
+              color: "#f59e0b",
             },
           ])
 
