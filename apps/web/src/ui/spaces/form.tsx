@@ -34,17 +34,6 @@ const COLORS = [
 export const randomColor = () =>
   COLORS[Math.floor(Math.random() * COLORS.length)]
 
-export function SpaceProvider({
-  space,
-  children,
-}: React.PropsWithChildren<{ space: Space }>) {
-  return (
-    <div style={{ "--primary": space.color } as React.CSSProperties}>
-      {children}
-    </div>
-  )
-}
-
 export function SpaceForm({
   space,
   appUsers,
@@ -119,22 +108,25 @@ export function SpaceForm({
       {space.spaceType === "shared" && (
         <>
           <Label htmlFor="users">users</Label>
-          <div className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-2">
             {editableUsers.map((u) => (
-              <Label
-                key={u.id}
-                htmlFor={"user-" + u.id}
-                className="flex flex-row items-center gap-2"
-              >
+              <li key={u.id} className="flex flex-row gap-2">
                 <Checkbox
-                  name={"user" + u.id}
+                  name={u.name}
+                  id={"user-" + u.id}
                   checked={users.includes(u.id)}
                   onCheckedChange={(v) => toggleUser(u, v as boolean)}
                 />
-                {u.name}
-              </Label>
+                <Label
+                  key={u.id}
+                  htmlFor={"user-" + u.id}
+                  className="flex flex-row items-center gap-2"
+                >
+                  {u.name}
+                </Label>
+              </li>
             ))}
-          </div>
+          </ul>
         </>
       )}
     </form>

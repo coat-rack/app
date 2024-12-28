@@ -45,10 +45,10 @@ export function SpaceTheme<
       /**
        * ID of space to use. Will be resolved from the {@link ProvideSpaces}
        */
-      space: string
+      space?: string
     }
   : HTMLAttributes<HTMLDivElement> & {
-      space: string
+      space?: string
       as?: undefined
     }) {
   const { all: spaces } = useSpaces()

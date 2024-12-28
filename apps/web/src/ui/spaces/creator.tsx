@@ -1,5 +1,6 @@
 import { Space, User } from "@repo/data/models"
 import { Plus } from "@repo/icons/regular"
+import { SpaceTheme } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import {
   Dialog,
@@ -11,7 +12,7 @@ import {
   DialogTrigger,
 } from "@repo/ui/components/dialog"
 import { useState } from "react"
-import { SpaceForm, SpaceProvider, randomColor } from "./form"
+import { SpaceForm, randomColor } from "./form"
 
 export function SpaceCreator({
   onSubmit,
@@ -62,7 +63,7 @@ export function SpaceCreator({
           </DialogTrigger>
         </div>
         <DialogContent>
-          <SpaceProvider space={space}>
+          <SpaceTheme space={space.id}>
             <DialogHeader>
               <DialogTitle className="text-primary">
                 create {space.name || "new space"}
@@ -88,7 +89,7 @@ export function SpaceCreator({
                 <Plus className="h-4 w-4 fill-current" />
               </Button>
             </DialogFooter>
-          </SpaceProvider>
+          </SpaceTheme>
         </DialogContent>
       </Dialog>
     </>
