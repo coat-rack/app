@@ -1,7 +1,7 @@
+import { Space, User } from "@repo/data/models"
 import { Checkbox } from "@repo/ui/components/checkbox"
-
+import { Input } from "@repo/ui/components/input"
 import { Label } from "@repo/ui/components/label"
-
 import {
   Select,
   SelectContent,
@@ -9,10 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select"
-
-import { Input } from "@repo/ui/components/input"
-
-import { Space, User } from "@repo/data/models"
 import { useEffect, useState } from "react"
 
 /**

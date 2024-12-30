@@ -1,10 +1,10 @@
+import { useObservable } from "@repo/core/async"
 import { ProvideSpaces } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
-import { useObservable } from "./async"
 import { useDatabase } from "./data"
-import { useActiveSpace } from "./db/rxdb"
+import { useActiveSpace } from "./db/local"
 import { Navigation } from "./ui/navigation"
 
 export const Layout = ({ children }: PropsWithChildren) => {

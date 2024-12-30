@@ -1,10 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 
-import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
-import { useLocalUser } from "@/db/rxdb"
+import { useLocalUser } from "@/db/local"
 import { SpaceCreator } from "@/ui/spaces/creator"
 import { SpaceEditor } from "@/ui/spaces/editor"
+import { useObservable } from "@repo/core/async"
 import { Space } from "@repo/data/models"
 import { useState } from "react"
 

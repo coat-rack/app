@@ -1,6 +1,6 @@
+import { useIFrameMessage } from "@repo/core/iframe"
 import { SpacesMessage } from "@repo/data/messaging"
 import { useState } from "react"
-import { useIFrameMessage } from "./iframe"
 
 /**
  * Spaces are communicated as updates via the host using the `meta.spaces` update

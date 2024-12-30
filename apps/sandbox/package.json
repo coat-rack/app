@@ -18,6 +18,7 @@
     "vite-tsconfig-paths": "^4.3.1"
   },
   "devDependencies": {
+    "@repo/core": "workspace:*",
     "@repo/sdk": "workspace:*",
     "@repo/data": "workspace:*",
     "@repo/tailwind-config": "workspace:*",

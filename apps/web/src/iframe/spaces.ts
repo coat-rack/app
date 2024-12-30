@@ -1,6 +1,6 @@
-import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
-import { useActiveSpace, useFilterSpaces } from "@/db/rxdb"
+import { useActiveSpace, useFilterSpaces } from "@/db/local"
+import { useObservable } from "@repo/core/async"
 import { SpacesMessage } from "@repo/data/messaging"
 import { useEffect, useState } from "react"
 
