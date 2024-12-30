@@ -1,4 +1,4 @@
-import { App, DbRecord, ProvideSpaces, SpaceTheme } from "@repo/sdk"
+import { App, DbRecord, SpaceTheme } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import { useEffect, useState } from "react"
 import { NoteEditor } from "./NoteEditor"
@@ -49,7 +49,7 @@ export const Notes: App<Note> = {
     }, [signal, spaces])
 
     return (
-      <ProvideSpaces spaces={spaces}>
+      <main>
         <h1>notes</h1>
         <Button onClick={newNote}>New note</Button>
         <div className="grid grid-cols-3 grid-rows-1 gap-4 py-2">
@@ -67,7 +67,7 @@ export const Notes: App<Note> = {
             )) || <p>Select a note</p>}
           </div>
         </div>
-      </ProvideSpaces>
+      </main>
     )
   },
 }

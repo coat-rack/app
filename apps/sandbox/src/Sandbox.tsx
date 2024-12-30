@@ -1,10 +1,10 @@
-import { getAppUrlsFromQueryString, useApp } from "./dynamic"
+import { ProvideSpaces } from "@repo/sdk"
 
+import { getAppUrlsFromQueryString, useApp } from "./dynamic"
 import { getRpcDb } from "./rpc"
 import { useSpaces } from "./spaces"
 
 function Sandbox() {
-
   const query = new URLSearchParams(window.location.search)
   const [appUrl, manifestUrl] = getAppUrlsFromQueryString(query)
   const [{ app }, error] = useApp(appUrl, manifestUrl)
@@ -24,7 +24,17 @@ function Sandbox() {
 
   const rpc = getRpcDb()
 
-  return App && <App db={rpc} spaces={spaces} />
+  if (!App) {
+    return
+  }
+
+  // It may also be useful to create a DB context here so apps aren't dependant
+  // on being injected with this directly
+  return (
+    <ProvideSpaces spaces={spaces}>
+      <App db={rpc} spaces={spaces} />
+    </ProvideSpaces>
+  )
 }
 
 export default Sandbox

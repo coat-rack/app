@@ -57,7 +57,6 @@ export const Tasks: App = {
    *  The Entrypoint for the app
    */
   Entry: ({ spaces }) => {
-    console.log(spaces)
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [spaceColor, setSpaceColor] = useState<string>()
 

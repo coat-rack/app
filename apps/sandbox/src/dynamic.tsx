@@ -22,6 +22,9 @@ type AppResult = {
 
 type UseAppResult = [result: AppResult, error?: AppError]
 
+// It may be possible to implement this using React.lazy + Suspense
+// It doesn't really simplify things in ths context but could help iron out
+// lazy loading issues if we run into them at a later stage
 export const useApp = (
   entryPointUrl?: URL,
   manifestUrl?: URL,
