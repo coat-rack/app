@@ -1,5 +1,6 @@
 {
   "name": "web",
+  "description": "The entrypoint to the application. The interface through which users interact with the platform",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +11,6 @@
   },
   "dependencies": {
     "@originjs/vite-plugin-federation": "^1.3.4",
-    "@repo/core": "workspace:*",
     "@repo/core": "workspace:*",
     "@repo/icons": "workspace:*",
     "@repo/sdk": "workspace:*",

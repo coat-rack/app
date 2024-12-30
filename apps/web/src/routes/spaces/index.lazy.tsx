@@ -5,7 +5,7 @@ import { useLocalUser } from "@/db/local"
 import { SpaceCreator } from "@/ui/spaces/creator"
 import { SpaceEditor } from "@/ui/spaces/editor"
 import { useObservable } from "@repo/core/async"
-import { Space } from "@repo/data/models"
+import { Space } from "@repo/core/models"
 import { useState } from "react"
 
 export const Route = createLazyFileRoute("/spaces/")({

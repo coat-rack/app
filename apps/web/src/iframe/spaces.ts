@@ -2,7 +2,7 @@ import { useDatabase } from "@/data"
 import { useActiveSpace, useFilterSpaces } from "@/db/local"
 import { useObservable } from "@repo/core/async"
 import { useWindowEvent } from "@repo/core/event"
-import { SpacesMessage } from "@repo/data/messaging"
+import { SpacesMessage } from "@repo/core/messaging"
 import { useEffect, useState } from "react"
 
 export const useIFrameSpaces = (sandboxHost: string) => {

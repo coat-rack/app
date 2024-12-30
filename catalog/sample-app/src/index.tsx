@@ -1,4 +1,4 @@
-import { App, ProvideSpaces } from "@repo/sdk"
+import { App } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 
 import "./styles.css"
@@ -14,7 +14,7 @@ export const SampleApp: App = {
     }
 
     return (
-      <ProvideSpaces spaces={spaces}>
+      <>
         <h1>Hello sample-app</h1>
         <Button
           onClick={() =>
@@ -66,7 +66,7 @@ export const SampleApp: App = {
         >
           Query
         </Button>
-      </ProvideSpaces>
+      </>
     )
   },
 }

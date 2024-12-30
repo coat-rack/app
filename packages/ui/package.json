@@ -1,5 +1,6 @@
 {
   "name": "@repo/ui",
+  "description": "UI library used for building platform as well as app functionality. Depends on @repo/sdk at runtime for theming primitives",
   "version": "0.0.0",
   "private": true,
   "sideEffects": [

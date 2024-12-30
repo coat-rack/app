@@ -1,20 +1,24 @@
-import { AppData, Space } from "@repo/data/models"
-import React from "react"
+import type { ComponentType } from "react"
 
-export type Entry<D = unknown> = React.ComponentType<{
-  db: Db<D>
-  spaces: {
-    active?: Space
-    all: Space[]
-    filtered: boolean
-  }
-}>
+export interface AppContext<T = unknown> {
+  db: Db<T>
+  activeSpace?: Space
+  spaces: Space[]
+}
 
-export interface App<D = unknown> {
+export interface Space {
+  id: string
+  name: string
+  owner: string
+  spaceType: "user" | "shared"
+  color: string
+}
+
+export interface App {
   /**
    *  The Entrypoint for the app
    */
-  Entry: Entry<D>
+  Entry: ComponentType<AppContext>
 }
 
 export interface Manifest {
@@ -26,19 +30,26 @@ export interface Manifest {
 
 type PromiseArray<T> = Promise<Array<T>>
 
-export type DbRecord<T> = Pick<AppData, "id" | "space" | "timestamp"> & {
+export interface DbRecord<T> {
+  id: string
+  timestamp: number
+  space: string
   data: T
 }
 
 export interface Db<T = unknown> {
   get: <O extends T = T>(key: string) => Promise<DbRecord<O> | undefined>
+
   update: <O extends T = T>(
     key: string,
     space: string,
     value: O,
   ) => Promise<DbRecord<O>>
+
   create: <O extends T = T>(value: O) => Promise<DbRecord<O>>
+
   delete: (key: string) => Promise<void>
+
   query: <O extends T = T>(query?: Partial<O>) => PromiseArray<DbRecord<O>>
 
   subscribe: <O extends T = T>(query?: Partial<O>) => PromiseArray<DbRecord<O>>

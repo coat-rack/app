@@ -1,5 +1,6 @@
 {
   "name": "@repo/icons",
+  "description": "UI library used for building platform as well as app functionality. Simply provides a React wrapper around @hackernoon/pixel-icon-library",
   "version": "0.0.0",
   "private": true,
   "exports": {

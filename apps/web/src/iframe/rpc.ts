@@ -1,6 +1,6 @@
 import { useDatabase } from "@/data"
 import { useWindowEvent } from "@repo/core/event"
-import { RpcRequest, RpcResponse, err, ok } from "@repo/data/rpc"
+import { RpcRequest, RpcResponse, err, ok } from "@repo/core/rpc"
 import { Db } from "@repo/sdk"
 
 type DataKey = `data.${string}`

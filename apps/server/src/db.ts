@@ -1,4 +1,4 @@
-import { Schema } from "@repo/data/models"
+import { Schema } from "@repo/core/models"
 import { join } from "path"
 import { MultiFileTable } from "./persistence/multi-file-db"
 import { Table } from "./persistence/types"

@@ -1,12 +1,16 @@
 {
   "name": "@repo/core",
+  "description": "Core library reserved use within the platform. Should not depend on any other internal libraries",
   "version": "0.0.0",
   "private": true,
   "types": "./src/index.ts",
   "exports": {
     "./async": "./src/async.ts",
     "./event": "./src/event.ts",
-    "./iframe": "./src/iframe.ts"
+    "./iframe": "./src/iframe.ts",
+    "./messaging": "./src/messaging.ts",
+    "./models": "./src/models.ts",
+    "./rpc": "./src/rpc.ts"
   },
   "dependencies": {
     "rxjs": "^7.8.1",

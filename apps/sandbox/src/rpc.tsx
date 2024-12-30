@@ -1,4 +1,4 @@
-import { RpcResponse } from "@repo/data/rpc"
+import { RpcResponse } from "@repo/core/rpc"
 import { Db } from "@repo/sdk"
 
 function guidGenerator() {
