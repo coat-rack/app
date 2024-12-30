@@ -56,7 +56,7 @@ export const Tasks: App = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: (context) => {
+  Entry: ({ context }) => {
     const { activeSpace } = context
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [spaceColor, setSpaceColor] = useState<string>()

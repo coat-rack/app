@@ -5,4 +5,12 @@ export {
   useAppContext,
   useSpace,
 } from "./context"
-export type { App, AppContext, Db, DbRecord, Manifest, Space } from "./types"
+export type {
+  App,
+  AppContext,
+  Db,
+  DbRecord,
+  Entry,
+  Manifest,
+  Space,
+} from "./types"

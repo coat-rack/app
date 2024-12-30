@@ -7,7 +7,7 @@ import {
 } from "react"
 import type { AppContext, Space } from "./types"
 
-const Context = createContext<AppContext>({} as unknown as AppContext)
+const Context = createContext<AppContext>(undefined as unknown as AppContext)
 
 /**
  * Provides context for the {@link useAppContext} hook. Apps should provide this

@@ -1,5 +1,5 @@
 import { ChevronDown, Plus } from "@repo/icons/regular"
-import { App, AppContext, ProvideAppContext, ProvideSpace } from "@repo/sdk"
+import { App, ProvideAppContext, ProvideSpace, type Entry } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import {
   Card,
@@ -44,7 +44,7 @@ function useRefresh() {
   return [key, refresh] as const
 }
 
-function Entry(context: AppContext<TaskData>) {
+function Entry({ context }: Entry<TaskData>) {
   const { db, activeSpace } = context
   const [title, setTitle] = useState("")
 

@@ -13,11 +13,11 @@ function useRefresh() {
   return [key, refresh] as const
 }
 
-export const Notes: App = {
+export const Notes: App<Note> = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: (context) => {
+  Entry: ({ context }) => {
     const { db, activeSpace } = context
     const [notes, setNotes] = useState([] as DbRecord<Note>[])
     const [signal, doRefresh] = useRefresh()

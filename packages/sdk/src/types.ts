@@ -14,11 +14,15 @@ export interface Space {
   color: string
 }
 
-export interface App {
+export interface Entry<TData = unknown> {
+  context: AppContext<TData>
+}
+
+export interface App<TData = unknown> {
   /**
    *  The Entrypoint for the app
    */
-  Entry: ComponentType<AppContext>
+  Entry: ComponentType<Entry<TData>>
 }
 
 export interface Manifest {

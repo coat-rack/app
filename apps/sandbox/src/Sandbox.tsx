@@ -34,9 +34,11 @@ function Sandbox() {
     spaces: spaces.all,
   }
 
-  // It may also be useful to create a DB context here so apps aren't dependant
-  // on being injected with this directly
-  return <App {...context} />
+  // ideally we would want to wrap this with `ProvideAppContext` so apps don't
+  // need to do that, but that doesn't seem to work. maybe it can be done using
+  // React.lazy and suspense but that would need quite a bit of refactoring on
+  // the app-loading side of things
+  return <App context={context} />
 }
 
 export default Sandbox

@@ -7,8 +7,8 @@ export const SampleApp: App = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: ({ db, spaces }) => {
-    const activeSpace = spaces.active
+  Entry: ({ context }) => {
+    const { db, activeSpace } = context
     if (!activeSpace) {
       return <h1>Space loading</h1>
     }
