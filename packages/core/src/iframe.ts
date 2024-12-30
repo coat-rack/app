@@ -1,5 +1,5 @@
-import { IFrameMessage } from "@repo/data/messaging"
 import { useWindowEvent } from "./event"
+import { IFrameMessage } from "./messaging"
 
 export const useIFrameMessage = <T extends IFrameMessage<string, string>>(
   type: T["type"],

@@ -79,9 +79,6 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@repo/data':
-        specifier: workspace:*
-        version: link:../../packages/data
       '@repo/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
@@ -115,9 +112,9 @@ importers:
 
   apps/server:
     dependencies:
-      '@repo/data':
+      '@repo/core':
         specifier: workspace:*
-        version: link:../../packages/data
+        version: link:../../packages/core
       '@trpc/server':
         specifier: 11.0.0-next-beta.242
         version: 11.0.0-next-beta.242
@@ -182,9 +179,6 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@repo/data':
-        specifier: workspace:*
-        version: link:../../packages/data
       '@repo/icons':
         specifier: workspace:*
         version: link:../../packages/icons
@@ -493,6 +487,12 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+      zod-to-json-schema:
+        specifier: ^3.22.4
+        version: 3.22.4(zod@3.22.4)
     devDependencies:
       '@types/react':
         specifier: ^18.2.46
@@ -503,28 +503,6 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
-
-  packages/data:
-    dependencies:
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-      zod-to-json-schema:
-        specifier: ^3.22.4
-        version: 3.22.4(zod@3.22.4)
-    devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@turbo/gen':
-        specifier: ^1.11.3
-        version: 1.11.3(@types/node@20.10.6)(typescript@5.3.3)
-      '@types/node':
-        specifier: ^20.10.6
-        version: 20.10.6
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -560,10 +538,6 @@ importers:
         version: 5.3.3
 
   packages/sdk:
-    dependencies:
-      '@repo/data':
-        specifier: workspace:*
-        version: link:../data
     devDependencies:
       '@types/react':
         specifier: ^18.2.46

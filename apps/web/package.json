@@ -11,7 +11,7 @@
   "dependencies": {
     "@originjs/vite-plugin-federation": "^1.3.4",
     "@repo/core": "workspace:*",
-    "@repo/data": "workspace:*",
+    "@repo/core": "workspace:*",
     "@repo/icons": "workspace:*",
     "@repo/sdk": "workspace:*",
     "@repo/ui": "workspace:*",

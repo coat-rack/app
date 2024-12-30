@@ -1,4 +1,3 @@
-import { Space } from "@repo/data/models"
 import {
   createContext,
   CSSProperties,
@@ -6,6 +5,14 @@ import {
   PropsWithChildren,
   useContext,
 } from "react"
+
+interface Space {
+  id: string
+  name: string
+  owner: string
+  spaceType: "user" | "shared"
+  color: `#${string}`
+}
 
 interface Context {
   active?: Space
