@@ -1,6 +1,7 @@
 import { useDatabase } from "@/data"
 import { useActiveSpace, useFilterSpaces } from "@/db/local"
 import { useObservable } from "@repo/core/async"
+import { useWindowEvent } from "@repo/core/event"
 import { SpacesMessage } from "@repo/data/messaging"
 import { useEffect, useState } from "react"
 
@@ -19,11 +20,7 @@ export const useIFrameSpaces = (sandboxHost: string) => {
     }
   }
 
-  useEffect(() => {
-    window.addEventListener("message", handler)
-
-    return () => window.removeEventListener("message", handler)
-  })
+  useWindowEvent("message", handler)
 
   useEffect(() => {
     const message: SpacesMessage = {
