@@ -1,20 +1,21 @@
-import { App } from "@repo/sdk"
+import { App, ProvideSpaces } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 
 import "./styles.css"
 
 export const SampleApp: App = {
   /**
-   * Name of the app
-   */
-  name: "sample-app",
-  /**
    *  The Entrypoint for the app
    */
-  Entry: ({ db }) => {
+  Entry: ({ db, spaces }) => {
+    const activeSpace = spaces.active
+    if (!activeSpace) {
+      return <h1>Space loading</h1>
+    }
+
     return (
-      <>
-        <h1 className="bg-red-500">Hello sample-app</h1>
+      <ProvideSpaces spaces={spaces}>
+        <h1>Hello sample-app</h1>
         <Button
           onClick={() =>
             db.get<any>("1").then(
@@ -37,7 +38,7 @@ export const SampleApp: App = {
         </Button>
         <Button
           onClick={() =>
-            db.update("", { something: "really cool" }).then(
+            db.update("", activeSpace.id, { something: "really cool" }).then(
               (v) => console.log("update", v),
               (err) => console.error(err),
             )
@@ -65,7 +66,7 @@ export const SampleApp: App = {
         >
           Query
         </Button>
-      </>
+      </ProvideSpaces>
     )
   },
 }

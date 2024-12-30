@@ -7,9 +7,24 @@ import { usePromise } from "./async"
 window["React"] = React
 window["ReactDOM"] = ReactDOM
 
-type AppError = { type: "manifest" | "app"; error: unknown }
-type AppResult = { app?: App; manifest?: Manifest }
+const MANIFEST_FILE = "manifest.json"
+const INDEX_FILE = "index.mjs"
+
+type AppError = {
+  type: "manifest" | "app"
+  error: unknown
+}
+
+type AppResult = {
+  app?: App
+  manifest?: Manifest
+}
+
 type UseAppResult = [result: AppResult, error?: AppError]
+
+// It may be possible to implement this using React.lazy + Suspense
+// It doesn't really simplify things in ths context but could help iron out
+// lazy loading issues if we run into them at a later stage
 export const useApp = (
   entryPointUrl?: URL,
   manifestUrl?: URL,
@@ -31,20 +46,54 @@ export const useApp = (
     if (!response.ok) {
       throw `manifest is not ok: ${response.status}`
     }
+
     const result = await response.json()
+
     return result as Manifest
   }, [manifestUrl?.toString()])
 
   if (manifestError) {
-    return [{}, { type: "manifest", error: manifestError }]
+    return [
+      {},
+      {
+        type: "manifest",
+        error: manifestError,
+      },
+    ]
   }
 
   if (appError) {
-    return [{}, { type: "app", error: appError }]
+    return [
+      {},
+      {
+        type: "app",
+        error: appError,
+      },
+    ]
   }
 
   return [
-    { app: app?.default as App | undefined, manifest },
+    {
+      app: app?.default as App | undefined,
+      manifest,
+    },
     undefined,
   ] as const
+}
+
+export function getAppUrlsFromQueryString(
+  query: URLSearchParams,
+): [indexUrl: URL, manifestUrl: URL] {
+  const appUrl = query.get("appUrl")
+
+  if (!appUrl) {
+    throw new Error("App URL is not defined")
+  }
+
+  const baseUrl = new URL(appUrl)
+
+  const manifestUrl = new URL(MANIFEST_FILE, baseUrl)
+  const indexUrl = new URL(INDEX_FILE, baseUrl)
+
+  return [indexUrl, manifestUrl]
 }

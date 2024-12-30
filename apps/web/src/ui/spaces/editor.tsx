@@ -1,5 +1,6 @@
 import { Space, User } from "@repo/data/models"
 import { Check, Pencil, Save } from "@repo/icons/regular"
+import { SpaceTheme } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import {
   Dialog,
@@ -11,7 +12,7 @@ import {
   DialogTrigger,
 } from "@repo/ui/components/dialog"
 import { useState } from "react"
-import { SpaceForm, SpaceProvider } from "./form"
+import { SpaceForm } from "./form"
 
 export function SpaceEditor({
   space,
@@ -60,7 +61,7 @@ export function SpaceEditor({
           </DialogTrigger>
         </div>
         <DialogContent>
-          <SpaceProvider space={updated}>
+          <SpaceTheme space={updated.id}>
             <DialogHeader>
               <DialogTitle className="text-primary">
                 editing {updated.name}
@@ -97,7 +98,7 @@ export function SpaceEditor({
                 )}
               </Button>
             </DialogFooter>
-          </SpaceProvider>
+          </SpaceTheme>
         </DialogContent>
       </Dialog>
     </>

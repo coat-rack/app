@@ -1,5 +1,5 @@
 import { ChevronDown, Plus } from "@repo/icons/regular"
-import { App, type Entry } from "@repo/sdk"
+import { App, SpaceTheme, type Entry } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import {
   Card,
@@ -44,7 +44,7 @@ function useRefresh() {
   return [key, refresh] as const
 }
 
-function Entry({ db }: ComponentProps<Entry<TaskData>>) {
+function Entry({ db, spaces }: ComponentProps<Entry<TaskData>>) {
   const [title, setTitle] = useState("")
 
   const [key, refresh] = useRefresh()
@@ -54,7 +54,7 @@ function Entry({ db }: ComponentProps<Entry<TaskData>>) {
       db.query({
         completed: false,
       }),
-    [key],
+    [key, spaces],
   )
 
   const completed = usePromise(
@@ -62,7 +62,7 @@ function Entry({ db }: ComponentProps<Entry<TaskData>>) {
       db.query({
         completed: true,
       }),
-    [key],
+    [key, spaces],
   )
 
   const createTask = async () => {
@@ -76,97 +76,112 @@ function Entry({ db }: ComponentProps<Entry<TaskData>>) {
     refresh()
   }
 
-  const updateTask = async (id: string, task: Task) => {
-    await db.update(id, task)
+  const updateTask = async (id: string, space: string, task: Task) => {
+    await db.update(id, space, task)
 
     setTitle("")
     refresh()
   }
 
   return (
-    <main className="flex flex-col gap-2">
+    <main className="mx-4 flex flex-1 flex-col justify-between gap-2">
       <h1>Tasks</h1>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex flex-row items-center justify-between">
-            To Do
-          </CardTitle>
-          <CardDescription>{todo?.length || 0} tasks to do</CardDescription>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              createTask()
-            }}
-            className="flex flex-row items-center gap-2"
-          >
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-            <Button
-              disabled={!title}
-              title="Add Item"
-              variant="default"
-              type="submit"
-            >
-              <Plus className="h-4 w-4 fill-current" />
-            </Button>
-          </form>
-        </CardHeader>
-        <CardContent>
-          <ul className="flex flex-col gap-4">
-            {todo?.map((task) => (
-              <li className="flex flex-row items-center gap-2" key={task.id}>
-                <Checkbox
-                  id={task.id}
-                  checked={task.data.completed}
-                  onClick={() =>
-                    updateTask(task.id, { ...task.data, completed: true })
-                  }
-                />
-                <Label htmlFor={task.id}>{task.data?.title}</Label>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-
-      <Collapsible asChild>
-        <Card>
+      <div className="flex flex-col gap-2 md:flex-row">
+        <Card className="flex-1">
           <CardHeader>
             <CardTitle className="flex flex-row items-center justify-between">
-              <div>Completed</div>
-              <CollapsibleTrigger asChild>
-                <Button title="Toggle Collapsible" variant="ghost">
-                  <ChevronDown className="h-4 w-4 fill-current" />
-                </Button>
-              </CollapsibleTrigger>
+              To Do
             </CardTitle>
-            <CardDescription>
-              {completed?.length || 0} tasks completed
-            </CardDescription>
+            <CardDescription>{todo?.length || 0} tasks to do</CardDescription>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                createTask()
+              }}
+              className="flex flex-row items-center gap-2"
+            >
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+              <Button
+                disabled={!title}
+                title="Add Item"
+                variant="default"
+                type="submit"
+              >
+                <Plus className="h-4 w-4 fill-current" />
+              </Button>
+            </form>
           </CardHeader>
-          <CollapsibleContent asChild>
-            <CardContent>
-              <ul className="flex flex-col gap-4">
-                {completed?.map((task) => (
-                  <li
-                    className="flex flex-row items-center gap-2"
-                    key={task.id}
-                  >
-                    <Checkbox
-                      id={task.id}
-                      checked={task.data.completed}
-                      onClick={() =>
-                        updateTask(task.id, { ...task.data, completed: false })
-                      }
-                    />
-                    <Label htmlFor={task.id}>{task.data?.title}</Label>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </CollapsibleContent>
+          <CardContent>
+            <ul className="flex flex-col gap-4">
+              {todo?.map((task) => (
+                <SpaceTheme
+                  space={task.space}
+                  as="li"
+                  className="flex flex-row items-center gap-2"
+                  key={task.id}
+                >
+                  <Checkbox
+                    id={task.id}
+                    checked={task.data.completed}
+                    onClick={() =>
+                      updateTask(task.id, task.space, {
+                        ...task.data,
+                        completed: true,
+                      })
+                    }
+                  />
+                  <Label htmlFor={task.id}>{task.data?.title}</Label>
+                </SpaceTheme>
+              ))}
+            </ul>
+          </CardContent>
         </Card>
-      </Collapsible>
+
+        <Collapsible asChild>
+          <Card className="flex-1">
+            <CardHeader>
+              <CardTitle className="flex flex-row items-center justify-between">
+                <div>Completed</div>
+                <CollapsibleTrigger asChild>
+                  <Button title="Toggle Collapsible" variant="ghost">
+                    <ChevronDown className="h-4 w-4 fill-current" />
+                  </Button>
+                </CollapsibleTrigger>
+              </CardTitle>
+              <CardDescription>
+                {completed?.length || 0} tasks completed
+              </CardDescription>
+            </CardHeader>
+            <CollapsibleContent asChild>
+              <CardContent>
+                <ul className="flex flex-col gap-4">
+                  {completed?.map((task) => (
+                    <SpaceTheme
+                      as="li"
+                      space={task.space}
+                      className="flex flex-row items-center gap-2"
+                      key={task.id}
+                    >
+                      <Checkbox
+                        id={task.id}
+                        checked={task.data.completed}
+                        onClick={() =>
+                          updateTask(task.id, task.space, {
+                            ...task.data,
+                            completed: false,
+                          })
+                        }
+                      />
+                      <Label htmlFor={task.id}>{task.data?.title}</Label>
+                    </SpaceTheme>
+                  ))}
+                </ul>
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
+      </div>
     </main>
   )
 }

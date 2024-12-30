@@ -43,11 +43,11 @@ export const Space = Row("space").extend({
   color: z.string().startsWith("#"),
 })
 
+export type KeyValue = z.infer<typeof KeyValue>
 export const KeyValue = z.object({
   id: z.string().max(100),
-  value: z.string().optional(),
+  value: z.any(),
 })
-export type KeyValue = z.infer<typeof KeyValue>
 
 export type AppData = z.infer<typeof AppData>
 export const AppData = RowWithSpace("app-data").extend({

@@ -46,7 +46,7 @@ import {
 } from "@repo/ui/components/select"
 import { Toaster, toast } from "@repo/ui/components/sonner"
 import { Textarea } from "@repo/ui/components/textarea"
-import { useState } from "react"
+import { CSSProperties, useState } from "react"
 
 import { ChartConfig, ChartContainer } from "@repo/ui/components/chart"
 import { Bar, BarChart, Legend } from "recharts"
@@ -56,8 +56,9 @@ export const Tasks: App = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: () => {
+  Entry: ({ spaces }) => {
     const [date, setDate] = useState<Date | undefined>(new Date())
+    const [spaceColor, setSpaceColor] = useState<string>()
 
     const chartData = [
       { month: "January", desktop: 186, mobile: 80 },
@@ -80,7 +81,55 @@ export const Tasks: App = {
     } satisfies ChartConfig
 
     return (
-      <div className="flex flex-col gap-4">
+      <div
+        style={
+          spaceColor
+            ? ({
+                "--space": spaceColor || spaces.active?.color,
+              } as CSSProperties)
+            : undefined
+        }
+        className="bg-background flex flex-col gap-4"
+      >
+        <div className="flex flex-col gap-4">
+          <h1 className="flex flex-row  justify-start gap-4">
+            <input
+              className="h-8 w-8"
+              type="color"
+              value={spaceColor}
+              onChange={(e) => setSpaceColor(e.target.value)}
+            />
+
+            <div>Colors</div>
+          </h1>
+          <div className="flex flex-row flex-wrap gap-4">
+            <div className="text-foreground bg-background p-4">bg/fg</div>
+            <div className="text-card-foreground bg-card p-4">card</div>
+            <div className="text-popover-foreground bg-popover p-4">
+              popover
+            </div>
+            <div className="text-primary-foreground bg-primary p-4">
+              primary
+            </div>
+            <div className="text-secondary-foreground bg-secondary p-4">
+              secondary
+            </div>
+            <div className="text-muted-foreground bg-muted p-4">muted</div>
+            <div className="text-accent-foreground bg-accent p-4">accent</div>
+            <div className="text-destructive-foreground bg-destructive p-4">
+              destructive
+            </div>
+            <div className="bg-border p-4">border</div>
+            <div className="bg-input p-4">input</div>
+            <div className="bg-ring p-4">ring</div>
+            <div className="bg-[color:--chart-1] p-4">chart-1</div>
+            <div className="bg-[color:--chart-2] p-4">chart-2</div>
+            <div className="bg-[color:--chart-3] p-4">chart-3</div>
+            <div className="bg-[color:--chart-4] p-4">chart-4</div>
+            <div className="bg-[color:--chart-5] p-4">chart-5</div>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-4">
           <h1>Button</h1>
 
