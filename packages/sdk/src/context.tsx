@@ -10,11 +10,14 @@ import type { AppContext, Space } from "./types"
 const Context = createContext<AppContext>({} as unknown as AppContext)
 
 /**
- * Provides context for the {@link useAppContext} hook. This will be provided by
- * platform. As long as components are rendered within the normal context this
- * will not need to be used by apps.
+ * Provides context for the {@link useAppContext} hook. Apps should provide this
+ * once at the top-level in order to ensure that all components are styled
+ * correctly
  *
  * > Renders children inside of a styled div with relevant style variables defined
+ *
+ * TODO: it should be possible to provide this once at the Sandbox level so that
+ * apps don't need to do it but that doesn't seem to work for some reason
  */
 export const ProvideAppContext = <T,>({
   children,
