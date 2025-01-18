@@ -1,0 +1,1 @@
+docker run --privileged -v .:/src -v ./build:/out arm64v8/debian /bin/bash -c /src/build-image.sh
