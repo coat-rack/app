@@ -18,7 +18,7 @@ COPY --from=build /build/apps/server/dist/ .
 WORKDIR /usr/src/app
 COPY ./docker/coatrack.config.js .
 USER node
-EXPOSE 3000
-EXPOSE 4000
-EXPOSE 5000
+EXPOSE 3000/tcp
+EXPOSE 4000/tcp
+EXPOSE 5000/tcp
 CMD [ "pm2-runtime", "start", "coatrack.config.js" ]
