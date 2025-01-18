@@ -1,2 +1,16 @@
-export { ProvideSpaces, SpaceTheme, useSpaces } from "./spaces"
-export type { App, Db, DbRecord, Entry, Manifest } from "./types"
+export {
+  ProvideAppContext,
+  ProvideSpace,
+  getSpaceStyles,
+  useAppContext,
+  useSpace,
+} from "./context"
+export type {
+  App,
+  AppContext,
+  Db,
+  DbRecord,
+  Entry,
+  Manifest,
+  Space,
+} from "./types"

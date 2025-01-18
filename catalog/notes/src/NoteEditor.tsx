@@ -1,5 +1,5 @@
 import { Save, Trash } from "@repo/icons/regular"
-import { Db } from "@repo/sdk"
+import { useAppContext, useSpace } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import { Input } from "@repo/ui/components/input"
 import { Textarea } from "@repo/ui/components/textarea"
@@ -8,17 +8,12 @@ import { Note } from "./note"
 
 interface NoteEditorProps {
   noteId: string
-  noteSpace: string
-  db: Db<Note>
   onNoteChanged?: (isDelete: boolean) => void
 }
 
-export function NoteEditor({
-  noteId,
-  noteSpace,
-  db,
-  onNoteChanged,
-}: NoteEditorProps) {
+export function NoteEditor({ noteId, onNoteChanged }: NoteEditorProps) {
+  const { db } = useAppContext<Note>()
+  const space = useSpace()
   const [note, setNote] = useState<Note | undefined>(undefined)
   const [dirty, setDirty] = useState<boolean>(false)
 
@@ -32,8 +27,8 @@ export function NoteEditor({
   }
 
   const save = async () => {
-    if (note) {
-      await db.update(noteId, noteSpace, note)
+    if (note && space) {
+      await db.update(noteId, space.id, note)
       onNoteChanged?.(false)
       setDirty(false)
     }

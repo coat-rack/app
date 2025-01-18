@@ -1,4 +1,4 @@
-import { DbRecord, SpaceTheme } from "@repo/sdk"
+import { DbRecord, ProvideSpace } from "@repo/sdk"
 import { Note } from "./note"
 
 interface NoteListItemProps {
@@ -7,7 +7,7 @@ interface NoteListItemProps {
 }
 export function NoteListItem({ note, onClick }: NoteListItemProps) {
   return (
-    <SpaceTheme
+    <ProvideSpace
       space={note.space}
       className="border-primary border-2 border-solid p-4"
       onClick={() => onClick(note)}
@@ -16,6 +16,6 @@ export function NoteListItem({ note, onClick }: NoteListItemProps) {
       <p className="text-xs italic">
         Last updated: {new Date(note.timestamp).toDateString()}
       </p>
-    </SpaceTheme>
+    </ProvideSpace>
   )
 }

@@ -1,6 +1,6 @@
-import { Space, User } from "@repo/data/models"
+import { Space, User } from "@repo/core/models"
 import { Check, Pencil, Save } from "@repo/icons/regular"
-import { SpaceTheme } from "@repo/sdk"
+import { ProvideSpace } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import {
   Dialog,
@@ -61,7 +61,7 @@ export function SpaceEditor({
           </DialogTrigger>
         </div>
         <DialogContent>
-          <SpaceTheme space={updated.id}>
+          <ProvideSpace space={updated.id}>
             <DialogHeader>
               <DialogTitle className="text-primary">
                 editing {updated.name}
@@ -98,7 +98,7 @@ export function SpaceEditor({
                 )}
               </Button>
             </DialogFooter>
-          </SpaceTheme>
+          </ProvideSpace>
         </DialogContent>
       </Dialog>
     </>

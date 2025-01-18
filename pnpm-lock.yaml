@@ -57,6 +57,12 @@ importers:
       '@originjs/vite-plugin-federation':
         specifier: ^1.3.4
         version: 1.3.4
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@repo/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       autoprefixer:
         specifier: ^10.4.17
         version: 10.4.17(postcss@8.4.33)
@@ -76,12 +82,6 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1(typescript@5.3.3)(vite@5.0.12)
     devDependencies:
-      '@repo/data':
-        specifier: workspace:*
-        version: link:../../packages/data
-      '@repo/sdk':
-        specifier: workspace:*
-        version: link:../../packages/sdk
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
@@ -112,9 +112,9 @@ importers:
 
   apps/server:
     dependencies:
-      '@repo/data':
+      '@repo/core':
         specifier: workspace:*
-        version: link:../../packages/data
+        version: link:../../packages/core
       '@trpc/server':
         specifier: 11.0.0-next-beta.242
         version: 11.0.0-next-beta.242
@@ -176,6 +176,18 @@ importers:
       '@originjs/vite-plugin-federation':
         specifier: ^1.3.4
         version: 1.3.4
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@repo/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
+      '@repo/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@tanstack/react-query':
         specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
@@ -249,21 +261,9 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4(zod@3.22.4)
     devDependencies:
-      '@repo/data':
-        specifier: workspace:*
-        version: link:../../packages/data
-      '@repo/icons':
-        specifier: workspace:*
-        version: link:../../packages/icons
-      '@repo/sdk':
-        specifier: workspace:*
-        version: link:../../packages/sdk
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
-      '@repo/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@types/react':
         specifier: ^18.2.43
         version: 18.2.46
@@ -482,8 +482,11 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  packages/data:
+  packages/core:
     dependencies:
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -491,15 +494,15 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4(zod@3.22.4)
     devDependencies:
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@turbo/gen':
-        specifier: ^1.11.3
-        version: 1.11.3(@types/node@20.10.6)(typescript@5.3.3)
-      '@types/node':
-        specifier: ^20.10.6
-        version: 20.10.6
+      '@types/react':
+        specifier: ^18.2.46
+        version: 18.2.46
+      '@types/react-dom':
+        specifier: ^18.2.18
+        version: 18.2.18
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -535,10 +538,6 @@ importers:
         version: 5.3.3
 
   packages/sdk:
-    dependencies:
-      '@repo/data':
-        specifier: workspace:*
-        version: link:../data
     devDependencies:
       '@types/react':
         specifier: ^18.2.46

@@ -1,7 +1,7 @@
+import { usePromise } from "@repo/core/async"
 import { App, Manifest } from "@repo/sdk"
 import React from "react"
 import ReactDOM from "react-dom"
-import { usePromise } from "./async"
 
 // Need to figure out how to do this at the build level
 window["React"] = React
@@ -22,9 +22,6 @@ type AppResult = {
 
 type UseAppResult = [result: AppResult, error?: AppError]
 
-// It may be possible to implement this using React.lazy + Suspense
-// It doesn't really simplify things in ths context but could help iron out
-// lazy loading issues if we run into them at a later stage
 export const useApp = (
   entryPointUrl?: URL,
   manifestUrl?: URL,

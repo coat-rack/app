@@ -1,11 +1,11 @@
-import { useObservable } from "@/async"
 import { useDatabase } from "@/data"
 import {
   setActiveSpace,
   setFilterSpaces,
   useActiveSpace,
   useFilterSpaces,
-} from "@/db/rxdb"
+} from "@/db/local"
+import { useObservable } from "@repo/core/async"
 import { ChartNetwork, User } from "@repo/icons/regular"
 import { FilterSolid } from "@repo/icons/solid"
 

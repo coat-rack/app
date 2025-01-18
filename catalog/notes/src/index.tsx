@@ -1,4 +1,4 @@
-import { App, DbRecord, SpaceTheme } from "@repo/sdk"
+import { App, DbRecord, ProvideAppContext, ProvideSpace } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import { useEffect, useState } from "react"
 import { NoteEditor } from "./NoteEditor"
@@ -17,7 +17,8 @@ export const Notes: App<Note> = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: ({ db, spaces }) => {
+  Entry: ({ context }) => {
+    const { db, activeSpace } = context
     const [notes, setNotes] = useState([] as DbRecord<Note>[])
     const [signal, doRefresh] = useRefresh()
 
@@ -46,28 +47,28 @@ export const Notes: App<Note> = {
 
     useEffect(() => {
       getNotes()
-    }, [signal, spaces])
+    }, [signal, activeSpace])
 
     return (
-      <main>
-        <h1>notes</h1>
-        <Button onClick={newNote}>New note</Button>
-        <div className="grid grid-cols-3 grid-rows-1 gap-4 py-2">
-          <NoteList notes={notes} onNoteSelected={setActiveNote} />
-          <div className="col-span-2">
-            {(activeNote && (
-              <SpaceTheme space={activeNote.space}>
-                <NoteEditor
-                  db={db}
-                  noteId={activeNote.id}
-                  noteSpace={activeNote.space}
-                  onNoteChanged={noteChanged}
-                ></NoteEditor>
-              </SpaceTheme>
-            )) || <p>Select a note</p>}
+      <ProvideAppContext {...context}>
+        <main>
+          <h1>notes</h1>
+          <Button onClick={newNote}>New note</Button>
+          <div className="grid grid-cols-3 grid-rows-1 gap-4 py-2">
+            <NoteList notes={notes} onNoteSelected={setActiveNote} />
+            <div className="col-span-2">
+              {(activeNote && (
+                <ProvideSpace space={activeNote.space}>
+                  <NoteEditor
+                    noteId={activeNote.id}
+                    onNoteChanged={noteChanged}
+                  ></NoteEditor>
+                </ProvideSpace>
+              )) || <p>Select a note</p>}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </ProvideAppContext>
     )
   },
 }

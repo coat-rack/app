@@ -1,6 +1,6 @@
-import { Space, User } from "@repo/data/models"
+import { Space, User } from "@repo/core/models"
 import { Plus } from "@repo/icons/regular"
-import { SpaceTheme } from "@repo/sdk"
+import { ProvideSpace } from "@repo/sdk"
 import { Button } from "@repo/ui/components/button"
 import {
   Dialog,
@@ -63,7 +63,7 @@ export function SpaceCreator({
           </DialogTrigger>
         </div>
         <DialogContent>
-          <SpaceTheme space={space.id}>
+          <ProvideSpace space={space.id}>
             <DialogHeader>
               <DialogTitle className="text-primary">
                 create {space.name || "new space"}
@@ -89,7 +89,7 @@ export function SpaceCreator({
                 <Plus className="h-4 w-4 fill-current" />
               </Button>
             </DialogFooter>
-          </SpaceTheme>
+          </ProvideSpace>
         </DialogContent>
       </Dialog>
     </>

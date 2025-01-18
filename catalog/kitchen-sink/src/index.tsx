@@ -56,7 +56,8 @@ export const Tasks: App = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: ({ spaces }) => {
+  Entry: ({ context }) => {
+    const { activeSpace } = context
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [spaceColor, setSpaceColor] = useState<string>()
 
@@ -85,7 +86,7 @@ export const Tasks: App = {
         style={
           spaceColor
             ? ({
-                "--space": spaceColor || spaces.active?.color,
+                "--space": spaceColor || activeSpace?.color,
               } as CSSProperties)
             : undefined
         }

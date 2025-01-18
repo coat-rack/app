@@ -1,7 +1,7 @@
 import { useDatabase } from "@/data"
-import { RpcRequest, RpcResponse, err, ok } from "@repo/data/rpc"
+import { useWindowEvent } from "@repo/core/event"
+import { RpcRequest, RpcResponse, err, ok } from "@repo/core/rpc"
 import { Db } from "@repo/sdk"
-import { useEffect } from "react"
 
 type DataKey = `data.${string}`
 type DataQuery = Record<DataKey, unknown>
@@ -163,8 +163,5 @@ export function useIFrameRPC(
     }
   }
 
-  useEffect(() => {
-    window.addEventListener("message", handler)
-    return () => window.removeEventListener("message", handler)
-  })
+  useWindowEvent("message", handler)
 }
