@@ -10,6 +10,7 @@ import { join, resolve } from "path"
 import { initDb } from "./db"
 
 const appServers: Partial<Record<string, Server>> = {}
+const dataDir = process.env["COATRACK_DATA_DIR"] || "_data"
 
 function setupAppServer(app: App) {
   const existing = appServers[app.id]
@@ -18,7 +19,7 @@ function setupAppServer(app: App) {
     existing.close()
   }
 
-  const appPath = resolve(join("_data", "catalog", app.id))
+  const appPath = resolve(join(dataDir, "catalog", app.id))
 
   const expressApp = express()
   expressApp.use(cors())
@@ -36,7 +37,7 @@ async function main() {
 
   app.use(cors())
 
-  const root = resolve("_data")
+  const root = resolve(dataDir)
   const db = initDb(root)
   await seedDb(db)
 
