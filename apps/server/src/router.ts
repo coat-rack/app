@@ -1,11 +1,4 @@
-import {
-  App,
-  AppData,
-  appPortRange,
-  Push,
-  Space,
-  User,
-} from "@repo/core/models"
+import { App, AppData, Push, Space, User } from "@repo/core/models"
 import { z } from "zod"
 import { DB, dbKeys } from "./db"
 import { addToCatalog } from "./persistence/fs"
@@ -178,6 +171,7 @@ export const rxdbRouter = (db: DB) =>
 export const appRouter = (
   rootDir: string,
   db: DB,
+  appPortRange: readonly [number, number],
   onAppChange: (app: App) => void,
 ) =>
   router({

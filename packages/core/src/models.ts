@@ -55,11 +55,9 @@ export const AppData = RowWithSpace("app-data").extend({
   data: z.any(),
 })
 
-export const appPortRange = [40_000, 50_000] as const
-
 export type App = z.infer<typeof App>
 export const App = Row("app").extend({
-  port: z.number().min(appPortRange[0]).max(appPortRange[1]),
+  port: z.number(),
 })
 
 export type Schema = z.infer<typeof Schema>
