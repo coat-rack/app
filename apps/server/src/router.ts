@@ -171,6 +171,7 @@ export const rxdbRouter = (db: DB) =>
 export const appRouter = (
   rootDir: string,
   db: DB,
+  appPortRange: readonly [number, number],
   onAppChange: (app: App) => void,
 ) =>
   router({
@@ -270,9 +271,7 @@ export const appRouter = (
           const apps = await db.apps.getAll()
           const usedPorts = apps.map((app) => app.port)
 
-          const port_low = process.env.COATRACK_APP_HOST_PORT_LOW || 40_000
-          const port_high = process.env.COATRACK_APP_HOST_PORT_HIGH || 50_000
-          const port = getNextAvailablePort([port_low, port_high], usedPorts)
+          const port = getNextAvailablePort(appPortRange, usedPorts)
           const app: App = {
             type: "app",
             id: manifest.id,

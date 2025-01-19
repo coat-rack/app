@@ -11,6 +11,8 @@ import { initDb } from "./db"
 
 const appServers: Partial<Record<string, Server>> = {}
 const dataDir = process.env.COATRACK_DATA_DIR || "_data"
+const appPortRangeLow = process.env.COATRACK_APP_HOST_PORT_LOW || 40_000
+const appPortRangeHigh = process.env.COATRACK_APP_HOST_PORT_HIGH || 50_000
 
 function setupAppServer(app: App) {
   const existing = appServers[app.id]
@@ -48,7 +50,12 @@ async function main() {
   app.use(
     "/",
     trpcExpress.createExpressMiddleware({
-      router: appRouter(root, db, setupAppServer),
+      router: appRouter(
+        root,
+        db,
+        [appPortRangeLow, appPortRangeHigh],
+        setupAppServer,
+      ),
     }),
   )
 
