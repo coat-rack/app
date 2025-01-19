@@ -8,6 +8,8 @@ RUN pnpm build
 
 FROM ${ARCH}node:20 AS runtime
 ENV COATRACK_DATA_DIR=/data
+ENV COATRACK_APP_HOST_PORT_LOW=40000
+ENV COATRACK_APP_HOST_PORT_HIGH=41000
 RUN npm install -g pm2
 WORKDIR /usr/src/app/web
 COPY --from=build /build/apps/web/dist/ .
@@ -20,5 +22,6 @@ COPY ./docker/coatrack.config.js .
 USER node
 EXPOSE 3000/tcp
 EXPOSE 4000/tcp
-EXPOSE 5000/tcp
+EXPOSE 5001/tcp
+EXPOSE ${COATRACK_APP_HOST_PORT_LOW}-${COATRACK_APP_HOST_PORT_HIGH}
 CMD [ "pm2-runtime", "start", "coatrack.config.js" ]

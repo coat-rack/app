@@ -10,7 +10,7 @@ import { join, resolve } from "path"
 import { initDb } from "./db"
 
 const appServers: Partial<Record<string, Server>> = {}
-const dataDir = process.env["COATRACK_DATA_DIR"] || "_data"
+const dataDir = process.env.COATRACK_DATA_DIR || "_data"
 
 function setupAppServer(app: App) {
   const existing = appServers[app.id]

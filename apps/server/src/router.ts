@@ -1,11 +1,4 @@
-import {
-  App,
-  AppData,
-  appPortRange,
-  Push,
-  Space,
-  User,
-} from "@repo/core/models"
+import { App, AppData, Push, Space, User } from "@repo/core/models"
 import { z } from "zod"
 import { DB, dbKeys } from "./db"
 import { addToCatalog } from "./persistence/fs"
@@ -277,7 +270,9 @@ export const appRouter = (
           const apps = await db.apps.getAll()
           const usedPorts = apps.map((app) => app.port)
 
-          const port = getNextAvailablePort(appPortRange, usedPorts)
+          const port_low = process.env.COATRACK_APP_HOST_PORT_LOW || 40_000
+          const port_high = process.env.COATRACK_APP_HOST_PORT_HIGH || 50_000
+          const port = getNextAvailablePort([port_low, port_high], usedPorts)
           const app: App = {
             type: "app",
             id: manifest.id,
