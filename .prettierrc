@@ -2,5 +2,9 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": false,
-  "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss", "prettier-plugin-astro"]
+  "plugins": [
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-astro"
+  ]
 }
