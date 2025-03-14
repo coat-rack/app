@@ -52,6 +52,7 @@ import { Textarea } from "@coat-rack/ui/components/textarea"
 import { CSSProperties, useState } from "react"
 
 import { ChartConfig, ChartContainer } from "@coat-rack/ui/components/chart"
+import { Progress } from "@repo/ui/components/progress"
 import { Bar, BarChart, Legend } from "recharts"
 import "./styles.css"
 
@@ -142,6 +143,11 @@ export const Tasks: App = {
             <Button variant="secondary">Click Me</Button>
             <Button variant="link">Click Me</Button>
           </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h1>Progress</h1>
+          <Progress value={50}></Progress>
         </div>
 
         <div className="flex flex-col gap-4">
