@@ -1,18 +1,32 @@
 import * as ProgressPrimitive from "@radix-ui/react-progress"
 import * as React from "react"
 
+import { cva, VariantProps } from "class-variance-authority"
 import { cn } from "../lib/utils"
+
+const progressVariants = cva("bg-muted relative w-full overflow-hidden", {
+  variants: {
+    size: {
+      default: "h-4 border-solid border-2 border-primary",
+      slim: "h-2",
+    },
+  },
+  defaultVariants: {
+    size: "default",
+  },
+})
+
+export interface ProgressProps
+  extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>,
+    VariantProps<typeof progressVariants> {}
 
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
->(({ className, value, ...props }, ref) => (
+  ProgressProps
+>(({ className, value, size, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
-    className={cn(
-      "bg-primary/20 relative h-2 w-full overflow-hidden rounded-full",
-      className,
-    )}
+    className={cn(progressVariants({ size, className }), className)}
     {...props}
   >
     <ProgressPrimitive.Indicator
@@ -23,4 +37,4 @@ const Progress = React.forwardRef<
 ))
 Progress.displayName = ProgressPrimitive.Root.displayName
 
-export { Progress }
+export { Progress, progressVariants }
