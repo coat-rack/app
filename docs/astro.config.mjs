@@ -18,6 +18,7 @@ export default defineConfig({
                 items: [
                     // Each item here is one entry in the navigation menu.
                     { label: 'Example Guide', slug: 'guides/example' },
+                    { label: 'Example Guide 2', slug: 'guides/example-2' },
                 ],
             },
             {
@@ -27,7 +28,8 @@ export default defineConfig({
         ],
         customCss: ['./src/tailwind.css'],
         components: {
-            Hero: './src/components/Hero.astro'
+            Hero: './src/components/Hero.astro',
+            Pagination: './src/components/Pagination.astro'
         }
 		}), tailwind({ applyBaseStyles: false }), react()],
 });

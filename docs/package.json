@@ -16,6 +16,7 @@
     "@astrojs/tailwind": "^5.1.4",
     "@repo/tailwind-config": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@repo/icons": "workspace:*",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "astro": "^5.1.5",
