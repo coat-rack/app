@@ -2,7 +2,11 @@ import { useDatabase } from "@/data"
 import { useActiveSpace, useFilterSpaces } from "@/db/local"
 import { useObservable } from "@repo/core/async"
 import { useWindowEvent } from "@repo/core/event"
-import { SpacesMessage } from "@repo/core/messaging"
+import {
+  HandshakeSandboxMessage,
+  SpacesMessage,
+  isOfMessageType,
+} from "@repo/core/messaging"
 import { useEffect, useState } from "react"
 
 export const useIFrameSpaces = (sandboxHost: string) => {
@@ -15,7 +19,11 @@ export const useIFrameSpaces = (sandboxHost: string) => {
   const origin = new URL(sandboxHost).origin
 
   const handler = (ev: MessageEvent<unknown>) => {
-    if (ev.origin === origin && ev.source) {
+    if (
+      ev.origin === origin &&
+      ev.source &&
+      isOfMessageType<HandshakeSandboxMessage>("meta.handshake", ev)
+    ) {
       setSource(ev.source)
     }
   }

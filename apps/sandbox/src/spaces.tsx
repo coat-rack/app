@@ -6,13 +6,8 @@ import { useState } from "react"
  * Spaces are communicated as updates via the host using the `meta.spaces` update
  */
 export const useSpacesMeta = () => {
-  const [spaces, setSpaces] = useState<SpacesMessage>({
-    type: "meta.spaces",
-    filtered: false,
-    all: [],
-  })
+  const [spaces, setSpaces] = useState<SpacesMessage>()
 
   useIFrameMessage<SpacesMessage>("meta.spaces", setSpaces)
-
   return spaces
 }

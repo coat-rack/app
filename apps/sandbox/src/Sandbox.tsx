@@ -1,4 +1,6 @@
+import { HandshakeSandboxMessage } from "@repo/core/messaging"
 import { AppContext } from "@repo/sdk"
+import { useEffect } from "react"
 import { getAppUrlsFromQueryString, useApp } from "./dynamic"
 import { getRpcDb } from "./rpc"
 import { useSpacesMeta } from "./spaces"
@@ -13,6 +15,15 @@ function Sandbox() {
   const spaces = useSpacesMeta()
   const db = getRpcDb()
 
+  // HACK
+  useEffect(() => {
+    const host = document.referrer.replace(/\/$/, "")
+    window.parent.postMessage(
+      { type: "meta.handshake" } satisfies HandshakeSandboxMessage,
+      host,
+    )
+  })
+
   if (error) {
     return (
       <div>
@@ -24,7 +35,7 @@ function Sandbox() {
     )
   }
 
-  if (!App) {
+  if (!App || !spaces) {
     return
   }
 
