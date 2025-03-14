@@ -15,7 +15,7 @@
     --mix-fg: white;
   }
 
-  :root[data-theme='dark'] {
+  :root[data-theme="dark"] {
     --mix-bg: white;
     --mix-fg: black;
   }

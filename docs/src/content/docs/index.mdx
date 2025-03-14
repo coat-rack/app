@@ -7,30 +7,30 @@ hero:
     Welcome to Coat Rack!
   tagline: Hang up your coat, let's get started!
   actions:
-    - text: Guide
-      link: /guides/example/
+    - text: Getting started
+      link: /getting-started/
       variant: primary
-    - text: Starlight docs
-      link: https://starlight.astro.build
+    - text: Build an app
+      link: /app-development/
       variant: minimal
 ---
 
-import { CardGrid } from '@astrojs/starlight/components';
-import Card from '../../components/Card.tsx'
+import { CardGrid } from "@astrojs/starlight/components"
+import Card from "../../components/Card.tsx"
 
 ## Next steps
 
 <CardGrid stagger>
-	<Card title="Update content">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" >
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+  <Card title="Update content">
+    Edit `src/content/docs/index.mdx` to see this page change.
+  </Card>
+  <Card title="Add new content">
+    Add Markdown or MDX files to `src/content/docs` to create new pages.
+  </Card>
+  <Card title="Configure your site">
+    Edit your `sidebar` and other config in `astro.config.mjs`.
+  </Card>
+  <Card title="Read the docs">
+    Learn more in [the Starlight Docs](https://starlight.astro.build/).
+  </Card>
 </CardGrid>

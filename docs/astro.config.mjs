@@ -1,35 +1,49 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
-import tailwind from '@astrojs/tailwind';
+import starlight from "@astrojs/starlight"
+import tailwind from "@astrojs/tailwind"
+import { defineConfig } from "astro/config"
 
-import react from '@astrojs/react';
+import react from "@astrojs/react"
 
 // https://astro.build/config
 export default defineConfig({
-    integrations: [starlight({
-        title: 'Coat Rack',
-        social: {
-            github: 'https://github.com/coat-rack',
+  integrations: [
+    starlight({
+      title: "Coat Rack",
+      social: {
+        github: "https://github.com/coat-rack",
+      },
+      sidebar: [
+        {
+          label: "Welcome",
+          link: "welcome",
         },
-        sidebar: [
-            {
-                label: 'Guides',
-                items: [
-                    // Each item here is one entry in the navigation menu.
-                    { label: 'Example Guide', slug: 'guides/example' },
-                    { label: 'Example Guide 2', slug: 'guides/example-2' },
-                ],
-            },
-            {
-                label: 'Reference',
-                autogenerate: { directory: 'reference' },
-            },
-        ],
-        customCss: ['./src/tailwind.css'],
-        components: {
-            Hero: './src/components/Hero.astro',
-            Pagination: './src/components/Pagination.astro'
-        }
-		}), tailwind({ applyBaseStyles: false }), react()],
-});
+        {
+          label: "Getting Started",
+          link: "getting-started",
+        },
+        {
+          label: "App Development",
+          link: "app-development",
+        },
+        {
+          label: "Architecture",
+          link: "architecture",
+        },
+        {
+          label: "Reference",
+          autogenerate: {
+            directory: "reference",
+          },
+        },
+      ],
+      customCss: ["./src/tailwind.css"],
+      components: {
+        Hero: "./src/components/Hero.astro",
+        Pagination: "./src/components/Pagination.astro",
+      },
+    }),
+    tailwind({ applyBaseStyles: false }),
+    react(),
+  ],
+})
