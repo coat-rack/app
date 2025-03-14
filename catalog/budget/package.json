@@ -15,6 +15,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@coat-rack/icons": "workspace:*",
     "@coat-rack/sdk": "workspace:*",
     "@coat-rack/tailwind-config": "workspace:*",
     "@coat-rack/ui": "workspace:*",

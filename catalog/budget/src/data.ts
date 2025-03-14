@@ -13,4 +13,6 @@ export interface BudgetModel {
   categoryGroups: CategoryGroup[]
   startDate: Date
   endDate: Date
+  locale: string
+  currency: string
 }

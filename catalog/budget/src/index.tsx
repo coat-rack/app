@@ -1,15 +1,25 @@
-import { App } from "@repo/sdk"
+import { App, ProvideAppContext } from "@repo/sdk"
 
+import { ChevronDown, ChevronUp } from "@repo/icons/regular"
 import { Button } from "@repo/ui/components/button"
-import { Card } from "@repo/ui/components/card"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/ui/components/collapsible"
 import { useState } from "react"
-import { ChevronDown, ChevronUp } from "../../../packages/icons/src/regular"
 import { BudgetModel, Category, CategoryGroup } from "./data"
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@repo/ui/components/table"
+import { CurrencyProvider, LocaleProvider } from "./context"
+import { useCurrencyFormatter } from "./format"
 import "./styles.css"
 
 const rentCategory: Category = {
@@ -64,18 +74,20 @@ const sampleData: BudgetModel = {
   ],
   startDate: new Date(2025, 2, 1),
   endDate: new Date(2025, 2, 31, 23, 59, 59),
+  locale: "nl-NL",
+  currency: "EUR",
 }
 
 export const Budget: App = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: () => {
+  Entry: ({ context }) => {
     return (
-      <>
-        <h1 className="bg-red-500">Budget</h1>
+      <ProvideAppContext {...context}>
+        <h1>Budget</h1>
         <BudgetView data={sampleData} />
-      </>
+      </ProvideAppContext>
     )
   },
 }
@@ -85,11 +97,25 @@ interface BudgetViewProps {
 }
 function BudgetView({ data }: BudgetViewProps) {
   return (
-    <div>
-      {data.categoryGroups.map((g) => (
-        <CategoryGroupView categoryGroup={g} />
-      ))}
-    </div>
+    <LocaleProvider value={data.locale}>
+      <CurrencyProvider value={data.currency}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead></TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Assigned</TableHead>
+              <TableHead>Spent</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.categoryGroups.map((g) => (
+              <CategoryGroupView key={g.name} categoryGroup={g} />
+            ))}
+          </TableBody>
+        </Table>
+      </CurrencyProvider>
+    </LocaleProvider>
   )
 }
 
@@ -109,25 +135,29 @@ function CategoryGroupView({ categoryGroup }: CategoryGroupViewProps) {
 
   const [open, setOpen] = useState(true)
 
+  const amountFormatter = useCurrencyFormatter()
   return (
-    <Card>
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <div className="header columns-4">
-          <CollapsibleTrigger asChild>
-            <Button asChild>{open ? <ChevronDown /> : <ChevronUp />}</Button>
-          </CollapsibleTrigger>
-          <div>{categoryGroup.name}</div>
-          <div>{totalAssigned}</div>
-          <div>{totalSpent}</div>
-        </div>
-
-        <CollapsibleContent>
-          {categoryGroup.categories.map((category) => (
-            <CategoryView category={category}></CategoryView>
+    <Collapsible open={open} onOpenChange={setOpen} asChild>
+      <>
+        <TableRow>
+          <TableCell>
+            <CollapsibleTrigger>
+              <Button asChild>{open ? <ChevronDown /> : <ChevronUp />}</Button>
+            </CollapsibleTrigger>
+          </TableCell>
+          <TableCell>{categoryGroup.name}</TableCell>
+          <TableCell>{amountFormatter.format(totalAssigned)}</TableCell>
+          <TableCell>{amountFormatter.format(totalSpent)}</TableCell>
+        </TableRow>
+        {open &&
+          categoryGroup.categories.map((category) => (
+            <CategoryView key={category.name} category={category} />
           ))}
+        <CollapsibleContent>
+          <div>hello</div>
         </CollapsibleContent>
-      </Collapsible>
-    </Card>
+      </>
+    </Collapsible>
   )
 }
 
@@ -136,12 +166,17 @@ interface CategoryViewProps {
 }
 
 function CategoryView({ category }: CategoryViewProps) {
+  const formatter = useCurrencyFormatter()
   return (
-    <Card className="columns-3">
-      <div>{category.name}</div>
-      <div>{category.assignedAmount}</div>
-      <div>{category.spentAmount}</div>
-    </Card>
+    <TableRow key={category.name}>
+      <TableCell>{/* Empty space for chevron */}</TableCell>
+      <TableCell>
+        <div>{category.name}</div>
+        <div>Progress bar goes here</div>
+      </TableCell>
+      <TableCell>{formatter.format(category.assignedAmount)}</TableCell>
+      <TableCell>{formatter.format(category.spentAmount)}</TableCell>
+    </TableRow>
   )
 }
 
