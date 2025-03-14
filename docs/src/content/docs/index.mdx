@@ -1,0 +1,35 @@
+---
+title: Welcome to Coat Rack!
+description: Gettting started and developer documentation.
+template: splash
+hero:
+  title: |
+    Welcome to Coat Rack!
+  tagline: Hang up your coat, let's get started!
+  actions:
+    - text: Guide
+      link: /guides/example/
+      variant: primary
+    - text: Starlight docs
+      link: https://starlight.astro.build
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Next steps
+
+<CardGrid stagger>
+	<Card title="Update content" icon="pencil">
+		Edit `src/content/docs/index.mdx` to see this page change.
+	</Card>
+	<Card title="Add new content" icon="add-document">
+		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	</Card>
+	<Card title="Configure your site" icon="setting">
+		Edit your `sidebar` and other config in `astro.config.mjs`.
+	</Card>
+	<Card title="Read the docs" icon="open-book">
+		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	</Card>
+</CardGrid>
