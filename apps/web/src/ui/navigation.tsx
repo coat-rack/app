@@ -64,7 +64,7 @@ export const Navigation = ({
           {Links}
         </div>
       </nav>
-      <main>{children}</main>
+      <main className="bg-background">{children}</main>
     </div>
   )
 }
