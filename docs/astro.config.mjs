@@ -23,12 +23,12 @@ export default defineConfig({
           link: "getting-started",
         },
         {
-          label: "App Development",
-          link: "app-development",
-        },
-        {
           label: "Architecture",
           link: "architecture",
+        },
+        {
+          label: "App Development",
+          link: "app-development",
         },
         {
           label: "Reference",

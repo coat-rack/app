@@ -22,9 +22,9 @@ const isRtl = dir === "rtl"
             <CardDescription>{prev.label}</CardDescription>
             <CardTitle className="flex flex-row items-center justify-start">
               {isRtl ? (
-                <ArrowRightSolid className="h-4 pl-4" />
+                <ArrowRightSolid className="h-4 pl-4 fill-current" />
               ) : (
-                <ArrowLeftSolid className="h-4 pr-4" />
+                <ArrowLeftSolid className="h-4 pr-4 fill-current" />
               )}
               {Astro.locals.t("page.previousLink")}
             </CardTitle>
@@ -43,9 +43,9 @@ const isRtl = dir === "rtl"
             <CardTitle className="flex flex-row items-center justify-end">
               {Astro.locals.t("page.nextLink")}
               {isRtl ? (
-                <ArrowLeftSolid className="h-4 pr-4" />
+                <ArrowLeftSolid className="h-4 pr-4 fill-current" />
               ) : (
-                <ArrowRightSolid className="h-4 pl-4" />
+                <ArrowRightSolid className="h-4 pl-4 fill-current" />
               )}
             </CardTitle>
           </CardHeader>

@@ -7,30 +7,39 @@ hero:
     Welcome to Coat Rack!
   tagline: Hang up your coat, let's get started!
   actions:
-    - text: Getting started
-      link: /getting-started/
+    - text: Let's go
+      link: ./welcome
       variant: primary
-    - text: Build an app
-      link: /app-development/
-      variant: minimal
 ---
 
 import { CardGrid } from "@astrojs/starlight/components"
 import Card from "../../components/Card.tsx"
+import LinkButton from "../../components/LinkButton.tsx"
 
 ## Next steps
 
 <CardGrid stagger>
-  <Card title="Update content">
-    Edit `src/content/docs/index.mdx` to see this page change.
+  <Card title="Getting started">
+    Get up and running with Coat Rack.
+    
+    [Setup your instance](./getting-started)
   </Card>
-  <Card title="Add new content">
-    Add Markdown or MDX files to `src/content/docs` to create new pages.
+
+  <Card title="Architecture">
+    Understand how the platform works.
+
+    [Architecture overview](./architecture)
   </Card>
-  <Card title="Configure your site">
-    Edit your `sidebar` and other config in `astro.config.mjs`.
+
+  <Card title="Build an app">
+    Build your first app for Coat Rack!
+
+    [App development](./app-development)
   </Card>
-  <Card title="Read the docs">
-    Learn more in [the Starlight Docs](https://starlight.astro.build/).
+
+  <Card title="Documentation">
+    Learn everything you need to deliver great user experiences.
+
+    [Developer docs](./reference/example)
   </Card>
 </CardGrid>
