@@ -1,0 +1,122 @@
+---
+title: App Development
+description: Basic introduction to building an app
+---
+
+import { FileTree } from "@astrojs/starlight/components"
+
+:::caution
+TODO: this needs to be updated to reflect the "real" process for creating a new app once we have published all the packages
+:::
+
+## Prerequisites
+
+To build an app for the platform it is assumed that you have some basic knowledge of [React](https://react.dev/) and that you have [Node.js](https://nodejs.org/en) installed.
+
+## Scaffolding an App
+
+To create a new app you can use the following command:
+
+```sh title="generate app"
+pnpm run generate catalog-app
+```
+
+Next, you will need to install the dependencies for your app, this can be done using:
+
+```sh title="install dependencies"
+pnpm install
+```
+
+Thereafter, you will be asked to enter a name for your app, a new app will be created for you. The created app will contain the following:
+
+<FileTree>
+
+- my-app
+  - src
+    - **index.tsx** - app entrypoint
+    - **styles.css** - app styles
+  - public
+    - **manifest.json** - app metadata
+  - **package.json**
+  - postcss.config.js
+  - tailwind.config.ts - config for app styles
+  - tsconfig.json
+  - vite.config.ts - build config for application
+
+</FileTree>
+
+Most of the generated files are to configure the application, the main files that you will work with are `index.tsx`, `styles.css`, and `manifest.json` files
+
+## Developing
+
+:::caution
+TODO: This should describe the process of installing/linking an app to a running instance. The process for this outside of the demo apps we have isn't clear at the moment and will need to be added once we have figured this out for cases where an app comes from outside of the repo
+:::
+
+## App Entrypoint
+
+The entrypoint for your application is the `index.tsx` file - this file will be compiled into the module that is loaded to run your application. Apps in Coat Rack are defined as follows:
+
+```tsx title="src/index.tsx"
+import { App, ProvideAppContext } from "@repo/sdk"
+import { Button } from "@repo/ui/components/button"
+
+import "./styles.css"  
+
+export const MyApp: App = {
+  /**
+   *  The Entrypoint for the app
+   */
+  Entry: ({context}) => {
+    return (
+      <ProvideAppContext {...context}>
+        <h1 className="bg-red-500">Hello my-app</h1>
+        <Button>Click Me</Button>
+      </ProvideAppContext>
+    )
+  },
+}
+
+export default MyApp 
+```
+
+An `App` is defined as an object with an `Entry` property. The `Entry` here is a react component that is provided with the `context` prop.
+
+:::note
+Important functionality related to working with the platform are exported from the `@repo/sdk` package
+:::
+
+## App Context
+
+The `context` prop provided to the `ProvideAppContext` in order to make it possible to work with the app context in other places, for example if we were to query the database from a component:
+
+```tsx title="src/example-component.tsx"
+import { DbRecord, ProvideSpace, useAppContext } from "@repo/sdk"
+import { useEffect, useState } from "react"
+
+interface AppData {
+  name: string
+  age: number
+}
+
+export const MyComponent = () => {
+  const context = useAppContext<AppData>()
+  const [data, setData] = useState<DbRecord<AppData>[]>()
+
+  useEffect(() => {
+    context.db.query({}).then((users) => setData(users))
+  })
+
+  return (
+    <ul>
+      {data?.map((d) => (
+        <ProvideSpace key={d.id} space={d.space}>
+          <li className="text-primary">{d.data.name}</li>
+        </ProvideSpace>
+      ))}
+    </ul>
+  )
+}
+```
+
+Additionally, `ProvideSpace` allows us to respect the space that a data entry belongs to, this means that any styles needed within the a segment of the UI will match the space in which the database record exists
