@@ -1,0 +1,12 @@
+{
+  "name": "@repo/build-utils",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@repo/typescript-config": "workspace:*"
+  }
+}
