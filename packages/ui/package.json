@@ -193,8 +193,6 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "generate:component": "turbo gen react-component",
-    "xbuild": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
-    "xdev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
