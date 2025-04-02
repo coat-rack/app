@@ -16,6 +16,16 @@
     "typescript": "^5.3.3"
   },
   "exports": {
+    "./context": {
+      "require": {
+        "types": "./dist/context.d.ts",
+        "default": "./dist/context.js"
+      },
+      "import": {
+        "types": "./dist/context.d.mts",
+        "default": "./dist/context.mjs"
+      }
+    },
     ".": {
       "require": {
         "types": "./dist/index.d.ts",

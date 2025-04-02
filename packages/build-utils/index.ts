@@ -2,7 +2,7 @@
  * Specifics around export setup from here: https://hirok.io/posts/package-json-exports
  */
 
-import { readdirSync, readFileSync, writeFileSync } from "node:fs"
+import { readFileSync, readdirSync, writeFileSync, type Dirent } from "node:fs"
 import { join } from "node:path"
 
 type ExportPaths = {
@@ -18,42 +18,55 @@ export type PackageExports = Record<
   }
 >
 
-function getExportName(file: string) {
-  if (file === "index.ts") {
+type BaseFileName = string & {
+  __brand: "BASE_FILE_NAME"
+}
+
+function toBaseFileName(file: Dirent): BaseFileName {
+  return file.name.replace(/\.(ts|tsx)$/, "") as BaseFileName
+}
+
+function getExportName(file: BaseFileName) {
+  if (file === "index") {
     return "."
   }
 
   return "./" + file.replace(".ts", "")
 }
 
-function getDistPath(file: string, newExt: string) {
-  return "./dist/" + file.replace(".ts", newExt)
+function distPath(file: BaseFileName, newExt: `.${string}`) {
+  return `./dist/${file}${newExt}`
 }
 
 /**
- * Treats all top-level files in the `src` dir as files that are meant to be exported
+ * Treats all top-level files in the `dir` as files that are meant to be exported
  * via the `package.json`'s `exports` property
+ *
+ * > Note that the automatic entrypoints only support TS and TSX Files
  */
-export function getTsupEntryPoints(basePath: string) {
-  const files = readdirSync(join(basePath, "src"), {
+export function getTsupEntryPoints(basePath: string, dir = "src") {
+  const exportsDir = join(basePath, dir)
+  const files = readdirSync(exportsDir, {
     withFileTypes: true,
-  })
-    .filter((d) => d.isFile() && d.name.endsWith(".ts"))
-    .map((f) => f.name)
+  }).filter(
+    (d) => (d.isFile() && d.name.endsWith(".ts")) || d.name.endsWith(".tsx"),
+  )
 
-  const tsupEntry = files.map((f) => `./src/${f}`)
+  const baseFileNames = files.map(toBaseFileName)
 
-  const packageJsonExports = files.reduce<PackageExports>(
+  const tsupEntry = files.map((f) => `./${dir}/${f.name}`)
+
+  const packageJsonExports = baseFileNames.reduce<PackageExports>(
     (curr, e) => ({
       ...curr,
       [getExportName(e)]: {
         require: {
-          types: getDistPath(e, ".d.ts"),
-          default: getDistPath(e, ".js"),
+          types: distPath(e, ".d.ts"),
+          default: distPath(e, ".js"),
         },
         import: {
-          types: getDistPath(e, ".d.mts"),
-          default: getDistPath(e, ".mjs"),
+          types: distPath(e, ".d.mts"),
+          default: distPath(e, ".mjs"),
         },
       },
     }),
@@ -65,7 +78,7 @@ export function getTsupEntryPoints(basePath: string) {
 
 export function updatePackageJsonExports(
   basePath: string,
-  exports: PackageExports,
+  exports: PackageExports | Record<string, string>,
 ) {
   const packageJson = JSON.parse(
     readFileSync(join(basePath, "package.json"), "utf-8"),
@@ -77,4 +90,19 @@ export function updatePackageJsonExports(
   }
 
   writeFileSync("./package.json", JSON.stringify(updatedPackageJson, null, 2))
+}
+
+/**
+ * Appends a prefix to the export path that consumers should use
+ */
+export function prefixExportPaths(
+  prefix: string,
+  packageJsonExports: PackageExports,
+) {
+  return Object.fromEntries(
+    Object.entries(packageJsonExports).map(([key, value]) => [
+      key.replace("./", `./${prefix}/`),
+      value,
+    ]),
+  )
 }

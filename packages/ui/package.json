@@ -8,38 +8,204 @@
   ],
   "exports": {
     "./styles.css": "./dist/index.css",
-    "./components/button": "./src/components/button.tsx",
-    "./components/radio-group": "./src/components/radio-group.tsx",
-    "./components/label": "./src/components/label.tsx",
-    "./components/checkbox": "./src/components/checkbox.tsx",
-    "./components/alert-dialog": "./src/components/alert-dialog.tsx",
-    "./components/card": "./src/components/card.tsx",
-    "./components/calendar": "./src/components/calendar.tsx",
-    "./components/table": "./src/components/table.tsx",
-    "./components/input": "./src/components/input.tsx",
-    "./components/textarea": "./src/components/textarea.tsx",
-    "./components/chart": "./src/components/chart.tsx",
-    "./components/tabs": "./src/components/tabs.tsx",
-    "./components/carousel": "./src/components/carousel.tsx",
-    "./components/sonner": "./src/components/sonner.tsx",
-    "./components/dialog": "./src/components/dialog.tsx",
-    "./components/select": "./src/components/select.tsx",
-    "./components/form": "./src/components/form.tsx",
-    "./components/collapsible": "./src/components/collapsible.tsx"
+    "./components/alert-dialog": {
+      "require": {
+        "types": "./dist/alert-dialog.d.ts",
+        "default": "./dist/alert-dialog.js"
+      },
+      "import": {
+        "types": "./dist/alert-dialog.d.mts",
+        "default": "./dist/alert-dialog.mjs"
+      }
+    },
+    "./components/button": {
+      "require": {
+        "types": "./dist/button.d.ts",
+        "default": "./dist/button.js"
+      },
+      "import": {
+        "types": "./dist/button.d.mts",
+        "default": "./dist/button.mjs"
+      }
+    },
+    "./components/calendar": {
+      "require": {
+        "types": "./dist/calendar.d.ts",
+        "default": "./dist/calendar.js"
+      },
+      "import": {
+        "types": "./dist/calendar.d.mts",
+        "default": "./dist/calendar.mjs"
+      }
+    },
+    "./components/card": {
+      "require": {
+        "types": "./dist/card.d.ts",
+        "default": "./dist/card.js"
+      },
+      "import": {
+        "types": "./dist/card.d.mts",
+        "default": "./dist/card.mjs"
+      }
+    },
+    "./components/carousel": {
+      "require": {
+        "types": "./dist/carousel.d.ts",
+        "default": "./dist/carousel.js"
+      },
+      "import": {
+        "types": "./dist/carousel.d.mts",
+        "default": "./dist/carousel.mjs"
+      }
+    },
+    "./components/chart": {
+      "require": {
+        "types": "./dist/chart.d.ts",
+        "default": "./dist/chart.js"
+      },
+      "import": {
+        "types": "./dist/chart.d.mts",
+        "default": "./dist/chart.mjs"
+      }
+    },
+    "./components/checkbox": {
+      "require": {
+        "types": "./dist/checkbox.d.ts",
+        "default": "./dist/checkbox.js"
+      },
+      "import": {
+        "types": "./dist/checkbox.d.mts",
+        "default": "./dist/checkbox.mjs"
+      }
+    },
+    "./components/collapsible": {
+      "require": {
+        "types": "./dist/collapsible.d.ts",
+        "default": "./dist/collapsible.js"
+      },
+      "import": {
+        "types": "./dist/collapsible.d.mts",
+        "default": "./dist/collapsible.mjs"
+      }
+    },
+    "./components/dialog": {
+      "require": {
+        "types": "./dist/dialog.d.ts",
+        "default": "./dist/dialog.js"
+      },
+      "import": {
+        "types": "./dist/dialog.d.mts",
+        "default": "./dist/dialog.mjs"
+      }
+    },
+    "./components/form": {
+      "require": {
+        "types": "./dist/form.d.ts",
+        "default": "./dist/form.js"
+      },
+      "import": {
+        "types": "./dist/form.d.mts",
+        "default": "./dist/form.mjs"
+      }
+    },
+    "./components/input": {
+      "require": {
+        "types": "./dist/input.d.ts",
+        "default": "./dist/input.js"
+      },
+      "import": {
+        "types": "./dist/input.d.mts",
+        "default": "./dist/input.mjs"
+      }
+    },
+    "./components/label": {
+      "require": {
+        "types": "./dist/label.d.ts",
+        "default": "./dist/label.js"
+      },
+      "import": {
+        "types": "./dist/label.d.mts",
+        "default": "./dist/label.mjs"
+      }
+    },
+    "./components/radio-group": {
+      "require": {
+        "types": "./dist/radio-group.d.ts",
+        "default": "./dist/radio-group.js"
+      },
+      "import": {
+        "types": "./dist/radio-group.d.mts",
+        "default": "./dist/radio-group.mjs"
+      }
+    },
+    "./components/select": {
+      "require": {
+        "types": "./dist/select.d.ts",
+        "default": "./dist/select.js"
+      },
+      "import": {
+        "types": "./dist/select.d.mts",
+        "default": "./dist/select.mjs"
+      }
+    },
+    "./components/sonner": {
+      "require": {
+        "types": "./dist/sonner.d.ts",
+        "default": "./dist/sonner.js"
+      },
+      "import": {
+        "types": "./dist/sonner.d.mts",
+        "default": "./dist/sonner.mjs"
+      }
+    },
+    "./components/table": {
+      "require": {
+        "types": "./dist/table.d.ts",
+        "default": "./dist/table.js"
+      },
+      "import": {
+        "types": "./dist/table.d.mts",
+        "default": "./dist/table.mjs"
+      }
+    },
+    "./components/tabs": {
+      "require": {
+        "types": "./dist/tabs.d.ts",
+        "default": "./dist/tabs.js"
+      },
+      "import": {
+        "types": "./dist/tabs.d.mts",
+        "default": "./dist/tabs.mjs"
+      }
+    },
+    "./components/textarea": {
+      "require": {
+        "types": "./dist/textarea.d.ts",
+        "default": "./dist/textarea.js"
+      },
+      "import": {
+        "types": "./dist/textarea.d.mts",
+        "default": "./dist/textarea.mjs"
+      }
+    }
   },
   "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
     "generate:component": "turbo gen react-component",
-    "build": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
-    "dev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
+    "xbuild": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "xdev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@repo/build-utils": "workspace:^",
     "@repo/typescript-config": "workspace:*",
     "@turbo/gen": "^1.11.3",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "react": "^18.2.0",
+    "tsup": "^8.4.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {
