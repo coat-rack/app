@@ -35,12 +35,18 @@ function getExportName(file: BaseFileName) {
 }
 
 /**
+ * Any code that is intended to be in a build must be in the `src`. For the sake of consistency
+ * `src` is the source for all files that end up being distributed
+ */
+type SrcDir = "src" | `src/${string}`
+
+/**
  * Treats all top-level files in the `dir` as files that are meant to be exported
  * via the `package.json`'s `exports` property
  *
  * > Note that the automatic entrypoints only support TS and TSX Files
  */
-export function getTsupEntryPoints(basePath: string, dir = "src") {
+export function getTsupEntrypoints(basePath: string, dir: SrcDir = "src") {
   const exportsDir = join(basePath, dir)
   const files = readdirSync(exportsDir, {
     withFileTypes: true,
@@ -52,7 +58,7 @@ export function getTsupEntryPoints(basePath: string, dir = "src") {
 
   const tsupEntry = files.map((f) => `./${dir}/${f.name}`)
 
-  const outDir = `./dist${dir.replace("src", "")}/`
+  const outDir = `./${dir.replace(/^src/, "dist")}/`
 
   const packageJsonExports = baseFileNames.reduce<PackageExports>(
     (curr, e) => ({

@@ -1,8 +1,8 @@
 import { defineConfig } from "tsup"
 // direct import since otherwise we need to compile the internal package
-import { getTsupEntryPoints, updatePackageJsonExports } from "../build-utils"
+import { getTsupEntrypoints, updatePackageJsonExports } from "../build-utils"
 
-const { packageJsonExports, tsupEntry } = getTsupEntryPoints(__dirname)
+const { packageJsonExports, tsupEntry } = getTsupEntrypoints(__dirname)
 
 updatePackageJsonExports(__dirname, packageJsonExports)
 

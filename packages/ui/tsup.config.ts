@@ -1,12 +1,12 @@
 import { defineConfig } from "tsup"
 // direct import since otherwise we need to compile the internal package
 import {
-  getTsupEntryPoints,
+  getTsupEntrypoints,
   prefixExportPaths,
   updatePackageJsonExports,
 } from "../build-utils"
 
-const { packageJsonExports, tsupEntry } = getTsupEntryPoints(
+const { packageJsonExports, tsupEntry } = getTsupEntrypoints(
   __dirname,
   "src/components",
 )
