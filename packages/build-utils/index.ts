@@ -34,10 +34,6 @@ function getExportName(file: BaseFileName) {
   return "./" + file.replace(".ts", "")
 }
 
-function distPath(file: BaseFileName, newExt: `.${string}`) {
-  return `./dist/${file}${newExt}`
-}
-
 /**
  * Treats all top-level files in the `dir` as files that are meant to be exported
  * via the `package.json`'s `exports` property
@@ -56,17 +52,19 @@ export function getTsupEntryPoints(basePath: string, dir = "src") {
 
   const tsupEntry = files.map((f) => `./${dir}/${f.name}`)
 
+  const outDir = `./dist${dir.replace("src", "")}/`
+
   const packageJsonExports = baseFileNames.reduce<PackageExports>(
     (curr, e) => ({
       ...curr,
       [getExportName(e)]: {
         require: {
-          types: distPath(e, ".d.ts"),
-          default: distPath(e, ".js"),
+          types: `${outDir + e}.d.ts`,
+          default: `${outDir + e}.js`,
         },
         import: {
-          types: distPath(e, ".d.mts"),
-          default: distPath(e, ".mjs"),
+          types: `${outDir + e}.d.mts`,
+          default: `${outDir + e}.mjs`,
         },
       },
     }),

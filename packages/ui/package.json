@@ -7,185 +7,185 @@
     "**/*.css"
   ],
   "exports": {
-    "./styles.css": "./dist/index.css",
+    "./styles.css": "./dist/styles.css",
     "./components/alert-dialog": {
       "require": {
-        "types": "./dist/alert-dialog.d.ts",
-        "default": "./dist/alert-dialog.js"
+        "types": "./dist/components/alert-dialog.d.ts",
+        "default": "./dist/components/alert-dialog.js"
       },
       "import": {
-        "types": "./dist/alert-dialog.d.mts",
-        "default": "./dist/alert-dialog.mjs"
+        "types": "./dist/components/alert-dialog.d.mts",
+        "default": "./dist/components/alert-dialog.mjs"
       }
     },
     "./components/button": {
       "require": {
-        "types": "./dist/button.d.ts",
-        "default": "./dist/button.js"
+        "types": "./dist/components/button.d.ts",
+        "default": "./dist/components/button.js"
       },
       "import": {
-        "types": "./dist/button.d.mts",
-        "default": "./dist/button.mjs"
+        "types": "./dist/components/button.d.mts",
+        "default": "./dist/components/button.mjs"
       }
     },
     "./components/calendar": {
       "require": {
-        "types": "./dist/calendar.d.ts",
-        "default": "./dist/calendar.js"
+        "types": "./dist/components/calendar.d.ts",
+        "default": "./dist/components/calendar.js"
       },
       "import": {
-        "types": "./dist/calendar.d.mts",
-        "default": "./dist/calendar.mjs"
+        "types": "./dist/components/calendar.d.mts",
+        "default": "./dist/components/calendar.mjs"
       }
     },
     "./components/card": {
       "require": {
-        "types": "./dist/card.d.ts",
-        "default": "./dist/card.js"
+        "types": "./dist/components/card.d.ts",
+        "default": "./dist/components/card.js"
       },
       "import": {
-        "types": "./dist/card.d.mts",
-        "default": "./dist/card.mjs"
+        "types": "./dist/components/card.d.mts",
+        "default": "./dist/components/card.mjs"
       }
     },
     "./components/carousel": {
       "require": {
-        "types": "./dist/carousel.d.ts",
-        "default": "./dist/carousel.js"
+        "types": "./dist/components/carousel.d.ts",
+        "default": "./dist/components/carousel.js"
       },
       "import": {
-        "types": "./dist/carousel.d.mts",
-        "default": "./dist/carousel.mjs"
+        "types": "./dist/components/carousel.d.mts",
+        "default": "./dist/components/carousel.mjs"
       }
     },
     "./components/chart": {
       "require": {
-        "types": "./dist/chart.d.ts",
-        "default": "./dist/chart.js"
+        "types": "./dist/components/chart.d.ts",
+        "default": "./dist/components/chart.js"
       },
       "import": {
-        "types": "./dist/chart.d.mts",
-        "default": "./dist/chart.mjs"
+        "types": "./dist/components/chart.d.mts",
+        "default": "./dist/components/chart.mjs"
       }
     },
     "./components/checkbox": {
       "require": {
-        "types": "./dist/checkbox.d.ts",
-        "default": "./dist/checkbox.js"
+        "types": "./dist/components/checkbox.d.ts",
+        "default": "./dist/components/checkbox.js"
       },
       "import": {
-        "types": "./dist/checkbox.d.mts",
-        "default": "./dist/checkbox.mjs"
+        "types": "./dist/components/checkbox.d.mts",
+        "default": "./dist/components/checkbox.mjs"
       }
     },
     "./components/collapsible": {
       "require": {
-        "types": "./dist/collapsible.d.ts",
-        "default": "./dist/collapsible.js"
+        "types": "./dist/components/collapsible.d.ts",
+        "default": "./dist/components/collapsible.js"
       },
       "import": {
-        "types": "./dist/collapsible.d.mts",
-        "default": "./dist/collapsible.mjs"
+        "types": "./dist/components/collapsible.d.mts",
+        "default": "./dist/components/collapsible.mjs"
       }
     },
     "./components/dialog": {
       "require": {
-        "types": "./dist/dialog.d.ts",
-        "default": "./dist/dialog.js"
+        "types": "./dist/components/dialog.d.ts",
+        "default": "./dist/components/dialog.js"
       },
       "import": {
-        "types": "./dist/dialog.d.mts",
-        "default": "./dist/dialog.mjs"
+        "types": "./dist/components/dialog.d.mts",
+        "default": "./dist/components/dialog.mjs"
       }
     },
     "./components/form": {
       "require": {
-        "types": "./dist/form.d.ts",
-        "default": "./dist/form.js"
+        "types": "./dist/components/form.d.ts",
+        "default": "./dist/components/form.js"
       },
       "import": {
-        "types": "./dist/form.d.mts",
-        "default": "./dist/form.mjs"
+        "types": "./dist/components/form.d.mts",
+        "default": "./dist/components/form.mjs"
       }
     },
     "./components/input": {
       "require": {
-        "types": "./dist/input.d.ts",
-        "default": "./dist/input.js"
+        "types": "./dist/components/input.d.ts",
+        "default": "./dist/components/input.js"
       },
       "import": {
-        "types": "./dist/input.d.mts",
-        "default": "./dist/input.mjs"
+        "types": "./dist/components/input.d.mts",
+        "default": "./dist/components/input.mjs"
       }
     },
     "./components/label": {
       "require": {
-        "types": "./dist/label.d.ts",
-        "default": "./dist/label.js"
+        "types": "./dist/components/label.d.ts",
+        "default": "./dist/components/label.js"
       },
       "import": {
-        "types": "./dist/label.d.mts",
-        "default": "./dist/label.mjs"
+        "types": "./dist/components/label.d.mts",
+        "default": "./dist/components/label.mjs"
       }
     },
     "./components/radio-group": {
       "require": {
-        "types": "./dist/radio-group.d.ts",
-        "default": "./dist/radio-group.js"
+        "types": "./dist/components/radio-group.d.ts",
+        "default": "./dist/components/radio-group.js"
       },
       "import": {
-        "types": "./dist/radio-group.d.mts",
-        "default": "./dist/radio-group.mjs"
+        "types": "./dist/components/radio-group.d.mts",
+        "default": "./dist/components/radio-group.mjs"
       }
     },
     "./components/select": {
       "require": {
-        "types": "./dist/select.d.ts",
-        "default": "./dist/select.js"
+        "types": "./dist/components/select.d.ts",
+        "default": "./dist/components/select.js"
       },
       "import": {
-        "types": "./dist/select.d.mts",
-        "default": "./dist/select.mjs"
+        "types": "./dist/components/select.d.mts",
+        "default": "./dist/components/select.mjs"
       }
     },
     "./components/sonner": {
       "require": {
-        "types": "./dist/sonner.d.ts",
-        "default": "./dist/sonner.js"
+        "types": "./dist/components/sonner.d.ts",
+        "default": "./dist/components/sonner.js"
       },
       "import": {
-        "types": "./dist/sonner.d.mts",
-        "default": "./dist/sonner.mjs"
+        "types": "./dist/components/sonner.d.mts",
+        "default": "./dist/components/sonner.mjs"
       }
     },
     "./components/table": {
       "require": {
-        "types": "./dist/table.d.ts",
-        "default": "./dist/table.js"
+        "types": "./dist/components/table.d.ts",
+        "default": "./dist/components/table.js"
       },
       "import": {
-        "types": "./dist/table.d.mts",
-        "default": "./dist/table.mjs"
+        "types": "./dist/components/table.d.mts",
+        "default": "./dist/components/table.mjs"
       }
     },
     "./components/tabs": {
       "require": {
-        "types": "./dist/tabs.d.ts",
-        "default": "./dist/tabs.js"
+        "types": "./dist/components/tabs.d.ts",
+        "default": "./dist/components/tabs.js"
       },
       "import": {
-        "types": "./dist/tabs.d.mts",
-        "default": "./dist/tabs.mjs"
+        "types": "./dist/components/tabs.d.mts",
+        "default": "./dist/components/tabs.mjs"
       }
     },
     "./components/textarea": {
       "require": {
-        "types": "./dist/textarea.d.ts",
-        "default": "./dist/textarea.js"
+        "types": "./dist/components/textarea.d.ts",
+        "default": "./dist/components/textarea.js"
       },
       "import": {
-        "types": "./dist/textarea.d.mts",
-        "default": "./dist/textarea.mjs"
+        "types": "./dist/components/textarea.d.mts",
+        "default": "./dist/components/textarea.mjs"
       }
     }
   },

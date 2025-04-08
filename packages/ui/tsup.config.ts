@@ -16,7 +16,7 @@ const adjustedPackageJsonExports = prefixExportPaths(
   packageJsonExports,
 )
 updatePackageJsonExports(__dirname, {
-  "./styles.css": "./dist/index.css",
+  "./styles.css": "./dist/styles.css",
   ...adjustedPackageJsonExports,
 })
 
