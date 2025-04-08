@@ -65,12 +65,12 @@ export function getTsupEntrypoints(basePath: string, dir: SrcDir = "src") {
       ...curr,
       [getExportName(e)]: {
         require: {
-          types: `${outDir + e}.d.ts`,
-          default: `${outDir + e}.js`,
+          types: `${outDir}${e}.d.ts`,
+          default: `${outDir}${e}.js`,
         },
         import: {
-          types: `${outDir + e}.d.mts`,
-          default: `${outDir + e}.mjs`,
+          types: `${outDir}${e}.d.mts`,
+          default: `${outDir}${e}.mjs`,
         },
       },
     }),
