@@ -2,7 +2,7 @@
   "name": "@coat-rack/web",
   "description": "The entrypoint to the application. The interface through which users interact with the platform",
   "private": true,
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1-alpha.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
