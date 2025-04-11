@@ -1,7 +1,7 @@
 {
   "name": "@coat-rack/tailwind-config",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "exports": {
     ".": "./tailwind.config.ts"
   },

@@ -2,7 +2,7 @@
   "name": "@coat-rack/sdk",
   "description": "Library exposed to app developers. Should not depend on any internal-only libraries",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
