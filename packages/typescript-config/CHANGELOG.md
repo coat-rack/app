@@ -1,0 +1,3 @@
+# @coat-rack/typescript-config
+
+## 0.0.1-alpha.0
