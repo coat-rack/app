@@ -19,5 +19,7 @@
     "@coat-rack/typescript-config": "0.0.0",
     "@coat-rack/ui": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "nine-planes-melt"
+  ]
 }

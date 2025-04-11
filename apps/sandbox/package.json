@@ -2,7 +2,7 @@
   "name": "@coat-rack/sandbox",
   "description": "An application rendered by 'web' in which 'catalog apps' are rendered. Provided separation of origin in order to ensure app isolation",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
