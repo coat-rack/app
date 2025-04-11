@@ -46,13 +46,22 @@ When working on the catalog the `dev-catalog` will host the root directory, this
 
 ## Releasing
 
-> WIP: Still figuring out this process, but below is a proposed set of changes that should work
+Releases are done using [`changesets`](https://github.com/changesets/changesets). The process for releasing consists of creating changesets as part of the normal dev workflow, and then creating a release which consists of one or more changesets.
 
-Releases are done using [`changesets`](https://github.com/changesets/changesets). The process for releasing looks like so:
+### Creating Changesets
 
-1. Create a new changeset using `pnpm changeset`
-2. Once all changesets are created, update the relevant versions with `pnpm changeset version`
-3. Lastly, create a PR with the changes. If this is merged then a release on GitHub should be created
-  -  This release will automatically publish the relevant changes
+1. Make your changes/PR as normal.
+2. When ready, create a new changesets using `pnpm changeset` that describes the given group of changes following the prompts for the selection of libraries and whether the release is a major/minor/patch
+
+### Creating a Release
+
+1. Once ready with a set of changes that should form part of a release, you can use `pnpm changeset version` to create a new version, following the prompts as needed
+2. Lastly, create a PR with the changes. If this is merged, the `release` workflow will run which will:
+  - Create a release for all relevant packages on GitHub
+  - Publish appliccable packages to NPM
 
 For more detailed information on how changesets work, take a look at the `changesets` documentation
+
+### Pre-release Versions
+
+`changesets` also has support for pre-release versions. These can be "entered" or "exited" by using `pnpm changeset pre enter <alpha|beta|etc.>` and then versioning as normal. The pre-release chain can be ended using `pnpm pre exit <alpha|beta|etc.>`
