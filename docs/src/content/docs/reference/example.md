@@ -4,5 +4,5 @@ description: A reference page in my new Starlight docs site.
 ---
 
 :::caution
-TODO: Add a reference page for each of the exposed packages (`@repo/sdk`, `@repo/ui`, `@repo/icons`)
+TODO: Add a reference page for each of the exposed packages (`@coat-rack/sdk`, `@coat-rack/ui`, `@coat-rack/icons`)
 :::

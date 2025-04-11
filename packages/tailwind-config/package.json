@@ -1,12 +1,12 @@
 {
-  "name": "@repo/tailwind-config",
+  "name": "@coat-rack/tailwind-config",
   "version": "0.0.0",
   "private": true,
   "exports": {
     ".": "./tailwind.config.ts"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@coat-rack/typescript-config": "workspace:*",
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7"
   }

@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@coat-rack/server",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@repo/core": "workspace:*",
+    "@coat-rack/core": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.242",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",

@@ -1,5 +1,5 @@
 {
-  "name": "@repo/sdk",
+  "name": "@coat-rack/sdk",
   "description": "Library exposed to app developers. Should not depend on any internal-only libraries",
   "version": "0.0.0",
   "private": true,
@@ -8,7 +8,7 @@
     "dev": "tsup --watch"
   },
   "devDependencies": {
-    "@repo/build-utils": "workspace:*",
+    "@coat-rack/build-utils": "workspace:*",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "react": "^18.2.0",

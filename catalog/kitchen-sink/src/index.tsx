@@ -1,4 +1,4 @@
-import { App } from "@repo/sdk"
+import { App } from "@coat-rack/sdk"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,9 +9,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@repo/ui/components/alert-dialog"
-import { Button } from "@repo/ui/components/button"
-import { Calendar } from "@repo/ui/components/calendar"
+} from "@coat-rack/ui/components/alert-dialog"
+import { Button } from "@coat-rack/ui/components/button"
+import { Calendar } from "@coat-rack/ui/components/calendar"
 import {
   Card,
   CardContent,
@@ -19,13 +19,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card"
+} from "@coat-rack/ui/components/card"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-} from "@repo/ui/components/carousel"
-import { Checkbox } from "@repo/ui/components/checkbox"
+} from "@coat-rack/ui/components/carousel"
+import { Checkbox } from "@coat-rack/ui/components/checkbox"
 import {
   Dialog,
   DialogContent,
@@ -33,22 +33,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@repo/ui/components/dialog"
-import { Input } from "@repo/ui/components/input"
-import { Label } from "@repo/ui/components/label"
-import { RadioGroup, RadioGroupItem } from "@repo/ui/components/radio-group"
+} from "@coat-rack/ui/components/dialog"
+import { Input } from "@coat-rack/ui/components/input"
+import { Label } from "@coat-rack/ui/components/label"
+import { RadioGroup, RadioGroupItem } from "@coat-rack/ui/components/radio-group"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@repo/ui/components/select"
-import { Toaster, toast } from "@repo/ui/components/sonner"
-import { Textarea } from "@repo/ui/components/textarea"
+} from "@coat-rack/ui/components/select"
+import { Toaster, toast } from "@coat-rack/ui/components/sonner"
+import { Textarea } from "@coat-rack/ui/components/textarea"
 import { CSSProperties, useState } from "react"
 
-import { ChartConfig, ChartContainer } from "@repo/ui/components/chart"
+import { ChartConfig, ChartContainer } from "@coat-rack/ui/components/chart"
 import { Bar, BarChart, Legend } from "recharts"
 import "./styles.css"
 

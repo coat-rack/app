@@ -1,7 +1,7 @@
 import { useActiveSpace } from "@/db/local"
-import { HomeSolid, OctagonTimesSolid } from "@repo/icons/solid"
-import { getSpaceStyles } from "@repo/sdk"
-import { Button } from "@repo/ui/components/button"
+import { HomeSolid, OctagonTimesSolid } from "@coat-rack/icons/solid"
+import { getSpaceStyles } from "@coat-rack/sdk"
+import { Button } from "@coat-rack/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { SpaceSelector } from "./spaces/selector"
 

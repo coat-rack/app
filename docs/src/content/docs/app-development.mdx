@@ -58,8 +58,8 @@ TODO: This should describe the process of installing/linking an app to a running
 The entrypoint for your application is the `index.tsx` file - this file will be compiled into the module that is loaded to run your application. Apps in Coat Rack are defined as follows:
 
 ```tsx title="src/index.tsx"
-import { App, ProvideAppContext } from "@repo/sdk"
-import { Button } from "@repo/ui/components/button"
+import { App, ProvideAppContext } from "@coat-rack/sdk"
+import { Button } from "@coat-rack/ui/components/button"
 
 import "./styles.css"  
 
@@ -83,7 +83,7 @@ export default MyApp
 An `App` is defined as an object with an `Entry` property. The `Entry` here is a react component that is provided with the `context` prop.
 
 :::note
-Important functionality related to working with the platform are exported from the `@repo/sdk` package
+Important functionality related to working with the platform are exported from the `@coat-rack/sdk` package
 :::
 
 ## App Context
@@ -91,7 +91,7 @@ Important functionality related to working with the platform are exported from t
 The `context` prop provided to the `ProvideAppContext` in order to make it possible to work with the app context in other places, for example if we were to query the database from a component:
 
 ```tsx title="src/example-component.tsx"
-import { DbRecord, ProvideSpace, useAppContext } from "@repo/sdk"
+import { DbRecord, ProvideSpace, useAppContext } from "@coat-rack/sdk"
 import { useEffect, useState } from "react"
 
 interface AppData {

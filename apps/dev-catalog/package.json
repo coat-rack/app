@@ -1,5 +1,5 @@
 {
-  "name": "dev-catalog",
+  "name": "@coat-rack/dev-catalog",
   "version": "1.0.0",
   "description": "Serves the catalog directory so local apps can be installed",
   "scripts": {

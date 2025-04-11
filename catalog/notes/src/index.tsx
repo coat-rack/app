@@ -1,5 +1,5 @@
-import { App, DbRecord, ProvideAppContext, ProvideSpace } from "@repo/sdk"
-import { Button } from "@repo/ui/components/button"
+import { App, DbRecord, ProvideAppContext, ProvideSpace } from "@coat-rack/sdk"
+import { Button } from "@coat-rack/ui/components/button"
 import { useEffect, useState } from "react"
 import { NoteEditor } from "./NoteEditor"
 import { NoteList } from "./NoteList"

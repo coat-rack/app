@@ -1,5 +1,5 @@
-import { useObservable } from "@repo/core/async"
-import { KeyValue, Space } from "@repo/core/models"
+import { useObservable } from "@coat-rack/core/async"
+import { KeyValue, Space } from "@coat-rack/core/models"
 import { map } from "rxjs"
 import { localDB } from "./rxdb"
 

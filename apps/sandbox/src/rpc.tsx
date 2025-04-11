@@ -1,5 +1,5 @@
-import { RpcResponse } from "@repo/core/rpc"
-import { Db } from "@repo/sdk"
+import { RpcResponse } from "@coat-rack/core/rpc"
+import { Db } from "@coat-rack/sdk"
 
 function guidGenerator() {
   if (window.isSecureContext) {
