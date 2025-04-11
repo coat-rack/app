@@ -66,15 +66,15 @@ importers:
 
   apps/sandbox:
     dependencies:
-      '@originjs/vite-plugin-federation':
-        specifier: ^1.3.4
-        version: 1.3.4
       '@coat-rack/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@coat-rack/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      '@originjs/vite-plugin-federation':
+        specifier: ^1.3.4
+        version: 1.3.4
       autoprefixer:
         specifier: ^10.4.17
         version: 10.4.17(postcss@8.4.33)
@@ -185,9 +185,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@originjs/vite-plugin-federation':
-        specifier: ^1.3.4
-        version: 1.3.4
       '@coat-rack/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -197,9 +194,15 @@ importers:
       '@coat-rack/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      '@coat-rack/server':
+        specifier: workspace:*
+        version: link:../server
       '@coat-rack/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@originjs/vite-plugin-federation':
+        specifier: ^1.3.4
+        version: 1.3.4
       '@tanstack/react-query':
         specifier: ^5.17.19
         version: 5.17.19(react@18.2.0)
@@ -254,9 +257,6 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
-      server:
-        specifier: workspace:*
-        version: link:../server
       tailwind-merge:
         specifier: ^2.2.1
         version: 2.2.1
@@ -581,15 +581,15 @@ importers:
 
   packages/icons:
     devDependencies:
-      '@hackernoon/pixel-icon-library':
-        specifier: ^1.0.1
-        version: 1.0.1
       '@coat-rack/build-utils':
         specifier: workspace:^
         version: link:../build-utils
       '@coat-rack/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@hackernoon/pixel-icon-library':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@svgr/cli':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.3.3)
@@ -641,17 +641,29 @@ importers:
       '@coat-rack/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/node':
+        specifier: ^20.10.6
+        version: 20.10.6
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.1)
+      tsup:
+        specifier: ^8.4.0
+        version: 8.4.0(postcss@8.4.33)(typescript@5.3.3)
 
   packages/typescript-config: {}
 
   packages/ui:
     dependencies:
+      '@coat-rack/icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@coat-rack/tailwind-config':
+        specifier: workspace:*
+        version: link:../tailwind-config
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.52.1)
@@ -685,12 +697,6 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
-      '@coat-rack/icons':
-        specifier: workspace:*
-        version: link:../icons
-      '@coat-rack/tailwind-config':
-        specifier: workspace:*
-        version: link:../tailwind-config
       autoprefixer:
         specifier: ^10.4.17
         version: 10.4.17(postcss@8.4.33)

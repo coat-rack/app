@@ -33,7 +33,7 @@
     "rollup-plugin-external-globals": "^0.9.2",
     "rxdb": "^15.4.2",
     "rxjs": "^7.8.1",
-    "server": "workspace:*",
+    "@coat-rack/server": "workspace:*",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "vite-tsconfig-paths": "^4.3.1",

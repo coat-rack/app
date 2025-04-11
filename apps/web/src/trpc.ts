@@ -5,7 +5,7 @@ import {
   loggerLink,
 } from "@trpc/react-query"
 
-import type { AppRouter } from "server/src/types"
+import type { AppRouter } from "@coat-rack/server/src/types"
 
 const config = {
   links: [
