@@ -1,4 +1,4 @@
-import { App, AppData, KeyValue, Space, User } from "@repo/core/models"
+import { App, AppData, KeyValue, Space, User } from "@coat-rack/core/models"
 import { PrimaryKey, RxJsonSchema } from "rxdb"
 import { type ZodType } from "zod"
 import { zodToJsonSchema } from "zod-to-json-schema"

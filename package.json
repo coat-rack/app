@@ -8,10 +8,11 @@
     "lint": "turbo lint --concurrency 15",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mjs,astro,json,html,css,md,mdx}\"",
     "generate": "turbo gen",
-    "prepare": "husky"
+    "prepare": "husky",
+    "publish-packages": "turbo build lint && changeset publish"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@coat-rack/typescript-config": "workspace:*",
     "@turbo/gen": "^1.11.3",
     "husky": "^9.1.7",
     "prettier": "^3.1.1",
@@ -24,5 +25,7 @@
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@changesets/cli": "^2.28.1"
+  }
 }

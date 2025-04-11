@@ -1,7 +1,7 @@
 import { SynchronizedIframe } from "@/SynchronizedIFrame"
 import { useDatabase } from "@/data"
 import { useActiveSpace, useFilterSpaces, useLocalUser } from "@/db/local"
-import { useObservable } from "@repo/core/async"
+import { useObservable } from "@coat-rack/core/async"
 import { createLazyFileRoute } from "@tanstack/react-router"
 
 export const Route = createLazyFileRoute("/apps/$id")({

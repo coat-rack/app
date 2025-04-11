@@ -5,7 +5,7 @@ import {
   Push,
   Space,
   User,
-} from "@repo/core/models"
+} from "@coat-rack/core/models"
 import { z } from "zod"
 import { DB, dbKeys } from "./db"
 import { addToCatalog } from "./persistence/fs"

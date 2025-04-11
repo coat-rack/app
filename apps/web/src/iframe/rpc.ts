@@ -1,7 +1,7 @@
 import { useDatabase } from "@/data"
-import { useWindowEvent } from "@repo/core/event"
-import { RpcRequest, RpcResponse, err, ok } from "@repo/core/rpc"
-import { Db } from "@repo/sdk"
+import { useWindowEvent } from "@coat-rack/core/event"
+import { RpcRequest, RpcResponse, err, ok } from "@coat-rack/core/rpc"
+import { Db } from "@coat-rack/sdk"
 
 type DataKey = `data.${string}`
 type DataQuery = Record<DataKey, unknown>

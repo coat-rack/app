@@ -3,7 +3,7 @@ import { appRouter, seedDb } from "./router"
 
 import cors from "cors"
 
-import { App } from "@repo/core/models"
+import { App } from "@coat-rack/core/models"
 import express from "express"
 import { Server } from "http"
 import { join, resolve } from "path"

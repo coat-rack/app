@@ -15,10 +15,10 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@repo/sdk": "workspace:*",
-    "@repo/tailwind-config": "workspace:*",
-    "@repo/ui": "workspace:*",
-    "@repo/icons": "workspace:*",
+    "@coat-rack/sdk": "workspace:*",
+    "@coat-rack/tailwind-config": "workspace:*",
+    "@coat-rack/ui": "workspace:*",
+    "@coat-rack/icons": "workspace:*",
     "@rollup/plugin-replace": "^5.0.5",
     "@vitejs/plugin-react": "^4.2.1",
     "rollup-plugin-external-globals": "^0.9.2",

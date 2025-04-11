@@ -1,5 +1,5 @@
-import { useObservable } from "@repo/core/async"
-import { Button } from "@repo/ui/components/button"
+import { useObservable } from "@coat-rack/core/async"
+import { Button } from "@coat-rack/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
 import { useDatabase } from "./data"

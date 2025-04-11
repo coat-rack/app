@@ -3,7 +3,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card"
+} from "@coat-rack/ui/components/card"
 import type { PropsWithChildren } from "react"
 
 interface LinkButtonProps {

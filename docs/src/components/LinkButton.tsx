@@ -1,4 +1,4 @@
-import { Button, type ButtonProps } from "@repo/ui/components/button"
+import { Button, type ButtonProps } from "@coat-rack/ui/components/button"
 interface LinkButtonProps {
   href: string
   text: string

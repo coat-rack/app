@@ -5,9 +5,9 @@ import {
   useActiveSpace,
   useFilterSpaces,
 } from "@/db/local"
-import { useObservable } from "@repo/core/async"
-import { ChartNetwork, User } from "@repo/icons/regular"
-import { FilterSolid } from "@repo/icons/solid"
+import { useObservable } from "@coat-rack/core/async"
+import { ChartNetwork, User } from "@coat-rack/icons/regular"
+import { FilterSolid } from "@coat-rack/icons/solid"
 
 export const SpaceSelector = () => {
   const { db } = useDatabase()

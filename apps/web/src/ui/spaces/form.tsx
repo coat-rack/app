@@ -1,14 +1,14 @@
-import { Space, User } from "@repo/core/models"
-import { Checkbox } from "@repo/ui/components/checkbox"
-import { Input } from "@repo/ui/components/input"
-import { Label } from "@repo/ui/components/label"
+import { Space, User } from "@coat-rack/core/models"
+import { Checkbox } from "@coat-rack/ui/components/checkbox"
+import { Input } from "@coat-rack/ui/components/input"
+import { Label } from "@coat-rack/ui/components/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@repo/ui/components/select"
+} from "@coat-rack/ui/components/select"
 import { useEffect, useState } from "react"
 
 /**

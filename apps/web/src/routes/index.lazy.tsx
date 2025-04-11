@@ -2,9 +2,9 @@ import { Link, createLazyFileRoute } from "@tanstack/react-router"
 
 import { useDatabase } from "@/data"
 import { trpcClient } from "@/trpc"
-import { useObservable } from "@repo/core/async"
-import { Button } from "@repo/ui/components/button"
-import { Input } from "@repo/ui/components/input"
+import { useObservable } from "@coat-rack/core/async"
+import { Button } from "@coat-rack/ui/components/button"
+import { Input } from "@coat-rack/ui/components/input"
 import { useState } from "react"
 
 export const Route = createLazyFileRoute("/")({

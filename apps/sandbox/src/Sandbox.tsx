@@ -1,4 +1,4 @@
-import { AppContext } from "@repo/sdk"
+import { AppContext } from "@coat-rack/sdk"
 import { getAppUrlsFromQueryString, useApp } from "./dynamic"
 import { getRpcDb } from "./rpc"
 import { useSpacesMeta } from "./spaces"

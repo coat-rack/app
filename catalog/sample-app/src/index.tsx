@@ -1,5 +1,5 @@
-import { App } from "@repo/sdk"
-import { Button } from "@repo/ui/components/button"
+import { App } from "@coat-rack/sdk"
+import { Button } from "@coat-rack/ui/components/button"
 
 import "./styles.css"
 

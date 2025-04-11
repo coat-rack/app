@@ -1,7 +1,7 @@
-import { Space, User } from "@repo/core/models"
-import { Check, Pencil, Save } from "@repo/icons/regular"
-import { ProvideSpace } from "@repo/sdk"
-import { Button } from "@repo/ui/components/button"
+import { Space, User } from "@coat-rack/core/models"
+import { Check, Pencil, Save } from "@coat-rack/icons/regular"
+import { ProvideSpace } from "@coat-rack/sdk"
+import { Button } from "@coat-rack/ui/components/button"
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@repo/ui/components/dialog"
+} from "@coat-rack/ui/components/dialog"
 import { useState } from "react"
 import { SpaceForm } from "./form"
 

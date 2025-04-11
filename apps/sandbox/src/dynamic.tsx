@@ -1,5 +1,5 @@
-import { usePromise } from "@repo/core/async"
-import { App, Manifest } from "@repo/sdk"
+import { usePromise } from "@coat-rack/core/async"
+import { App, Manifest } from "@coat-rack/sdk"
 import React from "react"
 import ReactDOM from "react-dom"
 
