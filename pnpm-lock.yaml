@@ -37,6 +37,21 @@ importers:
         specifier: latest
         version: 1.11.3
 
+  apps/create-app:
+    devDependencies:
+      '@coat-rack/build-utils':
+        specifier: workspace:^
+        version: link:../../packages/build-utils
+      '@coat-rack/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.10.6
+        version: 20.10.6
+      tsup:
+        specifier: ^8.4.0
+        version: 8.4.0(postcss@8.4.33)(typescript@5.3.3)
+
   apps/dev-catalog:
     dependencies:
       '@types/express':

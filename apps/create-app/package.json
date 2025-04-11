@@ -1,0 +1,21 @@
+{
+  "name": "@coat-rack/create-app",
+  "version": "0.0.1-alpha.0",
+  "description": "Create a new Coat Rack app",
+  "private": false,
+  "bin": {
+    "@coat-rack/create-app": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "generate:component": "turbo gen react-component",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@coat-rack/build-utils": "workspace:^",
+    "@coat-rack/typescript-config": "workspace:*",
+    "@types/node": "^20.10.6",
+    "tsup": "^8.4.0"
+  }
+}
