@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mjs,astro,json,html,css,md,mdx}\"",
     "generate": "turbo gen",
     "prepare": "husky",
-    "changeset": "changeset"
+    "publish-packages": "turbo build lint && changeset publish"
   },
   "devDependencies": {
     "@coat-rack/typescript-config": "workspace:*",
