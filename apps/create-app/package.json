@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "generate:component": "turbo gen react-component",
+    "start": "node ./dist/index.js",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
@@ -17,5 +17,8 @@
     "@coat-rack/typescript-config": "workspace:*",
     "@types/node": "^20.10.6",
     "tsup": "^8.4.0"
+  },
+  "dependencies": {
+    "plop": "^4.0.1"
   }
 }

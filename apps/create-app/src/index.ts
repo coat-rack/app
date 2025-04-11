@@ -1,3 +1,10 @@
 #!/usr/bin/env node
+import { join } from "path"
+import { Plop, run } from "plop"
 
-console.log("Hi there, I don't do anything yet but watch this space!")
+Plop.prepare(
+  {
+    configPath: join(__dirname, "plopfile.mjs"),
+  },
+  (env) => Plop.execute(env, (env, arg) => run(env, arg, false)),
+)
