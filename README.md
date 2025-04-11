@@ -43,3 +43,16 @@ You will thereafter be prompted to create either an `app` or `package` and can s
 ## Installing Apps
 
 When working on the catalog the `dev-catalog` will host the root directory, this means that you can view the catalog directory apps using the `http://localhost:3005`. Each app can be "installed" via the `app-name/dist` directory
+
+## Releasing
+
+> WIP: Still figuring out this process, but below is a proposed set of changes that should work
+
+Releases are done using [`changesets`](https://github.com/changesets/changesets). The process for releasing looks like so:
+
+1. Create a new changeset using `pnpm changeset`
+2. Once all changesets are created, update the relevant versions with `pnpm changeset version`
+3. Lastly, create a PR with the changes. If this is merged then a release on GitHub should be created
+  -  This release will automatically publish the relevant changes
+
+For more detailed information on how changesets work, take a look at the `changesets` documentation
