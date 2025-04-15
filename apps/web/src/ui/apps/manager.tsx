@@ -53,7 +53,6 @@ export function AppManager({ app, setDevMode }: { app: App, setDevMode: (devMode
               />
               <Label htmlFor="dev-mode">is dev mode</Label>
             </div>
-            <p className="text-sm">changing the dev mode configuration of an app will require a page refresh</p>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -316,6 +316,8 @@ export const appRouter = (
           }
 
           await db.apps.putItems([updatedApp])
+
+          onAppChange(updatedApp)
         }),
     }),
   })
