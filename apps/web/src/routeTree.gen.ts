@@ -10,6 +10,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const IndexLazyImport = createFileRoute('/')()
 const SpacesIndexLazyImport = createFileRoute('/spaces/')()
+const AppsIndexLazyImport = createFileRoute('/apps/')()
 const AppsIdLazyImport = createFileRoute('/apps/$id')()
 
 // Create/Update Routes
@@ -23,6 +24,11 @@ const SpacesIndexLazyRoute = SpacesIndexLazyImport.update({
   path: '/spaces/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/spaces/index.lazy').then((d) => d.Route))
+
+const AppsIndexLazyRoute = AppsIndexLazyImport.update({
+  path: '/apps/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/apps/index.lazy').then((d) => d.Route))
 
 const AppsIdLazyRoute = AppsIdLazyImport.update({
   path: '/apps/$id',
@@ -41,6 +47,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppsIdLazyImport
       parentRoute: typeof rootRoute
     }
+    '/apps/': {
+      preLoaderRoute: typeof AppsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/spaces/': {
       preLoaderRoute: typeof SpacesIndexLazyImport
       parentRoute: typeof rootRoute
@@ -53,5 +63,6 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   AppsIdLazyRoute,
+  AppsIndexLazyRoute,
   SpacesIndexLazyRoute,
 ])

@@ -13,7 +13,7 @@ export const Route = createLazyFileRoute("/spaces/")({
 })
 
 function Index() {
-  const { db } = useDatabase()
+  const { db,spacesCollection } = useDatabase()
   const users = useObservable(db.users.find({}).$)
   const spaces = useObservable(db.spaces.find({}).$)
 
@@ -24,6 +24,7 @@ function Index() {
   const upsertSpace = async (space: Space) => {
     setCreateKey(Date.now())
     await db.spaces.upsert(space)
+    spacesCollection.reSync()
   }
 
   return (

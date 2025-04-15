@@ -53,6 +53,8 @@ export const seedDb = async (db: DB) => {
       type: "app",
       timestamp: Date.now(),
       port: 40_000,
+      devMode: false,
+      installURL: "http://localhost:3005/kitchen-sink/dist/",
     },
   ]
 
@@ -271,8 +273,8 @@ export const appRouter = (
     apps: router({
       install: publicProcedure
         .input(z.string().url())
-        .mutation(async ({ input }) => {
-          const manifest = await addToCatalog(rootDir, new URL(input))
+        .mutation(async ({ input: installURL }) => {
+          const manifest = await addToCatalog(rootDir, new URL(installURL))
 
           const apps = await db.apps.getAll()
           const usedPorts = apps.map((app) => app.port)
@@ -283,6 +285,8 @@ export const appRouter = (
             id: manifest.id,
             timestamp: Date.now(),
             port,
+            installURL,
+            devMode: false,
           }
 
           const item = await db.apps.putItems([app])
@@ -290,6 +294,28 @@ export const appRouter = (
           onAppChange(app)
 
           return item
+        }),
+      setDevMode: publicProcedure
+        .input(
+          z.object({
+            appId: z.string(),
+            devMode: z.boolean(),
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const app = await db.apps.get(input.appId)
+
+          if (!app) {
+            throw new Error("App not found")
+          }
+
+          const updatedApp: App = {
+            ...app,
+            devMode: input.devMode,
+            timestamp: Date.now(),
+          }
+
+          await db.apps.putItems([updatedApp])
         }),
     }),
   })

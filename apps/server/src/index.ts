@@ -1,13 +1,12 @@
-import * as trpcExpress from "@trpc/server/adapters/express"
-import { appRouter, seedDb } from "./router"
-
-import cors from "cors"
-
 import { App } from "@coat-rack/core/models"
+import * as trpcExpress from "@trpc/server/adapters/express"
+import cors from "cors"
 import express from "express"
 import { Server } from "http"
+import { createProxyMiddleware } from "http-proxy-middleware"
 import { join, resolve } from "path"
 import { initDb } from "./db"
+import { appRouter, seedDb } from "./router"
 
 const appServers: Partial<Record<string, Server>> = {}
 
@@ -22,7 +21,16 @@ function setupAppServer(app: App) {
 
   const expressApp = express()
   expressApp.use(cors())
-  expressApp.use("/", express.static(appPath))
+
+  if (app.devMode) {
+    const devProxy = createProxyMiddleware({
+      target: app.installURL,
+    })
+
+    expressApp.use("/", devProxy)
+  } else {
+    expressApp.use("/", express.static(appPath))
+  }
 
   const server = expressApp.listen(app.port, () => {
     console.log("App server started", app)
