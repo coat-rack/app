@@ -1,5 +1,11 @@
 # @coat-rack/create-app
 
+## 0.0.1-alpha.3
+
+### Patch Changes
+
+- 28d6ff7: Ensure package version is correctly set when creating a new app
+
 ## 0.0.1-alpha.2
 
 ### Patch Changes
