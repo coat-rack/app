@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch",
-    "serve": "serve dist",
+    "serve": "serve dist --cors --listen tcp://0.0.0.0:51000",
     "dev": "pnpm run '/watch|serve/'"
   },
   "devDependencies": {
