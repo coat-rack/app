@@ -1,6 +1,6 @@
 import { Space, User } from "@coat-rack/core/models"
 import { Check, Pencil, Save } from "@coat-rack/icons/regular"
-import { ProvideSpace } from "@coat-rack/sdk"
+import { getSpaceStyles } from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"
 import {
   Dialog,
@@ -42,6 +42,8 @@ export function SpaceEditor({
     setUpdated(space)
   }
 
+  const spaceStyles = getSpaceStyles(space)
+
   return (
     <>
       <Dialog>
@@ -61,7 +63,7 @@ export function SpaceEditor({
           </DialogTrigger>
         </div>
         <DialogContent>
-          <ProvideSpace space={updated.id}>
+          <div style={spaceStyles} >
             <DialogHeader>
               <DialogTitle className="text-primary">
                 editing {updated.name}
@@ -98,7 +100,7 @@ export function SpaceEditor({
                 )}
               </Button>
             </DialogFooter>
-          </ProvideSpace>
+          </div>
         </DialogContent>
       </Dialog>
     </>
