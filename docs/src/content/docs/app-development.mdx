@@ -5,29 +5,28 @@ description: Basic introduction to building an app
 
 import { FileTree } from "@astrojs/starlight/components"
 
-:::caution
-TODO: this needs to be updated to reflect the "real" process for creating a new app once we have published all the packages
-:::
-
 ## Prerequisites
 
 To build an app for the platform it is assumed that you have some basic knowledge of [React](https://react.dev/) and that you have [Node.js](https://nodejs.org/en) installed.
 
 ## Scaffolding an App
 
-To create a new app you can use the following command:
+To create a new app you can use the following command to create an app
 
 ```sh title="generate app"
-pnpm run generate catalog-app
+pnpm create @coat-rack/app
 ```
+Thereafter, you will be asked to enter a name for your app, a new app will be created for you.
 
-Next, you will need to install the dependencies for your app, this can be done using:
+An app will then be created in the directory for your app name. Next, move into this directory with `cd <your app name>`
+
+Next, you will need to install the dependencies for your app, this can be done as follows:
 
 ```sh title="install dependencies"
 pnpm install
 ```
 
-Thereafter, you will be asked to enter a name for your app, a new app will be created for you. The created app will contain the following:
+The created app will contain the following:
 
 <FileTree>
 
@@ -45,13 +44,16 @@ Thereafter, you will be asked to enter a name for your app, a new app will be cr
 
 </FileTree>
 
-Most of the generated files are to configure the application, the main files that you will work with are `index.tsx`, `styles.css`, and `manifest.json` files
+Most of the generated files are to configure the application, the main files that you will work with are `index.tsx`, `styles.csgs`, and `manifest.json` files
 
 ## Developing
 
-:::caution
-TODO: This should describe the process of installing/linking an app to a running instance. The process for this outside of the demo apps we have isn't clear at the moment and will need to be added once we have figured this out for cases where an app comes from outside of the repo
-:::
+Running the application in dev mode consists of running the following two commands:
+
+1. `pnpm watch` to run build the app whenever the source files change
+2. `pnpm serve` host the compiled app so it installed on the Coat Rack instance
+
+Once the dev server is running, a message will be logged via the `pnpm serve` process indicating what the **Network** address of the app is. Using this URL, the app can then be installed via the App installation on Coat Rack
 
 ## App Entrypoint
 
