@@ -1,6 +1,6 @@
 import { Space, User } from "@coat-rack/core/models"
 import { Plus } from "@coat-rack/icons/regular"
-import { ProvideSpace } from "@coat-rack/sdk"
+import { getSpaceStyles } from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"
 import {
   Dialog,
@@ -51,6 +51,8 @@ export function SpaceCreator({
     setChanged(true)
   }
 
+  const spaceStyles= getSpaceStyles(space)
+
   return (
     <>
       <Dialog>
@@ -63,7 +65,7 @@ export function SpaceCreator({
           </DialogTrigger>
         </div>
         <DialogContent>
-          <ProvideSpace space={space.id}>
+          <div style={spaceStyles}>
             <DialogHeader>
               <DialogTitle className="text-primary">
                 create {space.name || "new space"}
@@ -89,7 +91,7 @@ export function SpaceCreator({
                 <Plus className="h-4 w-4 fill-current" />
               </Button>
             </DialogFooter>
-          </ProvideSpace>
+          </div>
         </DialogContent>
       </Dialog>
     </>
