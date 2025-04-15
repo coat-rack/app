@@ -1,5 +1,13 @@
 # @coat-rack/docs
 
+## 0.0.1-alpha.4
+
+### Patch Changes
+
+- @coat-rack/icons@0.0.1-alpha.4
+- @coat-rack/tailwind-config@0.0.1-alpha.4
+- @coat-rack/ui@0.0.1-alpha.4
+
 ## 0.0.1-alpha.3
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@coat-rack/core",
   "description": "Core library reserved use within the platform. Should not depend on any other internal libraries",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-alpha.4",
   "private": true,
   "types": "./src/index.ts",
   "scripts": {

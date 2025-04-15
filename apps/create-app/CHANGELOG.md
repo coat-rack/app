@@ -1,5 +1,11 @@
 # @coat-rack/create-app
 
+## 0.0.1-alpha.4
+
+### Patch Changes
+
+- 98a8360: Make dev mode apps servable
+
 ## 0.0.1-alpha.3
 
 ### Patch Changes

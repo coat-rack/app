@@ -1,5 +1,7 @@
 # @coat-rack/typescript-config
 
+## 0.0.1-alpha.4
+
 ## 0.0.1-alpha.3
 
 ## 0.0.1-alpha.2
