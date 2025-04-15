@@ -1,5 +1,11 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.2
+
+### Patch Changes
+
+- @coat-rack/core@0.0.1-alpha.2
+
 ## 0.0.1-alpha.1
 
 ### Patch Changes

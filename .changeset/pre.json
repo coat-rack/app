@@ -21,6 +21,7 @@
     "@coat-rack/create-app": "0.0.1-alpha.0"
   },
   "changesets": [
+    "metal-states-find",
     "nine-planes-melt",
     "two-pigs-battle"
   ]
