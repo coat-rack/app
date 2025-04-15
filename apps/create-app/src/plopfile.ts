@@ -17,7 +17,9 @@ const catalogAppFiles = [
 
 export default function generator(plop: NodePlopAPI): void {
   const dir = importMetaDir(import.meta.url)
-  const pkg = JSON.parse(readFileSync(join(dir, "../package.json"), "utf-8"))
+
+  const pkgFile = readFileSync(join(dir, "../package.json"), "utf-8")
+  const pkg = JSON.parse(pkgFile)
 
   plop.setGenerator("app", {
     description: "Create a new Coat Rack app",
