@@ -1,5 +1,15 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.5
+
+### Patch Changes
+
+- @coat-rack/server@0.0.1-alpha.5
+- @coat-rack/core@0.0.1-alpha.5
+- @coat-rack/icons@0.0.1-alpha.5
+- @coat-rack/sdk@0.0.1-alpha.5
+- @coat-rack/ui@0.0.1-alpha.5
+
 ## 0.0.1-alpha.4
 
 ### Patch Changes

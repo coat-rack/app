@@ -1,5 +1,11 @@
 # @coat-rack/create-app
 
+## 0.0.1-alpha.5
+
+### Patch Changes
+
+- 92cff86: Make new apps automatically hosted
+
 ## 0.0.1-alpha.4
 
 ### Patch Changes
