@@ -1,5 +1,41 @@
 # @catalog/notes
 
+## 0.0.1-alpha.5
+
+### Patch Changes
+
+- @coat-rack/icons@0.0.1-alpha.5
+- @coat-rack/sdk@0.0.1-alpha.5
+- @coat-rack/tailwind-config@0.0.1-alpha.5
+- @coat-rack/ui@0.0.1-alpha.5
+
+## 0.0.1-alpha.4
+
+### Patch Changes
+
+- @coat-rack/icons@0.0.1-alpha.4
+- @coat-rack/sdk@0.0.1-alpha.4
+- @coat-rack/tailwind-config@0.0.1-alpha.4
+- @coat-rack/ui@0.0.1-alpha.4
+
+## 0.0.1-alpha.3
+
+### Patch Changes
+
+- @coat-rack/icons@0.0.1-alpha.3
+- @coat-rack/sdk@0.0.1-alpha.3
+- @coat-rack/tailwind-config@0.0.1-alpha.3
+- @coat-rack/ui@0.0.1-alpha.3
+
+## 0.0.1-alpha.2
+
+### Patch Changes
+
+- @coat-rack/icons@0.0.1-alpha.2
+- @coat-rack/sdk@0.0.1-alpha.2
+- @coat-rack/tailwind-config@0.0.1-alpha.2
+- @coat-rack/ui@0.0.1-alpha.2
+
 ## 0.0.1-alpha.1
 
 ### Patch Changes

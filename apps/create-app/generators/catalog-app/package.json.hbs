@@ -5,20 +5,23 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "vite build",
-    "dev": "vite build --watch"
+    "watch": "vite build --watch",
+    "serve": "serve dist --cors --listen tcp://0.0.0.0:51000",
+    "dev": "pnpm run '/watch|serve/'"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "react": "^18.2.0",
+    "serve": "^14.2.4",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@coat-rack/sdk": "workspace:*",
-    "@coat-rack/tailwind-config": "workspace:*",
-    "@coat-rack/ui": "workspace:*",
-    "@coat-rack/icons": "workspace:*",
+    "@coat-rack/sdk": "{{ version }}",
+    "@coat-rack/tailwind-config": "{{ version }}",
+    "@coat-rack/ui": "{{ version }}",
+    "@coat-rack/icons": "{{ version }}",
     "@rollup/plugin-replace": "^5.0.5",
     "@vitejs/plugin-react": "^4.2.1",
     "rollup-plugin-external-globals": "^0.9.2",
