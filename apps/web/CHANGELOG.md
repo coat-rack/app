@@ -1,5 +1,16 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.6
+
+### Patch Changes
+
+- Updated dependencies [e1ec8de]
+  - @coat-rack/server@0.0.1-alpha.6
+  - @coat-rack/core@0.0.1-alpha.6
+  - @coat-rack/icons@0.0.1-alpha.6
+  - @coat-rack/sdk@0.0.1-alpha.6
+  - @coat-rack/ui@0.0.1-alpha.6
+
 ## 0.0.1-alpha.5
 
 ### Patch Changes

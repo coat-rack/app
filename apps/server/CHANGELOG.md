@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.6
+
+### Patch Changes
+
+- e1ec8de: Expose server as runnable package
+  - @coat-rack/core@0.0.1-alpha.6
+
 ## 0.0.1-alpha.5
 
 ### Patch Changes
