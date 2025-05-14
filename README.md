@@ -4,6 +4,16 @@
 
 Run `pnpm install` then `pnpm dev`, the development version runs on port 4000
 
+
+### Scripts
+
+Additionally, the following scripts are provided:
+
+- `pnpm dev` - Starts all apps in dev mode
+- `pnpm build` - Builds all apps
+- `pnpm preview` - Starts apps that are independantly servable - `server`, `docs`, `dev-catalog`
+- `pnpm start` - Starts the production server app - `server`
+
 ## Running PWA Build
 
 Since the intention of the application is to work offline, it's useful to be able to test this behaviour. Offline behavior can be tested using the preview command - this will build all of the catalog apps and run the main applications (`web` and `server`) in production mode.
