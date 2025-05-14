@@ -2,7 +2,7 @@
   "name": "@coat-rack/core",
   "description": "Core library reserved use within the platform. Should not depend on any other internal libraries",
   "version": "0.0.1-alpha.8",
-  "private": true,
+  "private": false,
   "types": "./src/index.ts",
   "scripts": {
     "build": "tsup",
