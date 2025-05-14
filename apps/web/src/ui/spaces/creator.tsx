@@ -64,8 +64,7 @@ export function SpaceCreator({
             </Button>
           </DialogTrigger>
         </div>
-        <DialogContent>
-          <div style={spaceStyles}>
+        <DialogContent style={spaceStyles}>
             <DialogHeader>
               <DialogTitle className="text-primary">
                 create {space.name || "new space"}
@@ -91,7 +90,6 @@ export function SpaceCreator({
                 <Plus className="h-4 w-4 fill-current" />
               </Button>
             </DialogFooter>
-          </div>
         </DialogContent>
       </Dialog>
     </>

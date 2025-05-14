@@ -42,7 +42,7 @@ export function SpaceEditor({
     setUpdated(space)
   }
 
-  const spaceStyles = getSpaceStyles(space)
+  const spaceStyles = getSpaceStyles(updated)
 
   return (
     <>
@@ -62,8 +62,7 @@ export function SpaceEditor({
             </Button>
           </DialogTrigger>
         </div>
-        <DialogContent>
-          <div style={spaceStyles} >
+        <DialogContent style={spaceStyles}>
             <DialogHeader>
               <DialogTitle className="text-primary">
                 editing {updated.name}
@@ -100,7 +99,6 @@ export function SpaceEditor({
                 )}
               </Button>
             </DialogFooter>
-          </div>
         </DialogContent>
       </Dialog>
     </>
