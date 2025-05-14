@@ -4,8 +4,8 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "nodemon --watch src src/index.ts",
     "build": "tsc",
+    "dev": "NODE_ENV=development nodemon --watch src src/index.ts",
     "preview": "node dist/index.js",
     "start": "node dist/index.js"
   },
