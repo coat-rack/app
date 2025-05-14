@@ -7,6 +7,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
-    "@coat-rack/typescript-config": "workspace:*"
+    "@coat-rack/typescript-config": "0.0.1-alpha.7"
   }
 }

@@ -19,7 +19,7 @@
     }
   },
   "devDependencies": {
-    "@coat-rack/typescript-config": "workspace:*",
+    "@coat-rack/typescript-config": "0.0.1-alpha.7",
     "@types/node": "^20.10.6",
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",

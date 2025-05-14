@@ -11,10 +11,10 @@ importers:
       '@changesets/cli':
         specifier: ^2.28.1
         version: 2.28.1
-    devDependencies:
       '@coat-rack/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
+    devDependencies:
       '@turbo/gen':
         specifier: ^1.11.3
         version: 1.11.3(@types/node@20.10.6)(typescript@5.3.3)
@@ -39,16 +39,16 @@ importers:
 
   apps/create-app:
     dependencies:
-      plop:
-        specifier: ^4.0.1
-        version: 4.0.1
-    devDependencies:
       '@coat-rack/build-utils':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/build-utils
       '@coat-rack/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      plop:
+        specifier: ^4.0.1
+        version: 4.0.1
+    devDependencies:
       '@types/node':
         specifier: ^20.10.6
         version: 20.10.6
@@ -94,6 +94,12 @@ importers:
       '@coat-rack/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
+      '@coat-rack/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
+      '@coat-rack/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@originjs/vite-plugin-federation':
         specifier: ^1.3.4
         version: 1.3.4
@@ -116,12 +122,6 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1(typescript@5.3.3)(vite@5.0.12)
     devDependencies:
-      '@coat-rack/tailwind-config':
-        specifier: workspace:*
-        version: link:../../packages/tailwind-config
-      '@coat-rack/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@types/react':
         specifier: ^18.2.43
         version: 18.2.46
@@ -225,6 +225,9 @@ importers:
       '@coat-rack/server':
         specifier: workspace:*
         version: link:../server
+      '@coat-rack/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
       '@coat-rack/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -301,9 +304,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4(zod@3.22.4)
     devDependencies:
-      '@coat-rack/tailwind-config':
-        specifier: workspace:*
-        version: link:../../packages/tailwind-config
       '@types/react':
         specifier: ^18.2.43
         version: 18.2.46
@@ -334,6 +334,9 @@ importers:
       '@coat-rack/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
+      '@coat-rack/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@coat-rack/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -359,9 +362,6 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(vite@5.0.12)
     devDependencies:
-      '@coat-rack/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^20.10.6
         version: 20.10.6
@@ -568,16 +568,20 @@ importers:
         version: 3.4.17
 
   packages/build-utils:
-    devDependencies:
+    dependencies:
       '@coat-rack/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+    devDependencies:
       '@types/node':
         specifier: ^20.10.6
         version: 20.10.6
 
   packages/core:
     dependencies:
+      '@coat-rack/build-utils':
+        specifier: workspace:*
+        version: link:../build-utils
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -588,9 +592,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4(zod@3.22.4)
     devDependencies:
-      '@coat-rack/build-utils':
-        specifier: workspace:*
-        version: link:../build-utils
       '@types/react':
         specifier: ^18.2.46
         version: 18.2.46
@@ -608,13 +609,14 @@ importers:
         version: 5.3.3
 
   packages/icons:
-    devDependencies:
+    dependencies:
       '@coat-rack/build-utils':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../build-utils
       '@coat-rack/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+    devDependencies:
       '@hackernoon/pixel-icon-library':
         specifier: ^1.0.1
         version: 1.0.1
@@ -641,10 +643,11 @@ importers:
         version: 5.3.3
 
   packages/sdk:
-    devDependencies:
+    dependencies:
       '@coat-rack/build-utils':
         specifier: workspace:*
         version: link:../build-utils
+    devDependencies:
       '@types/react':
         specifier: ^18.2.46
         version: 18.2.46
@@ -662,10 +665,11 @@ importers:
         version: 5.3.3
 
   packages/tailwind-config:
-    devDependencies:
+    dependencies:
       '@coat-rack/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+    devDependencies:
       '@types/node':
         specifier: ^20.10.6
         version: 20.10.6
@@ -683,12 +687,18 @@ importers:
 
   packages/ui:
     dependencies:
+      '@coat-rack/build-utils':
+        specifier: workspace:*
+        version: link:../build-utils
       '@coat-rack/icons':
         specifier: workspace:*
         version: link:../icons
       '@coat-rack/tailwind-config':
         specifier: workspace:*
         version: link:../tailwind-config
+      '@coat-rack/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.52.1)
@@ -771,12 +781,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@coat-rack/build-utils':
-        specifier: workspace:^
-        version: link:../build-utils
-      '@coat-rack/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
       '@turbo/gen':
         specifier: ^1.11.3
         version: 1.11.3(@types/node@20.10.6)(typescript@5.3.3)
