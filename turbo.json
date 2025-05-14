@@ -5,6 +5,7 @@
   ],
   "tasks": {
     "build": {
+      "cache": false,
       "dependsOn": [
         "^build"
       ],
@@ -26,6 +27,8 @@
     "preview": {
       "dependsOn": [
         "^build",
+        "@coat-rack/web#build",
+        "@coat-rack/sandbox#build",
         "build"
       ]
     },

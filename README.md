@@ -10,10 +10,12 @@ Since the intention of the application is to work offline, it's useful to be abl
 
 > Note that during preview changes will not automatically be rebuilt. If you need to test your changes you will need to stop and restart the process
 
-To run the preview do the following:
+To run a production preview do the following:
+
+> Before running the preview be sure to clear your application site data to avoid any funny side effects
 
 1. Run `pnpm preview`
-2. Visit `http://localhost:4001` to view `web`
+2. Visit `http://localhost:4000` to view `web`
 3. Log into the app
 4. (If you are testing offline support) Open the network panel in your browser and swap the network throttling to `Offline` then refresh the page, the app should still be working - you should also be able to load apps using the "preview" version of each application
 5. (To clear your serviceworker cache) In your dev tools go to **Application > Storage** and check of all the options under the **Application** and **Storage** section and then click **Clear site data**
