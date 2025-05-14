@@ -1,6 +1,6 @@
 {
   "name": "@coat-rack/dev-catalog",
-  "version": "0.0.1-alpha.8",
+  "version": "0.0.1-alpha.9",
   "private": true,
   "description": "Serves the catalog directory so local apps can be installed",
   "scripts": {

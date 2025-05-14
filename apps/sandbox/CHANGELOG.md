@@ -1,5 +1,13 @@
 # @coat-rack/sandbox
 
+## 0.0.1-alpha.9
+
+### Patch Changes
+
+- Updated dependencies [0c6d81a]
+  - @coat-rack/core@0.0.1-alpha.9
+  - @coat-rack/sdk@0.0.1-alpha.9
+
 ## 0.0.1-alpha.8
 
 ### Patch Changes

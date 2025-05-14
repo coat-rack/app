@@ -1,5 +1,7 @@
 # @coat-rack/build-utils
 
+## 0.0.1-alpha.9
+
 ## 0.0.1-alpha.8
 
 ### Patch Changes
