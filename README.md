@@ -22,13 +22,9 @@ You can then enable offline in your network tab after the first load of the web 
 
 ## Creating a catalog app
 
-While apps are intented to be installable, we also include some predefined apps in the catalog. Adding a new app in the catalog can be done using the generator which can be run from the top-level of the project:
+Catalog apps are simply apps that are located in the `catalog` directory. The simplest way to create a new catalog app is by copying the `sample-app` and changing the name of the app to be whatever you'd like
 
-```sh
-pnpm run generate catalog-app
-```
-
-Thereafter the app will be created in the relevant directory. You can then install the app or use it in your installation as required
+> We should automate this at some point using `@coat-rack/create-app`, at the moment the generator can't be used since it uses "real" package versions and has a slightly diffeerent dev mode workflow
 
 ## Adding a new monorepo package
 
