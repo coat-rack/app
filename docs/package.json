@@ -2,7 +2,7 @@
   "name": "@coat-rack/docs",
   "private": true,
   "type": "module",
-  "version": "0.0.1-alpha.6",
+  "version": "0.0.1-alpha.7",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

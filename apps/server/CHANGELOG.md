@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.7
+
+### Patch Changes
+
+- b4f655e: Intercept PNPM install
+  - @coat-rack/core@0.0.1-alpha.7
+
 ## 0.0.1-alpha.6
 
 ### Patch Changes
