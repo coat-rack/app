@@ -31,7 +31,6 @@ export function AppInstaller({
   }
 
   return (
-    <>
       <Dialog>
         <div className="flex flex-row items-center gap-2">
           <DialogTrigger asChild>
@@ -79,6 +78,5 @@ export function AppInstaller({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
   )
 }

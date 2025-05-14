@@ -21,7 +21,6 @@ export function AppManager({ app, setDevMode }: { app: App, setDevMode: (devMode
   const spaceStyles = getSpaceStyles(space)
 
   return (
-    <>
       <Dialog>
         <div className="flex flex-row items-center gap-2">
           <DialogTrigger asChild>
@@ -56,6 +55,5 @@ export function AppManager({ app, setDevMode }: { app: App, setDevMode: (devMode
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
   )
 }
