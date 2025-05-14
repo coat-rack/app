@@ -16,7 +16,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
         <Button asChild variant="link" size="sm" key={app.id}>
           <Link
             to="/apps/$id"
-            className="block"
+            className="block h-auto"
             activeProps={{
               className: "underline",
             }}
