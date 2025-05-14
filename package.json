@@ -4,7 +4,8 @@
   "scripts": {
     "build": "turbo build --concurrency 20",
     "dev": "turbo dev --concurrency 20",
-    "preview": "turbo build && turbo preview --concurrency 20",
+    "preview": "turbo preview --concurrency 20",
+    "start": "turbo start --filter server",
     "lint": "turbo lint --concurrency 15",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mjs,astro,json,html,css,md,mdx}\"",
     "generate": "turbo gen",
