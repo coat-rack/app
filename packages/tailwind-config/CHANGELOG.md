@@ -1,5 +1,11 @@
 # @coat-rack/tailwind-config
 
+## 0.0.1-alpha.8
+
+### Patch Changes
+
+- 7367be3: Use real versions for coat-rack packages
+
 ## 0.0.1-alpha.7
 
 ## 0.0.1-alpha.6

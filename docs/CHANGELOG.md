@@ -1,5 +1,15 @@
 # @coat-rack/docs
 
+## 0.0.1-alpha.8
+
+### Patch Changes
+
+- 7367be3: Use real versions for coat-rack packages
+- Updated dependencies [7367be3]
+  - @coat-rack/tailwind-config@0.0.1-alpha.8
+  - @coat-rack/icons@0.0.1-alpha.8
+  - @coat-rack/ui@0.0.1-alpha.8
+
 ## 0.0.1-alpha.7
 
 ### Patch Changes

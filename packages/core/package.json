@@ -1,7 +1,7 @@
 {
   "name": "@coat-rack/core",
   "description": "Core library reserved use within the platform. Should not depend on any other internal libraries",
-  "version": "0.0.1-alpha.7",
+  "version": "0.0.1-alpha.8",
   "private": true,
   "types": "./src/index.ts",
   "scripts": {
@@ -14,7 +14,7 @@
     "zod-to-json-schema": "^3.22.4"
   },
   "devDependencies": {
-    "@coat-rack/build-utils": "0.0.1-alpha.7",
+    "@coat-rack/build-utils": "0.0.1-alpha.8",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "react": "^18.2.0",
