@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { App } from "@coat-rack/core/models"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import cors from "cors"

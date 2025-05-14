@@ -1,13 +1,16 @@
 {
   "name": "@coat-rack/server",
   "version": "0.0.1-alpha.5",
-  "private": true,
-  "description": "",
+  "private": false,
+  "description": "Server app for the Coat-Rack platform",
   "scripts": {
     "build": "tsup",
     "dev": "NODE_ENV=development nodemon --watch src src/index.ts",
     "preview": "node dist/index.js",
     "start": "node dist/index.js"
+  },
+  "bin": {
+    "@coat-rack/server": "./dist/index.js"
   },
   "keywords": [],
   "author": "",
