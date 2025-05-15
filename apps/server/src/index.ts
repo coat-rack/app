@@ -71,7 +71,11 @@ async function serve(path: string, port: number) {
 
   app.use(cors())
 
-  app.use("*", express.static(path))
+  app.use("/", express.static(path))
+
+  app.get("*", function (_, res) {
+    res.sendFile(resolve(path, "index.html"))
+  })
 
   app.listen(port, "0.0.0.0", () => {
     console.info(`Static host for ${path} started on port ${port}`)
