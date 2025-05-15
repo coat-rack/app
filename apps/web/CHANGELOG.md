@@ -1,5 +1,17 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.10
+
+### Patch Changes
+
+- 520ee6b: fix production hosting
+- Updated dependencies [520ee6b]
+  - @coat-rack/server@0.0.1-alpha.10
+  - @coat-rack/core@0.0.1-alpha.10
+  - @coat-rack/icons@0.0.1-alpha.10
+  - @coat-rack/sdk@0.0.1-alpha.10
+  - @coat-rack/ui@0.0.1-alpha.10
+
 ## 0.0.1-alpha.9
 
 ### Patch Changes

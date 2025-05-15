@@ -4,7 +4,6 @@
 
 Run `pnpm install` then `pnpm dev`, the development version runs on port 4000
 
-
 ### Scripts
 
 Additionally, the following scripts are provided:
@@ -60,13 +59,16 @@ Releases are done using [`changesets`](https://github.com/changesets/changesets)
 
 1. Make your changes/PR as normal.
 2. When ready, create a new changesets using `pnpm changeset` that describes the given group of changes following the prompts for the selection of libraries and whether the release is a major/minor/patch
+3. Commit the change, use `:memo: [changeset description]` as the commit message
 
 ### Creating a Release
 
 1. Once ready with a set of changes that should form part of a release, you can use `pnpm changeset version` to create a new version, following the prompts as needed
-2. Lastly, create a PR with the changes. If this is merged, the `release` workflow will run which will:
-  - Create a release for all relevant packages on GitHub
-  - Publish appliccable packages to NPM
+2. Commit the change, use `:bookmark: [version number]` as the commit message
+3. Lastly, create a PR with the changes. If this is merged, the `release` workflow will run which will:
+
+- Create a release for all relevant packages on GitHub
+- Publish appliccable packages to NPM
 
 For more detailed information on how changesets work, take a look at the `changesets` documentation
 

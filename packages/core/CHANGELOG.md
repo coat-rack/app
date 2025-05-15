@@ -1,5 +1,7 @@
 # @coat-rack/core
 
+## 0.0.1-alpha.10
+
 ## 0.0.1-alpha.9
 
 ### Patch Changes
