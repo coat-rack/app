@@ -1,5 +1,7 @@
 # @coat-rack/create-app
 
+## 0.0.1-alpha.12
+
 ## 0.0.1-alpha.11
 
 ## 0.0.1-alpha.10

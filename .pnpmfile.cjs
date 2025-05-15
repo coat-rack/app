@@ -8,13 +8,13 @@ module.exports = {
       )
 
       for (const [name] of Object.entries(pkg.dependencies)) {
-        if (name.startsWith("@coat-rack/")) {
+        if (name.startsWith("@coat-rack")) {
           pkg.dependencies[name] = "workspace:*"
         }
       }
 
       for (const [name] of Object.entries(pkg.devDependencies)) {
-        if (name.startsWith("@coat-rack/")) {
+        if (name.startsWith("@coat-rack")) {
           pkg.devDependencies[name] = "workspace:*"
         }
       }

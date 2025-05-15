@@ -1,14 +1,14 @@
 ---
 "@coat-rack/typescript-config": patch
 "@coat-rack/tailwind-config": patch
-"@catalog/kitchen-sink": patch
+"@coat-rack-catalog/kitchen-sink": patch
 "@coat-rack/build-utils": patch
-"@catalog/sample-app": patch
+"@coat-rack-catalog/sample-app": patch
 "@coat-rack/dev-catalog": patch
 "@coat-rack/create-app": patch
 "@coat-rack/icons": patch
-"@catalog/notes": patch
-"@catalog/tasks": patch
+"@coat-rack-catalog/notes": patch
+"@coat-rack-catalog/tasks": patch
 "@coat-rack/core": patch
 "@coat-rack/sandbox": patch
 "@coat-rack/sdk": patch

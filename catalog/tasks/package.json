@@ -1,7 +1,7 @@
 {
-  "name": "@catalog/tasks",
-  "version": "0.0.1-alpha.11",
-  "private": true,
+  "name": "@coat-rack-catalog/tasks",
+  "version": "0.0.1-alpha.12",
+  "private": false,
   "main": "./dist/index.js",
   "scripts": {
     "build": "vite build",
@@ -15,10 +15,10 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@coat-rack/icons": "0.0.1-alpha.11",
-    "@coat-rack/sdk": "0.0.1-alpha.11",
-    "@coat-rack/tailwind-config": "0.0.1-alpha.11",
-    "@coat-rack/ui": "0.0.1-alpha.11",
+    "@coat-rack/icons": "0.0.1-alpha.12",
+    "@coat-rack/sdk": "0.0.1-alpha.12",
+    "@coat-rack/tailwind-config": "0.0.1-alpha.12",
+    "@coat-rack/ui": "0.0.1-alpha.12",
     "@rollup/plugin-replace": "^5.0.5",
     "@vitejs/plugin-react": "^4.2.1",
     "rollup-plugin-external-globals": "^0.9.2",
