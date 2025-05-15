@@ -1,5 +1,39 @@
 # @catalog/kitchen-sink
 
+## 0.0.1-alpha.9
+
+### Patch Changes
+
+- @coat-rack/sdk@0.0.1-alpha.9
+- @coat-rack/tailwind-config@0.0.1-alpha.9
+- @coat-rack/ui@0.0.1-alpha.9
+
+## 0.0.1-alpha.8
+
+### Patch Changes
+
+- 7367be3: Use real versions for coat-rack packages
+- Updated dependencies [7367be3]
+  - @coat-rack/tailwind-config@0.0.1-alpha.8
+  - @coat-rack/sdk@0.0.1-alpha.8
+  - @coat-rack/ui@0.0.1-alpha.8
+
+## 0.0.1-alpha.7
+
+### Patch Changes
+
+- @coat-rack/sdk@0.0.1-alpha.7
+- @coat-rack/tailwind-config@0.0.1-alpha.7
+- @coat-rack/ui@0.0.1-alpha.7
+
+## 0.0.1-alpha.6
+
+### Patch Changes
+
+- @coat-rack/sdk@0.0.1-alpha.6
+- @coat-rack/tailwind-config@0.0.1-alpha.6
+- @coat-rack/ui@0.0.1-alpha.6
+
 ## 0.0.1-alpha.5
 
 ### Patch Changes

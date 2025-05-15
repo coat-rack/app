@@ -1,6 +1,6 @@
 {
   "name": "@catalog/kitchen-sink",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.9",
   "private": true,
   "main": "./dist/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev": "vite build --watch"
   },
   "devDependencies": {
-    "@coat-rack/typescript-config": "workspace:*",
+    "@coat-rack/typescript-config": "0.0.1-alpha.9",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
@@ -16,9 +16,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@coat-rack/sdk": "workspace:*",
-    "@coat-rack/tailwind-config": "workspace:*",
-    "@coat-rack/ui": "workspace:*",
+    "@coat-rack/sdk": "0.0.1-alpha.9",
+    "@coat-rack/tailwind-config": "0.0.1-alpha.9",
+    "@coat-rack/ui": "0.0.1-alpha.9",
     "@rollup/plugin-replace": "^5.0.5",
     "@vitejs/plugin-react": "^4.2.1",
     "recharts": "^2.12.7",

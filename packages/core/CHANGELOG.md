@@ -1,5 +1,21 @@
 # @coat-rack/core
 
+## 0.0.1-alpha.9
+
+### Patch Changes
+
+- 0c6d81a: Expose core package since @coat-rack/server depends on it to be installed when running
+
+## 0.0.1-alpha.8
+
+### Patch Changes
+
+- 7367be3: Use real versions for coat-rack packages
+
+## 0.0.1-alpha.7
+
+## 0.0.1-alpha.6
+
 ## 0.0.1-alpha.5
 
 ## 0.0.1-alpha.4

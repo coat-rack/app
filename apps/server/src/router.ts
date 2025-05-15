@@ -13,7 +13,7 @@ import { publicProcedure, router } from "./trpc"
 
 const PUBLIC_SPACE_ID = "public"
 
-export const seedDb = async (db: DB) => {
+export const seedDb = async (db: DB, isDev: boolean) => {
   const spaces: Space[] = [
     {
       type: "space",
@@ -47,16 +47,18 @@ export const seedDb = async (db: DB) => {
     },
   ]
 
-  const apps: App[] = [
-    {
-      id: "kitchen-sink",
-      type: "app",
-      timestamp: Date.now(),
-      port: 40_000,
-      devMode: false,
-      installURL: "http://localhost:3005/kitchen-sink/dist/",
-    },
-  ]
+  const apps: App[] = isDev
+    ? [
+        {
+          id: "kitchen-sink",
+          type: "app",
+          timestamp: Date.now(),
+          port: 40_000,
+          devMode: false,
+          installURL: "http://localhost:3005/kitchen-sink/dist/",
+        },
+      ]
+    : []
 
   const existingUsers = await db.users.getAll()
   if (!existingUsers.length) {

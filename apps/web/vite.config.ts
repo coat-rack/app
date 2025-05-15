@@ -21,11 +21,9 @@ export default defineConfig({
   ],
   build: {
     target: "esnext",
+    outDir: "../server/dist/web",
   },
   server: {
     port: 4000,
-  },
-  preview: {
-    port: 4001,
   },
 })

@@ -3,8 +3,9 @@
   "globalDependencies": [
     "**/.env.*local"
   ],
-  "pipeline": {
+  "tasks": {
     "build": {
+      "cache": false,
       "dependsOn": [
         "^build"
       ],
@@ -25,7 +26,18 @@
     },
     "preview": {
       "dependsOn": [
-        "^build"
+        "^build",
+        "@coat-rack/web#build",
+        "@coat-rack/sandbox#build",
+        "build"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "^build",
+        "@coat-rack/web#build",
+        "@coat-rack/sandbox#build",
+        "build"
       ]
     }
   }
