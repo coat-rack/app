@@ -1,7 +1,7 @@
 {
   "name": "@coat-rack/icons",
   "description": "UI library used for building platform as well as app functionality. Simply provides a React wrapper around @hackernoon/pixel-icon-library",
-  "version": "0.0.1-alpha.10",
+  "version": "0.0.1-alpha.11",
   "private": false,
   "exports": {
     "./brands": {
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@hackernoon/pixel-icon-library": "^1.0.1",
     "@coat-rack/build-utils": "workspace:^",
-    "@coat-rack/typescript-config": "0.0.1-alpha.10",
+    "@coat-rack/typescript-config": "0.0.1-alpha.11",
     "@svgr/cli": "^8.1.0",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",

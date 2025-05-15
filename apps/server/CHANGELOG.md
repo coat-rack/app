@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.11
+
+### Patch Changes
+
+- bb04bc9: Ensure that Express server resolves static files correctly in production
+  - @coat-rack/core@0.0.1-alpha.11
+
 ## 0.0.1-alpha.10
 
 ### Patch Changes
