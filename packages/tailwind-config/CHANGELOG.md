@@ -1,5 +1,7 @@
 # @coat-rack/tailwind-config
 
+## 0.0.1-alpha.11
+
 ## 0.0.1-alpha.10
 
 ## 0.0.1-alpha.9
