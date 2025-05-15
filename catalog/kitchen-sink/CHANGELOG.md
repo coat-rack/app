@@ -1,5 +1,14 @@
 # @catalog/kitchen-sink
 
+## 0.0.1-alpha.12
+
+### Patch Changes
+
+- 5613aee: Make catalog apps public
+  - @coat-rack/sdk@0.0.1-alpha.12
+  - @coat-rack/tailwind-config@0.0.1-alpha.12
+  - @coat-rack/ui@0.0.1-alpha.12
+
 ## 0.0.1-alpha.11
 
 ### Patch Changes
