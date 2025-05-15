@@ -16,7 +16,9 @@ function resolveAppUrl(port: number) {
 }
 
 function Index() {
-  const sandboxHost = import.meta.env.VITE_SANDBOX_URL
+  const sandboxHost = new URL(window.location.toString())
+  sandboxHost.port = import.meta.env.VITE_SANDBOX_PORT
+  sandboxHost.pathname = ""
   const { id } = Route.useParams()
 
   const user = useLocalUser()
@@ -42,7 +44,7 @@ function Index() {
           className="h-full w-full"
           appId={app.id}
           appUrl={resolveAppUrl(app.port)}
-          sandboxHost={sandboxHost}
+          sandboxHost={sandboxHost.toString()}
           filteredSpaces={filtered || false}
           space={space}
         />
