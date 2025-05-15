@@ -48,7 +48,7 @@ async function main() {
 
   const root = resolve("_data")
   const db = initDb(root)
-  await seedDb(db)
+  await seedDb(db, IS_DEV)
 
   const allApps = await db.apps.getAll()
 
@@ -71,7 +71,7 @@ async function serve(path: string, port: number) {
 
   app.use(cors())
 
-  app.use("/", express.static(path))
+  app.use("*", express.static(path))
 
   app.listen(port, "0.0.0.0", () => {
     console.info(`Static host for ${path} started on port ${port}`)
