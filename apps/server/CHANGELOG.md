@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.10
+
+### Patch Changes
+
+- 520ee6b: fix production hosting
+  - @coat-rack/core@0.0.1-alpha.10
+
 ## 0.0.1-alpha.9
 
 ### Patch Changes
