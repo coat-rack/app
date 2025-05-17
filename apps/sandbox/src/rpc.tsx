@@ -1,4 +1,5 @@
-import { RpcResponse } from "@coat-rack/core/rpc"
+import { SharedChannel } from "@coat-rack/core/messaging"
+import { RpcRequest, RpcResponse } from "@coat-rack/core/rpc"
 import { Db } from "@coat-rack/sdk"
 
 function guidGenerator() {
@@ -30,36 +31,31 @@ const initialDb: Db = {
   },
 }
 
-export const getRpcDb = (): Db<unknown> => {
-  const host = document.referrer.replace(/\/$/, "")
-  if (!host) {
-    throw new Error("Couldn't determine host origin")
-  }
-
+export const getRpcDb = (port: SharedChannel): Db<unknown> => {
   const rpcHost: (message: Object) => Promise<unknown | undefined> = (
     message,
   ) => {
     return new Promise<unknown | undefined>((resolve, reject) => {
       const requestId = guidGenerator()
-      const handler = (event: MessageEvent<RpcResponse<Db>>) => {
-        if (event.origin != host || event.data.requestId != requestId) {
+      const handler = (event: RpcResponse<Db>) => {
+        if (event.requestId != requestId) {
           return
         }
-        window.removeEventListener("message", handler)
-        if (event.data.result.ok) {
-          resolve(event.data.result.value)
+
+        port.unsubscribe<RpcResponse<Db>>("rpc.response", handler)
+        if (event.result.ok) {
+          resolve(event.result.value)
         } else {
-          reject(event.data.result.error)
+          reject(event.result.error)
         }
       }
-      window.addEventListener("message", handler)
-      window.parent.postMessage(
-        {
-          requestId,
-          ...message,
-        },
-        host,
-      )
+
+      port.subscribe("rpc.response", handler)
+      port.postMessage<RpcRequest<Db>>({
+        type: "rpc.request",
+        requestId,
+        ...message,
+      } as RpcRequest<Db>)
     })
   }
 
@@ -81,6 +77,8 @@ export const getRpcDb = (): Db<unknown> => {
       },
     })
   }
+
+  console.log(port)
 
   return constructRpcProxy(initialDb)
 }

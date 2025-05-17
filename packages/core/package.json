@@ -42,16 +42,6 @@
         "default": "./dist/event.mjs"
       }
     },
-    "./iframe": {
-      "require": {
-        "types": "./dist/iframe.d.ts",
-        "default": "./dist/iframe.js"
-      },
-      "import": {
-        "types": "./dist/iframe.d.mts",
-        "default": "./dist/iframe.mjs"
-      }
-    },
     "./messaging": {
       "require": {
         "types": "./dist/messaging.d.ts",

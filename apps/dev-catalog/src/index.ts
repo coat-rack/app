@@ -4,6 +4,7 @@ import { cp, mkdir, watch } from "fs/promises"
 import { join, resolve, sep } from "path"
 import serveIndex from "serve-index"
 
+const PORT = 3005
 const DB_PATH = resolve("../server/_data")
 
 const INSTALLED_CATALOG_PATH = resolve("../server/_data/catalog")
@@ -26,7 +27,7 @@ app.use(
   serveIndex(DB_PATH, { icons: true }),
 )
 
-app.listen(3005, () => {
+app.listen(PORT, () => {
   console.log("Static catalog host started on port 3005")
 })
 

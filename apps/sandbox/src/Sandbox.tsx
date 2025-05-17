@@ -1,5 +1,5 @@
-import { AppContext } from "@repo/sdk"
-import { useEffect } from "react"
+import { useMessageChannelForChild } from "@coat-rack/core/messaging"
+import { AppContext } from "@coat-rack/sdk"
 import { getAppUrlsFromQueryString, useApp } from "./dynamic"
 import { getRpcDb } from "./rpc"
 import { useSpacesMeta } from "./spaces"
@@ -11,17 +11,11 @@ function Sandbox() {
   const [{ app }, error] = useApp(appUrl, manifestUrl)
   const App = app?.Entry
 
-  const spaces = useSpacesMeta()
-  const db = getRpcDb()
+  const port = useMessageChannelForChild()
 
-  // HACK
-  useEffect(() => {
-    const host = document.referrer.replace(/\/$/, "")
-    window.parent.postMessage(
-      { type: "meta.handshake" } satisfies HandshakeSandboxMessage,
-      host,
-    )
-  })
+  const spaces = useSpacesMeta(port)
+
+  console.log({ port, spaces })
 
   if (error) {
     return (
@@ -34,10 +28,13 @@ function Sandbox() {
     )
   }
 
-  if (!App || !spaces) {
+  const allDeps = App && port && spaces
+
+  if (!allDeps) {
     return
   }
 
+  const db = getRpcDb(port)
   const context: AppContext = {
     db,
     activeSpace: spaces.active,
