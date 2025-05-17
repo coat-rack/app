@@ -1,6 +1,6 @@
 import { useDatabase } from "@/data"
-import { SharedChannel } from "@coat-rack/core/messaging"
 import { RpcRequest, RpcResponse, err, ok } from "@coat-rack/core/rpc"
+import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { Db } from "@coat-rack/sdk"
 import { useEffect } from "react"
 

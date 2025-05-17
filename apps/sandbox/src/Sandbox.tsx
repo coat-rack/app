@@ -1,4 +1,4 @@
-import { useMessageChannelForChild } from "@coat-rack/core/messaging"
+import { useChannelForChild } from "@coat-rack/core/messaging"
 import { AppContext } from "@coat-rack/sdk"
 import { getAppUrlsFromQueryString, useApp } from "./dynamic"
 import { getRpcDb } from "./rpc"
@@ -11,7 +11,7 @@ function Sandbox() {
   const [{ app }, error] = useApp(appUrl, manifestUrl)
   const App = app?.Entry
 
-  const port = useMessageChannelForChild()
+  const port = useChannelForChild()
 
   const spaces = useSpacesMeta(port)
 

@@ -1,9 +1,6 @@
-import {
-  SharedChannel,
-  SpacesMessage,
-  SpacesRequestMessage,
-  useMessageChannel,
-} from "@coat-rack/core/messaging"
+import { useChannelSubscription } from "@coat-rack/core/messaging"
+import { SpacesMessage, SpacesRequestMessage } from "@coat-rack/core/messsage"
+import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { useEffect, useState } from "react"
 
 /**
@@ -22,7 +19,7 @@ export const useSpacesMeta = (port?: SharedChannel) => {
     } satisfies SpacesRequestMessage)
   }, [port])
 
-  useMessageChannel<SpacesMessage>(
+  useChannelSubscription<SpacesMessage>(
     "meta.spaces",
     (message) => setSpaces(message),
     port,

@@ -1,5 +1,5 @@
-import { SharedChannel } from "@coat-rack/core/messaging"
 import { RpcRequest, RpcResponse } from "@coat-rack/core/rpc"
+import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { Db } from "@coat-rack/sdk"
 
 function guidGenerator() {

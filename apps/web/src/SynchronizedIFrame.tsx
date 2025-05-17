@@ -1,4 +1,4 @@
-import { useMessageChannelForParent } from "@coat-rack/core/messaging"
+import { useChannelForParent } from "@coat-rack/core/messaging"
 import { useRef, useState } from "react"
 import { useIFrameRPC } from "./iframe/rpc"
 import { useIFrameSpaces } from "./iframe/spaces"
@@ -24,7 +24,7 @@ export function SynchronizedIframe({
   const [iframeLoaded, setIframeLoaded] = useState(false)
   const url = `${sandboxHost}/?appUrl=${encodeURIComponent(appUrl.toString())}`
 
-  const port = useMessageChannelForParent(ref, iframeLoaded)
+  const port = useChannelForParent(ref, iframeLoaded)
 
   useIFrameRPC(appId, space, filteredSpaces, port)
   useIFrameSpaces(port)

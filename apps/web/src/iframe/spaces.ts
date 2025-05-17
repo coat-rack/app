@@ -1,12 +1,9 @@
 import { useDatabase } from "@/data"
 import { useActiveSpace, useFilterSpaces } from "@/db/local"
 import { useObservable } from "@coat-rack/core/async"
-import {
-  SharedChannel,
-  SpacesMessage,
-  SpacesRequestMessage,
-  useMessageChannel,
-} from "@coat-rack/core/messaging"
+import { useChannelSubscription } from "@coat-rack/core/messaging"
+import { SpacesMessage, SpacesRequestMessage } from "@coat-rack/core/messsage"
+import { SharedChannel } from "@coat-rack/core/shared-channel"
 
 export const useIFrameSpaces = (port?: SharedChannel) => {
   const { db } = useDatabase()
@@ -14,7 +11,7 @@ export const useIFrameSpaces = (port?: SharedChannel) => {
   const active = useActiveSpace()
   const filtered = useFilterSpaces()
 
-  useMessageChannel<SpacesRequestMessage>(
+  useChannelSubscription<SpacesRequestMessage>(
     "meta.spaces-request",
     (_, reply) => {
       const message: SpacesMessage = {
