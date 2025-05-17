@@ -1,8 +1,8 @@
-import { Save, Trash } from "@repo/icons/regular"
-import { useAppContext, useSpace } from "@repo/sdk"
-import { Button } from "@repo/ui/components/button"
-import { Input } from "@repo/ui/components/input"
-import { Textarea } from "@repo/ui/components/textarea"
+import { Save, Trash } from "@coat-rack/icons/regular"
+import { useAppContext, useSpace } from "@coat-rack/sdk"
+import { Button } from "@coat-rack/ui/components/button"
+import { Input } from "@coat-rack/ui/components/input"
+import { Textarea } from "@coat-rack/ui/components/textarea"
 import { useEffect, useState } from "react"
 import { Note } from "./note"
 

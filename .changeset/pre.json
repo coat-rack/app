@@ -1,0 +1,38 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@coat-rack/dev-catalog": "0.0.0",
+    "@coat-rack/sandbox": "0.0.0",
+    "@coat-rack/server": "0.0.0",
+    "@coat-rack/web": "0.0.0",
+    "@coat-rack-catalog/kitchen-sink": "0.0.0",
+    "@coat-rack-catalog/notes": "0.0.0",
+    "@coat-rack-catalog/sample-app": "0.0.0",
+    "@coat-rack-catalog/tasks": "0.0.0",
+    "@coat-rack/docs": "0.0.0",
+    "@coat-rack/build-utils": "0.0.0",
+    "@coat-rack/core": "0.0.0",
+    "@coat-rack/icons": "0.0.0",
+    "@coat-rack/sdk": "0.0.0",
+    "@coat-rack/tailwind-config": "0.0.0",
+    "@coat-rack/typescript-config": "0.0.0",
+    "@coat-rack/ui": "0.0.0",
+    "@coat-rack/create-app": "0.0.1-alpha.0"
+  },
+  "changesets": [
+    "eight-spoons-decide",
+    "evil-flowers-worry",
+    "fuzzy-dingos-behave",
+    "heavy-ducks-beam",
+    "metal-states-find",
+    "nine-planes-melt",
+    "shaggy-rabbits-build",
+    "small-symbols-sniff",
+    "swift-bananas-film",
+    "two-pigs-battle",
+    "violet-views-pay",
+    "wild-walls-repeat",
+    "young-turkeys-fix"
+  ]
+}

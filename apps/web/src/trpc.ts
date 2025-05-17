@@ -5,13 +5,19 @@ import {
   loggerLink,
 } from "@trpc/react-query"
 
-import type { AppRouter } from "server/src/types"
+import type { AppRouter } from "@coat-rack/server/src/types"
 
+function getServerUrl() {
+  const url = new URL(window.location.toString())
+  url.port = import.meta.env.VITE_SERVER_PORT
+  url.pathname = ""
+  return url
+}
 const config = {
   links: [
     loggerLink(),
     httpBatchLink({
-      url: import.meta.env.VITE_SERVER_URL,
+      url: getServerUrl(),
       // We can add additional things like auth headers, etc. here
     }),
   ],

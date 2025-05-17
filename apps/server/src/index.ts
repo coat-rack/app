@@ -1,13 +1,14 @@
+#!/usr/bin/env node
+import { App } from "@coat-rack/core/models"
 import * as trpcExpress from "@trpc/server/adapters/express"
-import { appRouter, seedDb } from "./router"
-
 import cors from "cors"
-
-import { App } from "@repo/core/models"
 import express from "express"
 import { Server } from "http"
-import { join, resolve } from "path"
+import { createProxyMiddleware } from "http-proxy-middleware"
+import { resolve } from "path"
+import { DB_PATH, IS_DEV, PORT } from "./config"
 import { initDb } from "./db"
+import { appRouter, seedDb } from "./router"
 
 const appServers: Partial<Record<string, Server>> = {}
 
@@ -18,11 +19,20 @@ function setupAppServer(app: App) {
     existing.close()
   }
 
-  const appPath = resolve(join("_data", "catalog", app.id))
+  const appPath = resolve(DB_PATH, "catalog", app.id)
 
   const expressApp = express()
   expressApp.use(cors())
-  expressApp.use("/", express.static(appPath))
+
+  if (app.devMode) {
+    const devProxy = createProxyMiddleware({
+      target: app.installURL,
+    })
+
+    expressApp.use("/", devProxy)
+  } else {
+    expressApp.use("/", express.static(appPath))
+  }
 
   const server = expressApp.listen(app.port, () => {
     console.log("App server started", app)
@@ -38,7 +48,7 @@ async function main() {
 
   const root = resolve("_data")
   const db = initDb(root)
-  await seedDb(db)
+  await seedDb(db, IS_DEV)
 
   const allApps = await db.apps.getAll()
 
@@ -51,8 +61,32 @@ async function main() {
     }),
   )
 
-  app.listen(3000, "0.0.0.0", () => {
+  app.listen(PORT.server, "0.0.0.0", () => {
     console.info("Server started on port 3000")
   })
 }
+
+async function serve(path: string, port: number) {
+  const app = express()
+
+  app.use(cors())
+
+  app.use("/", express.static(path))
+
+  app.get("*", function (_, res) {
+    res.sendFile(resolve(path, "index.html"))
+  })
+
+  app.listen(port, "0.0.0.0", () => {
+    console.info(`Static host for ${path} started on port ${port}`)
+  })
+}
+
 main()
+
+// in dev the applications are hosted by the Vite server
+// in order to simplify things we're keeping the same behavior here
+if (!IS_DEV) {
+  serve(resolve(__dirname, "web"), PORT.web)
+  serve(resolve(__dirname, "sandbox"), PORT.sandbox)
+}

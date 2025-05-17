@@ -1,4 +1,4 @@
-import { DbRecord, ProvideSpace } from "@repo/sdk"
+import { DbRecord, ProvideSpace } from "@coat-rack/sdk"
 import { Note } from "./note"
 
 interface NoteListItemProps {

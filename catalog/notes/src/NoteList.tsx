@@ -1,4 +1,4 @@
-import { DbRecord } from "@repo/sdk"
+import { DbRecord } from "@coat-rack/sdk"
 import { NoteListItem } from "./NoteListItem"
 import { Note } from "./note"
 

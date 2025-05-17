@@ -1,5 +1,5 @@
+import { Check } from "@coat-rack/icons/regular"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-import { Check } from "@repo/icons/regular"
 import * as React from "react"
 
 import { cn } from "../lib/utils"

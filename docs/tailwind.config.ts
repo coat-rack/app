@@ -1,5 +1,5 @@
 import starlightPlugin from "@astrojs/starlight-tailwind"
-import sharedConfig from "@repo/tailwind-config"
+import sharedConfig from "@coat-rack/tailwind-config"
 import type { Config } from "tailwindcss"
 
 // Generated color palettes from https://starlight.astro.build/guides/css-and-tailwind/#color-theme-editor

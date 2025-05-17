@@ -45,11 +45,10 @@ export default defineConfig({
 
   build: {
     target: "esnext",
+    emptyOutDir: true,
+    outDir: "../server/dist/sandbox",
   },
   server: {
     port: 5000,
-  },
-  preview: {
-    port: 5001,
   },
 })

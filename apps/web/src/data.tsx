@@ -1,10 +1,10 @@
-import { usePromise } from "@repo/core/async"
+import { usePromise } from "@coat-rack/core/async"
 import { PropsWithChildren, createContext, useContext, useState } from "react"
 import { setupUserDB } from "./db/rxdb"
 import { trpcClient } from "./trpc"
 
-import { Button } from "@repo/ui/components/button"
-import { Input } from "@repo/ui/components/input"
+import { Button } from "@coat-rack/ui/components/button"
+import { Input } from "@coat-rack/ui/components/input"
 import { setLocalUser, useLocalUser } from "./db/local"
 
 type ConfiguredDB = Awaited<ReturnType<typeof setupUserDB>>

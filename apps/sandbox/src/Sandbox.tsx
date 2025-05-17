@@ -1,4 +1,3 @@
-import { HandshakeSandboxMessage } from "@repo/core/messaging"
 import { AppContext } from "@repo/sdk"
 import { useEffect } from "react"
 import { getAppUrlsFromQueryString, useApp } from "./dynamic"

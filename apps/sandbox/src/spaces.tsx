@@ -1,5 +1,5 @@
-import { useIFrameMessage } from "@repo/core/iframe"
-import { SpacesMessage } from "@repo/core/messaging"
+import { useIFrameMessage } from "@coat-rack/core/iframe"
+import { SpacesMessage } from "@coat-rack/core/messaging"
 import { useState } from "react"
 
 /**

@@ -1,10 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "pipeline": {
+  "tasks": {
     "build": {
+      "cache": false,
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -14,7 +15,20 @@
       "persistent": true
     },
     "preview": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build",
+        "@coat-rack/web#build",
+        "@coat-rack/sandbox#build",
+        "build"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "^build",
+        "@coat-rack/web#build",
+        "@coat-rack/sandbox#build",
+        "build"
+      ]
     }
   }
 }

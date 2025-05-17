@@ -5,7 +5,7 @@ import {
   Push,
   Space,
   User,
-} from "@repo/core/models"
+} from "@coat-rack/core/models"
 import { z } from "zod"
 import { DB, dbKeys } from "./db"
 import { addToCatalog } from "./persistence/fs"
@@ -13,7 +13,7 @@ import { publicProcedure, router } from "./trpc"
 
 const PUBLIC_SPACE_ID = "public"
 
-export const seedDb = async (db: DB) => {
+export const seedDb = async (db: DB, isDev: boolean) => {
   const spaces: Space[] = [
     {
       type: "space",
@@ -47,14 +47,18 @@ export const seedDb = async (db: DB) => {
     },
   ]
 
-  const apps: App[] = [
-    {
-      id: "kitchen-sink",
-      type: "app",
-      timestamp: Date.now(),
-      port: 40_000,
-    },
-  ]
+  const apps: App[] = isDev
+    ? [
+        {
+          id: "kitchen-sink",
+          type: "app",
+          timestamp: Date.now(),
+          port: 40_000,
+          devMode: false,
+          installURL: "http://localhost:3005/kitchen-sink/dist/",
+        },
+      ]
+    : []
 
   const existingUsers = await db.users.getAll()
   if (!existingUsers.length) {
@@ -271,8 +275,8 @@ export const appRouter = (
     apps: router({
       install: publicProcedure
         .input(z.string().url())
-        .mutation(async ({ input }) => {
-          const manifest = await addToCatalog(rootDir, new URL(input))
+        .mutation(async ({ input: installURL }) => {
+          const manifest = await addToCatalog(rootDir, new URL(installURL))
 
           const apps = await db.apps.getAll()
           const usedPorts = apps.map((app) => app.port)
@@ -283,6 +287,8 @@ export const appRouter = (
             id: manifest.id,
             timestamp: Date.now(),
             port,
+            installURL,
+            devMode: false,
           }
 
           const item = await db.apps.putItems([app])
@@ -290,6 +296,30 @@ export const appRouter = (
           onAppChange(app)
 
           return item
+        }),
+      setDevMode: publicProcedure
+        .input(
+          z.object({
+            appId: z.string(),
+            devMode: z.boolean(),
+          }),
+        )
+        .mutation(async ({ input }) => {
+          const app = await db.apps.get(input.appId)
+
+          if (!app) {
+            throw new Error("App not found")
+          }
+
+          const updatedApp: App = {
+            ...app,
+            devMode: input.devMode,
+            timestamp: Date.now(),
+          }
+
+          await db.apps.putItems([updatedApp])
+
+          onAppChange(updatedApp)
         }),
     }),
   })

@@ -1,4 +1,4 @@
-import { KeyValue, Push, Schema } from "@repo/core/models"
+import { KeyValue, Push, Schema } from "@coat-rack/core/models"
 import {
   RxCollection,
   RxDatabase,

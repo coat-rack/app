@@ -4,8 +4,8 @@ import { useDatabase } from "@/data"
 import { useLocalUser } from "@/db/local"
 import { SpaceCreator } from "@/ui/spaces/creator"
 import { SpaceEditor } from "@/ui/spaces/editor"
-import { useObservable } from "@repo/core/async"
-import { Space } from "@repo/core/models"
+import { useObservable } from "@coat-rack/core/async"
+import { Space } from "@coat-rack/core/models"
 import { useState } from "react"
 
 export const Route = createLazyFileRoute("/spaces/")({
@@ -13,7 +13,7 @@ export const Route = createLazyFileRoute("/spaces/")({
 })
 
 function Index() {
-  const { db } = useDatabase()
+  const { db, spacesCollection } = useDatabase()
   const users = useObservable(db.users.find({}).$)
   const spaces = useObservable(db.spaces.find({}).$)
 
@@ -24,6 +24,7 @@ function Index() {
   const upsertSpace = async (space: Space) => {
     setCreateKey(Date.now())
     await db.spaces.upsert(space)
+    spacesCollection.reSync()
   }
 
   return (

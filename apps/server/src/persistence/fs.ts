@@ -1,4 +1,4 @@
-import { Manifest } from "@repo/core/models"
+import { Manifest } from "@coat-rack/core/models"
 import { existsSync } from "fs"
 import { mkdir, writeFile } from "fs/promises"
 import path from "path"

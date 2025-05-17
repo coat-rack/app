@@ -1,21 +1,26 @@
-import { ChevronDown, Plus } from "@repo/icons/regular"
-import { App, ProvideAppContext, ProvideSpace, type Entry } from "@repo/sdk"
-import { Button } from "@repo/ui/components/button"
+import { ChevronDown, Plus } from "@coat-rack/icons/regular"
+import {
+  App,
+  ProvideAppContext,
+  ProvideSpace,
+  type Entry,
+} from "@coat-rack/sdk"
+import { Button } from "@coat-rack/ui/components/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card"
-import { Checkbox } from "@repo/ui/components/checkbox"
+} from "@coat-rack/ui/components/card"
+import { Checkbox } from "@coat-rack/ui/components/checkbox"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@repo/ui/components/collapsible"
-import { Input } from "@repo/ui/components/input"
-import { Label } from "@repo/ui/components/label"
+} from "@coat-rack/ui/components/collapsible"
+import { Input } from "@coat-rack/ui/components/input"
+import { Label } from "@coat-rack/ui/components/label"
 import { DependencyList, useEffect, useState } from "react"
 import "./styles.css"
 
