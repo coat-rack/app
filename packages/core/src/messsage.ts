@@ -3,7 +3,6 @@ import { Space } from "./models"
 /**
  * Base message type for communication across IFrame boundary between web and sandbox
  */
-
 export interface ChannelMessage<
   Scope extends string = string,
   Type extends string = string,
@@ -20,12 +19,13 @@ export interface InitializeChannelMessage
 }
 
 /**
- * From Sandbox to Web to request ths current spaces-state
+ * From Sandbox to Web to request the current spaces-state
  */
 export type SpacesRequestMessage = ChannelMessage<"meta", "spaces">
 
 /**
- * From Web to Sandbox to respond with ths current spaces-state
+ * From Web to Sandbox to respond with the current spaces-state.
+ * Will also be sent when spaces are updated.
  */
 export interface SpacesResponseMessage
   extends ChannelMessage<"meta", "spaces-response"> {

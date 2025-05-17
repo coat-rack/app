@@ -26,7 +26,7 @@ export class SharedChannel {
     port.onmessage = (ev) => this.onMessage(ev)
   }
 
-  private onMessage = (ev: MessageEvent<unknown>) => {
+  private onMessage(ev: MessageEvent<unknown>) {
     const data = ev.data as ChannelMessage | undefined
     const type = data?.type
 
@@ -50,26 +50,26 @@ export class SharedChannel {
     }
   }
 
-  subscribe = <T extends ChannelMessage>(
+  subscribe<T extends ChannelMessage>(
     type: T["type"],
     subscriber: Subscriber<T>,
-  ) => {
+  ) {
     const subscribers = this.subscribers[type] || []
     subscribers.push(subscriber as Subscriber)
 
     this.subscribers[type] = subscribers
   }
 
-  unsubscribe = <T extends ChannelMessage>(
+  unsubscribe<T extends ChannelMessage>(
     type: T["type"],
     subscriber: Subscriber<T>,
-  ) => {
+  ) {
     const subscribers = this.subscribers[type] || []
 
     this.subscribers[type] = subscribers.filter((s) => s !== subscriber)
   }
 
-  postMessage = <T extends ChannelMessage>(message: T) => {
+  postMessage<T extends ChannelMessage>(message: T) {
     console.debug(`CHANNEL ${this.name} SEND`, message)
     this.port.postMessage(message)
   }
