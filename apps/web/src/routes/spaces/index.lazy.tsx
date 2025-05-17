@@ -13,7 +13,7 @@ export const Route = createLazyFileRoute("/spaces/")({
 })
 
 function Index() {
-  const { db,spacesCollection } = useDatabase()
+  const { db, spacesCollection } = useDatabase()
   const users = useObservable(db.users.find({}).$)
   const spaces = useObservable(db.spaces.find({}).$)
 

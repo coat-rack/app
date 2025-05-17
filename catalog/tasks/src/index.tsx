@@ -1,5 +1,10 @@
 import { ChevronDown, Plus } from "@coat-rack/icons/regular"
-import { App, ProvideAppContext, ProvideSpace, type Entry } from "@coat-rack/sdk"
+import {
+  App,
+  ProvideAppContext,
+  ProvideSpace,
+  type Entry,
+} from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"
 import {
   Card,

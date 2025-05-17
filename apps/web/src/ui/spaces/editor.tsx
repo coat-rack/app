@@ -63,42 +63,42 @@ export function SpaceEditor({
           </DialogTrigger>
         </div>
         <DialogContent style={spaceStyles}>
-            <DialogHeader>
-              <DialogTitle className="text-primary">
-                editing {updated.name}
-              </DialogTitle>
-              <DialogDescription>
-                config is shared for all users of the space.
-              </DialogDescription>
-            </DialogHeader>
+          <DialogHeader>
+            <DialogTitle className="text-primary">
+              editing {updated.name}
+            </DialogTitle>
+            <DialogDescription>
+              config is shared for all users of the space.
+            </DialogDescription>
+          </DialogHeader>
 
-            <SpaceForm
-              space={space}
-              appUsers={appUsers}
-              onChange={handleChange}
-              onSubmit={handleSubmit}
-            />
+          <SpaceForm
+            space={space}
+            appUsers={appUsers}
+            onChange={handleChange}
+            onSubmit={handleSubmit}
+          />
 
-            <DialogFooter className="mt-4">
-              <Button
-                disabled={!changed || !isValid}
-                variant="default"
-                className="flex flex-row items-center gap-2"
-                onClick={handleSubmit}
-              >
-                {changed ? (
-                  <>
-                    save
-                    <Save className="h-4 w-4 fill-current" />
-                  </>
-                ) : (
-                  <>
-                    saved
-                    <Check className="h-4 w-4 fill-current" />
-                  </>
-                )}
-              </Button>
-            </DialogFooter>
+          <DialogFooter className="mt-4">
+            <Button
+              disabled={!changed || !isValid}
+              variant="default"
+              className="flex flex-row items-center gap-2"
+              onClick={handleSubmit}
+            >
+              {changed ? (
+                <>
+                  save
+                  <Save className="h-4 w-4 fill-current" />
+                </>
+              ) : (
+                <>
+                  saved
+                  <Check className="h-4 w-4 fill-current" />
+                </>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

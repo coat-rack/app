@@ -1,11 +1,11 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 
 import { useDatabase } from "@/data"
-import { useState } from "react"
 import { trpcClient } from "@/trpc"
 import { AppInstaller } from "@/ui/apps/installer"
-import { useObservable } from "@coat-rack/core/async"
 import { AppManager } from "@/ui/apps/manager"
+import { useObservable } from "@coat-rack/core/async"
+import { useState } from "react"
 
 export const Route = createLazyFileRoute("/apps/")({
   component: Index,
@@ -15,7 +15,6 @@ function Index() {
   const { db, appsCollection } = useDatabase()
 
   const [createKey, setCreateKey] = useState(Date.now())
-
 
   const installApp = async (url: string) => {
     await trpcClient.apps.install.mutate(url)
@@ -40,10 +39,11 @@ function Index() {
         </div>
         <div className="flex flex-col">
           <ol>
-            {
-              apps?.map(app =>
-                <li key={app.id}><AppManager app={app._data} setDevMode={setDevMode(app.id)} /></li>)
-            }
+            {apps?.map((app) => (
+              <li key={app.id}>
+                <AppManager app={app._data} setDevMode={setDevMode(app.id)} />
+              </li>
+            ))}
           </ol>
         </div>
       </div>

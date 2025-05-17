@@ -36,7 +36,10 @@ import {
 } from "@coat-rack/ui/components/dialog"
 import { Input } from "@coat-rack/ui/components/input"
 import { Label } from "@coat-rack/ui/components/label"
-import { RadioGroup, RadioGroupItem } from "@coat-rack/ui/components/radio-group"
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@coat-rack/ui/components/radio-group"
 import {
   Select,
   SelectContent,

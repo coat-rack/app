@@ -51,7 +51,7 @@ export function SpaceCreator({
     setChanged(true)
   }
 
-  const spaceStyles= getSpaceStyles(space)
+  const spaceStyles = getSpaceStyles(space)
 
   return (
     <>
@@ -65,31 +65,31 @@ export function SpaceCreator({
           </DialogTrigger>
         </div>
         <DialogContent style={spaceStyles}>
-            <DialogHeader>
-              <DialogTitle className="text-primary">
-                create {space.name || "new space"}
-              </DialogTitle>
-              <DialogDescription>create a new shared space</DialogDescription>
-            </DialogHeader>
+          <DialogHeader>
+            <DialogTitle className="text-primary">
+              create {space.name || "new space"}
+            </DialogTitle>
+            <DialogDescription>create a new shared space</DialogDescription>
+          </DialogHeader>
 
-            <SpaceForm
-              space={space}
-              appUsers={appUsers}
-              onChange={handleChange}
-              onSubmit={handleSubmit}
-            />
+          <SpaceForm
+            space={space}
+            appUsers={appUsers}
+            onChange={handleChange}
+            onSubmit={handleSubmit}
+          />
 
-            <DialogFooter className="mt-4">
-              <Button
-                disabled={!changed || !isValid}
-                variant="default"
-                className="flex flex-row items-center gap-2"
-                onClick={handleSubmit}
-              >
-                create
-                <Plus className="h-4 w-4 fill-current" />
-              </Button>
-            </DialogFooter>
+          <DialogFooter className="mt-4">
+            <Button
+              disabled={!changed || !isValid}
+              variant="default"
+              className="flex flex-row items-center gap-2"
+              onClick={handleSubmit}
+            >
+              create
+              <Plus className="h-4 w-4 fill-current" />
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

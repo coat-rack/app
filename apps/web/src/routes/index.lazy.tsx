@@ -1,6 +1,6 @@
-import { Link, createLazyFileRoute } from "@tanstack/react-router"
 import { useDatabase } from "@/data"
 import { useObservable } from "@coat-rack/core/async"
+import { Link, createLazyFileRoute } from "@tanstack/react-router"
 
 export const Route = createLazyFileRoute("/")({
   component: Index,

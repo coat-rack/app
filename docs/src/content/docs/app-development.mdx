@@ -16,6 +16,7 @@ To create a new app you can use the following command to create an app
 ```sh title="generate app"
 pnpm create @coat-rack/app
 ```
+
 Thereafter, you will be asked to enter a name for your app, a new app will be created for you.
 
 An app will then be created in the directory for your app name. Next, move into this directory with `cd <your app name>`
@@ -63,13 +64,13 @@ The entrypoint for your application is the `index.tsx` file - this file will be 
 import { App, ProvideAppContext } from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"
 
-import "./styles.css"  
+import "./styles.css"
 
 export const MyApp: App = {
   /**
    *  The Entrypoint for the app
    */
-  Entry: ({context}) => {
+  Entry: ({ context }) => {
     return (
       <ProvideAppContext {...context}>
         <h1 className="bg-red-500">Hello my-app</h1>
@@ -79,7 +80,7 @@ export const MyApp: App = {
   },
 }
 
-export default MyApp 
+export default MyApp
 ```
 
 An `App` is defined as an object with an `Entry` property. The `Entry` here is a react component that is provided with the `context` prop.
