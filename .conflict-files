@@ -1,3 +1,0 @@
-ancestorEntries = ["apps/sandbox/src/Sandbox.tsx", "apps/web/src/iframe/spaces.ts"]
-ourEntries = ["apps/sandbox/src/Sandbox.tsx", "apps/web/src/iframe/spaces.ts"]
-theirEntries = ["apps/sandbox/src/Sandbox.tsx", "apps/web/src/iframe/spaces.ts"]

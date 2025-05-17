@@ -1,5 +1,0 @@
-{
-  "extends": "@coat-rack/typescript-config/base.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
-}
