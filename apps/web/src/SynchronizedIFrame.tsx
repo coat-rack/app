@@ -1,5 +1,5 @@
-import { useChannelForParent } from "@coat-rack/core/messaging"
-import { useRef, useState } from "react"
+import { createMessageChannelForParent } from "@coat-rack/core/messaging"
+import { useRef } from "react"
 import { useIFrameRPC } from "./iframe/rpc"
 import { useIFrameSpaces } from "./iframe/spaces"
 
@@ -21,20 +21,22 @@ export function SynchronizedIframe({
   className,
 }: SynchronizedIframeProps) {
   const ref = useRef<HTMLIFrameElement>(null)
-  const [iframeLoaded, setIframeLoaded] = useState(false)
   const url = `${sandboxHost}/?appUrl=${encodeURIComponent(appUrl.toString())}`
 
-  const port = useChannelForParent(ref, iframeLoaded)
+  const [channel, onIframeLoaded] = createMessageChannelForParent()
 
-  useIFrameRPC(appId, space, filteredSpaces, port)
-  useIFrameSpaces(port)
+  useIFrameRPC(channel, appId, space, filteredSpaces)
+  useIFrameSpaces(channel)
 
   return (
     <iframe
       ref={ref}
       className={className}
       src={url}
-      onLoad={() => setIframeLoaded(true)}
+      onLoad={() => {
+        console.log("iframe is initalized now")
+        onIframeLoaded(ref.current as HTMLIFrameElement)
+      }}
       referrerPolicy="strict-origin"
     ></iframe>
   )

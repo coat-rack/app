@@ -4,21 +4,26 @@ export type Subscriber<T extends ChannelMessage = ChannelMessage> = (
   ev: T,
   reply: (message: ChannelMessage) => void,
 ) => void
-/**
- * MessagePort doesn't work well with multiple subscribers.
- * This makes it possible for us to share a port and manage subscribers on our own.
- */
 
+/**
+ * Provides small wrapper around [MessagePort](https://developer.mozilla.org/en-US/docs/Web/API/MessagePort)
+ * to handle the following pitfalls/usecases
+ *
+ * - Subscribers don't need to `port.start()` when using `addEventListener`
+ *     - This is important as it can be confusing to manage this and the docs don't really cover it well
+ * - Logs debugging info in a centeral place since
+ * - Provides types and some basic type checking on messages
+ * - Makes it easy for subscribers to only handle messages they care about
+ */
 export class SharedChannel {
-  subscribers: Record<string, Subscriber[]> = {}
+  private subscribers: Record<string, Subscriber[]> = {}
 
   constructor(
     private readonly port: MessagePort,
     private readonly name: string,
   ) {
-    port.onmessage = (ev) => {
-      this.onMessage(ev)
-    }
+    // using port.onmessage implies the call to port.start()
+    port.onmessage = (ev) => this.onMessage(ev)
   }
 
   private onMessage(ev: MessageEvent<unknown>) {

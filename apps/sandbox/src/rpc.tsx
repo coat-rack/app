@@ -2,12 +2,12 @@ import { RpcRequest, RpcResponse } from "@coat-rack/core/rpc"
 import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { Db } from "@coat-rack/sdk"
 
-function guidGenerator() {
+function guidGenerator(): string {
   if (window.isSecureContext) {
     return crypto.randomUUID()
   }
 
-  return new Date().valueOf()
+  return new Date().valueOf().toString()
 }
 
 const initialDb: Db = {
@@ -31,11 +31,13 @@ const initialDb: Db = {
   },
 }
 
+type ProxyProps = Pick<RpcRequest<Db>, "op" | "args">
+
 export const getRpcDb = (port: SharedChannel): Db<unknown> => {
-  const rpcHost: (message: Object) => Promise<unknown | undefined> = (
+  const rpcHost: (message: ProxyProps) => Promise<unknown | undefined> = (
     message,
   ) => {
-    return new Promise<unknown | undefined>((resolve, reject) => {
+    return new Promise<unknown>((resolve, reject) => {
       const requestId = guidGenerator()
       const handler = (event: RpcResponse<Db>) => {
         if (event.requestId != requestId) {
@@ -65,20 +67,17 @@ export const getRpcDb = (port: SharedChannel): Db<unknown> => {
         if (typeof target[prop as keyof T] === "function") {
           const method = target[prop as keyof T] as CallableFunction
           return new Proxy(method, {
-            apply: (_, __, args) => {
-              return rpcHost({
+            apply: (_, __, args) =>
+              rpcHost({
                 op: prop,
                 args,
-              })
-            },
+              } as ProxyProps),
           })
         }
         return Reflect.get(target, prop)
       },
     })
   }
-
-  console.log(port)
 
   return constructRpcProxy(initialDb)
 }

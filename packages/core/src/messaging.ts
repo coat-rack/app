@@ -1,10 +1,5 @@
-import { RefObject, useEffect } from "react"
-import { usePromise } from "./async"
-import {
-  ChannelMessage,
-  InitializeChannelMessage,
-  InitializeChannelSuccessMessage,
-} from "./messsage"
+import { useEffect } from "react"
+import { ChannelMessage, InitializeChannelMessage } from "./messsage"
 import { SharedChannel } from "./shared-channel"
 
 export function isOfMessageType<T extends ChannelMessage>(
@@ -15,34 +10,41 @@ export function isOfMessageType<T extends ChannelMessage>(
   return data?.type === type
 }
 
-export async function createMessageChannelForParent(
-  iframe: HTMLIFrameElement,
+/**
+ * Creates the `SharedChannel` for the host app. This attaches a `MessagePort` to the
+ * `iframe` to enable two-way communication
+ *
+ * Messages should be queued when using `port.onmessage = ___` which is what the `SharedChannel` does
+ * So we should not need to have an initialization process beyond creating the `SharedChannel` and
+ * sending the `MessagePort` to the `iframe`
+ *
+ * > We need to wait for the `iframe` to be loaded however, since `window` events are not queued
+ * > which is what is needed to send the intialization message
+ *
+ * @returns a `SharedChannel` that is used for two-way communication with the `iframe` and `onLoad`
+ * which should be called to initalize the iframe once it's been loaded
+ */
+export function createMessageChannelForParent(
   origin = "*",
-): Promise<SharedChannel> {
-  const channel = new MessageChannel()
-  const parentPort = channel.port1
+): [
+  channel: SharedChannel,
+  onIFrameLoaded: (iframe: HTMLIFrameElement) => void,
+] {
+  const messageChannel = new MessageChannel()
+  const parentPort = messageChannel.port1
 
   // port2 will be transferred once sent and cannot be used by the parent
-  const iframePort = channel.port2
+  const iframePort = messageChannel.port2
 
-  const contentWindow = iframe.contentWindow
+  const channel = new SharedChannel(parentPort, "parent")
 
-  if (!contentWindow) {
-    throw new Error(
-      "iframe contentWindow must be defined when creating message channel",
-    )
-  }
+  const onIFrameLoaded = (iframe: HTMLIFrameElement) => {
+    const contentWindow = iframe.contentWindow
 
-  return new Promise<SharedChannel>((resolve) => {
-    parentPort.onmessage = (ev: MessageEvent<unknown>) => {
-      if (
-        isOfMessageType<InitializeChannelSuccessMessage>(
-          "channel.init-success",
-          ev,
-        )
-      ) {
-        resolve(new SharedChannel(parentPort, "parent"))
-      }
+    if (!contentWindow) {
+      throw new Error(
+        "iframe contentWindow must be defined when creating message channel",
+      )
     }
 
     contentWindow.postMessage(
@@ -53,18 +55,24 @@ export async function createMessageChannelForParent(
       origin,
       [iframePort],
     )
-  })
+  }
+
+  return [channel, onIFrameLoaded]
 }
 
+/**
+ * Creates the `SharedChannel` for the `iframe` app. This listens for the `MessagePort`
+ * shared by the host app in order to enable two-way communication
+ *
+ * > This must be called before the host tries to initialize. It will resolve once initialized
+ *
+ * @returns a `SharedChannel` that is used for two-way communication with the host app
+ */
 export async function createMessageChannelForChild(): Promise<SharedChannel> {
   return new Promise<SharedChannel>((resolve) => {
     const listener = (ev: MessageEvent<unknown>) => {
       if (isOfMessageType<InitializeChannelMessage>("channel.init", ev)) {
         const port = ev.data.port
-
-        port.postMessage({
-          type: "channel.init-success",
-        } satisfies InitializeChannelSuccessMessage)
 
         window.removeEventListener("message", listener)
 
@@ -76,42 +84,18 @@ export async function createMessageChannelForChild(): Promise<SharedChannel> {
   })
 }
 
-export function useChannelForParent(
-  ref: RefObject<HTMLIFrameElement>,
-  loaded: boolean,
-) {
-  const [port] = usePromise(() => {
-    const exec = async () => {
-      const iframe = ref.current
-      if (iframe) {
-        return await createMessageChannelForParent(iframe)
-      }
-    }
-
-    return exec()
-  }, [ref.current, loaded])
-
-  return port
-}
-
-export function useChannelForChild() {
-  const [port] = usePromise(() => createMessageChannelForChild(), [])
-
-  return port
-}
-
 export function useChannelSubscription<T extends ChannelMessage>(
+  channel: SharedChannel,
   type: T["type"],
   listener: (message: T, reply: (message: ChannelMessage) => void) => void,
-  port?: SharedChannel,
 ) {
   useEffect(() => {
-    if (!port) {
+    if (!channel) {
       return
     }
 
-    port.subscribe(type, listener)
+    channel.subscribe(type, listener)
 
-    return () => port.unsubscribe(type, listener)
-  }, [port, listener])
+    return () => channel.unsubscribe(type, listener)
+  }, [channel, listener])
 }

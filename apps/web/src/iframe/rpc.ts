@@ -1,8 +1,9 @@
 import { useDatabase } from "@/data"
+import { useChannelSubscription } from "@coat-rack/core/messaging"
+import { ChannelMessage } from "@coat-rack/core/messsage"
 import { RpcRequest, RpcResponse, err, ok } from "@coat-rack/core/rpc"
 import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { Db } from "@coat-rack/sdk"
-import { useEffect } from "react"
 
 type DataKey = `data.${string}`
 type DataQuery = Record<DataKey, unknown>
@@ -19,16 +20,18 @@ function createDataQuery(data: Record<string, unknown> = {}): DataQuery {
 }
 
 export function useIFrameRPC(
+  channel: SharedChannel,
   appId: string,
   space: string,
   filtered: boolean,
-  port?: SharedChannel,
 ) {
   const { db } = useDatabase()
 
-  const handler = (event: RpcRequest<Db<unknown>>) => {
-    console.log("event", event)
-    const reply = async <Op extends keyof Db<unknown>>(
+  const handler = (
+    event: RpcRequest<Db<unknown>>,
+    reply: (message: ChannelMessage) => void,
+  ) => {
+    const sendResponse = async <Op extends keyof Db<unknown>>(
       value: RpcResponse<Db<unknown>, Op>["result"],
     ) => {
       const message = {
@@ -38,10 +41,10 @@ export function useIFrameRPC(
         requestId: event.requestId,
       } as RpcResponse<Db<unknown>, Op>
 
-      port?.postMessage(message)
+      reply(message)
     }
 
-    const replyError = (e: unknown) => reply(err(e))
+    const sendError = (e: unknown) => sendResponse(err(e))
 
     if (event.op === "query") {
       const [data] = event.args
@@ -60,7 +63,7 @@ export function useIFrameRPC(
         })
         .exec()
         .then((documents) =>
-          reply(
+          sendResponse(
             ok(
               documents?.map((doc) => {
                 const docUnwrapped = doc.toJSON()
@@ -74,7 +77,7 @@ export function useIFrameRPC(
             ),
           ),
         )
-        .catch(replyError)
+        .catch(sendError)
     } else if (event.op === "delete") {
       const [id] = event.args
       db.appdata
@@ -88,8 +91,8 @@ export function useIFrameRPC(
 
           return foundItem.remove()
         })
-        .then(() => reply(ok(undefined)))
-        .catch(replyError)
+        .then(() => sendResponse(ok(undefined)))
+        .catch(sendError)
     } else if (event.op === "get") {
       const [id] = event.args
       db.appdata
@@ -98,9 +101,9 @@ export function useIFrameRPC(
         .then((foundItems) => {
           const foundItem = foundItems.get(id)?.toJSON()
           if (!foundItem) {
-            reply(ok(undefined))
+            sendResponse(ok(undefined))
           } else {
-            reply(
+            sendResponse(
               ok({
                 id: foundItem.id,
                 space: foundItem.space,
@@ -110,7 +113,7 @@ export function useIFrameRPC(
             )
           }
         })
-        .catch(replyError)
+        .catch(sendError)
     } else if (event.op === "create") {
       const [data] = event.args
       db.appdata
@@ -124,7 +127,7 @@ export function useIFrameRPC(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(
+          sendResponse(
             ok({
               id: docUnwrapped.id,
               data: docUnwrapped.data,
@@ -133,7 +136,7 @@ export function useIFrameRPC(
             }),
           )
         })
-        .catch(replyError)
+        .catch(sendError)
     } else if (event.op === "update") {
       const [id, space, data] = event.args
 
@@ -148,7 +151,7 @@ export function useIFrameRPC(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(
+          sendResponse(
             ok({
               id: docUnwrapped.id,
               data: docUnwrapped.data,
@@ -157,17 +160,9 @@ export function useIFrameRPC(
             }),
           )
         })
-        .catch(replyError)
+        .catch(sendError)
     }
   }
 
-  useEffect(() => {
-    if (!port) {
-      return
-    }
-
-    port.subscribe("rpc.request", handler)
-
-    return () => port.unsubscribe("rpc.request", handler)
-  }, [port])
+  useChannelSubscription(channel, "rpc.request", handler)
 }
