@@ -64,12 +64,9 @@ export class SharedChannel {
     type: T["type"],
     subscriber: Subscriber<T>,
   ) => {
-    // debugger
     const subscribers = this.subscribers[type] || []
 
-    console.log("before", type, this.subscribers)
     this.subscribers[type] = subscribers.filter((s) => s !== subscriber)
-    console.log("after", type, this.subscribers)
   }
 
   postMessage = <T extends ChannelMessage>(message: T) => {

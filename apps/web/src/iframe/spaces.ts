@@ -29,7 +29,6 @@ export const useIFrameSpaces = (channel: SharedChannel) => {
   )
 
   useEffect(() => {
-    console.log("active space changed")
     channel.postMessage(message)
   }, [spaces, active, filtered])
 }

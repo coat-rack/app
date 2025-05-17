@@ -107,12 +107,8 @@ export function useChannelSubscription<T extends ChannelMessage>(
   deps: DependencyList = [],
 ) {
   useEffect(() => {
-    console.log("sub", type)
     channel.subscribe(type, listener)
 
-    return () => {
-      console.log("unsub", type)
-      channel.unsubscribe(type, listener)
-    }
+    return () => channel.unsubscribe(type, listener)
   }, [channel, type, listener, ...deps])
 }
