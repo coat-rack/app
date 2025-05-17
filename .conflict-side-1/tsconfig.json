@@ -1,0 +1,3 @@
+{
+  "extends": "@coat-rack/typescript-config/base.json"
+}
