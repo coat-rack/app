@@ -164,5 +164,9 @@ export function useIFrameRPC(
     }
   }
 
-  useChannelSubscription(channel, "rpc.request", handler)
+  useChannelSubscription(channel, "rpc.request", handler, [
+    appId,
+    space,
+    filtered,
+  ])
 }

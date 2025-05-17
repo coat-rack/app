@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { DependencyList, useEffect } from "react"
 import { ChannelMessage, InitializeChannelMessage } from "./messsage"
 import { SharedChannel } from "./shared-channel"
 
@@ -11,6 +11,9 @@ export function isOfMessageType<T extends ChannelMessage>(
 }
 
 /**
+ * > THIS METHOD SHOULD ONLY BE CALLED ONCE PER IFRAME IN ORDER TO ENSURE THAT THE CHILD AND PARENT
+ * > CHANNELS REMAIN IN SYNC
+ *
  * Creates the `SharedChannel` for the host app. This attaches a `MessagePort` to the
  * `iframe` to enable two-way communication
  *
@@ -23,6 +26,11 @@ export function isOfMessageType<T extends ChannelMessage>(
  *
  * @returns a `SharedChannel` that is used for two-way communication with the `iframe` and `onLoad`
  * which should be called to initalize the iframe once it's been loaded
+ *
+ * @example
+ * ```ts
+ * const [channel, onIFrameLoaded] = useMemo(() => createMessageChannelForChild(), [appId])
+ * ```
  */
 export function createMessageChannelForParent(
   origin = "*",
@@ -61,12 +69,20 @@ export function createMessageChannelForParent(
 }
 
 /**
+ * > THIS METHOD SHOULD ONLY BE CALLED ONCE FOR THE LIFETIME OF THE IFRAME TO ENSURE THAT CHANNEL
+ * > INSTANCES REMAIN IN SYNC
+ *
  * Creates the `SharedChannel` for the `iframe` app. This listens for the `MessagePort`
  * shared by the host app in order to enable two-way communication
  *
  * > This must be called before the host tries to initialize. It will resolve once initialized
  *
  * @returns a `SharedChannel` that is used for two-way communication with the host app
+ *
+ * @example
+ * ```ts
+ * const channel = useMemo(() => createMessageChannelForChild(), [])
+ * ```
  */
 export async function createMessageChannelForChild(): Promise<SharedChannel> {
   return new Promise<SharedChannel>((resolve) => {
@@ -88,14 +104,15 @@ export function useChannelSubscription<T extends ChannelMessage>(
   channel: SharedChannel,
   type: T["type"],
   listener: (message: T, reply: (message: ChannelMessage) => void) => void,
+  deps: DependencyList = [],
 ) {
   useEffect(() => {
-    if (!channel) {
-      return
-    }
-
+    console.log("sub", type)
     channel.subscribe(type, listener)
 
-    return () => channel.unsubscribe(type, listener)
-  }, [channel, listener])
+    return () => {
+      console.log("unsub", type)
+      channel.unsubscribe(type, listener)
+    }
+  }, [channel, type, listener, ...deps])
 }

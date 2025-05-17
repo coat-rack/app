@@ -1,4 +1,3 @@
-import { useChannelSubscription } from "@coat-rack/core/messaging"
 import {
   SpacesRequestMessage,
   SpacesResponseMessage,
@@ -13,19 +12,32 @@ export const useSpacesMeta = (channel: SharedChannel) => {
   const [spaces, setSpaces] = useState<SpacesResponseMessage>()
 
   useEffect(() => {
-    if (!channel) {
-      return
-    }
-
     channel.postMessage({
       type: "meta.spaces",
     } satisfies SpacesRequestMessage)
-  }, [channel])
+  }, [])
 
-  useChannelSubscription<SpacesResponseMessage>(
-    channel,
-    "meta.spaces-response",
-    (message) => setSpaces(message),
-  )
+  // useChannelSubscription<SpacesResponseMessage>(
+  //   channel,
+  //   "meta.spaces-response",
+  //   (message) => {
+  //     setSpaces(message)},
+  // )
+
+  useEffect(() => {
+    channel.subscribe<SpacesResponseMessage>(
+      "meta.spaces-response",
+      (message) => setSpaces(message),
+    )
+
+    channel.subscribe<SpacesResponseMessage>(
+      "meta.spaces-response",
+      (message) => console.log("got message", message),
+    )
+    channel.subscribe<SpacesRequestMessage>("meta.spaces", (message) =>
+      console.log("got message", message),
+    )
+  }, [])
+
   return spaces
 }
