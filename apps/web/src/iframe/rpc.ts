@@ -1,6 +1,8 @@
 import { useDatabase } from "@/data"
-import { useWindowEvent } from "@coat-rack/core/event"
+import { useChannelSubscription } from "@coat-rack/core/messaging"
+import { ChannelMessage } from "@coat-rack/core/messsage"
 import { RpcRequest, RpcResponse, err, ok } from "@coat-rack/core/rpc"
+import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { Db } from "@coat-rack/sdk"
 
 type DataKey = `data.${string}`
@@ -18,35 +20,34 @@ function createDataQuery(data: Record<string, unknown> = {}): DataQuery {
 }
 
 export function useIFrameRPC(
+  channel: SharedChannel,
   appId: string,
-  sandboxHost: string,
   space: string,
   filtered: boolean,
 ) {
   const { db } = useDatabase()
 
-  const handler = (event: MessageEvent<RpcRequest<Db<unknown>>>) => {
-    if (event.origin != sandboxHost) {
-      return
-    }
-
-    const reply = async <Op extends keyof Db<unknown>>(
+  const handler = (
+    event: RpcRequest<Db<unknown>>,
+    reply: (message: ChannelMessage) => void,
+  ) => {
+    const sendResponse = async <Op extends keyof Db<unknown>>(
       value: RpcResponse<Db<unknown>, Op>["result"],
     ) => {
       const message = {
         type: "rpc.response",
         result: value,
-        op: event.data.op,
-        requestId: event.data.requestId,
+        op: event.op,
+        requestId: event.requestId,
       } as RpcResponse<Db<unknown>, Op>
 
-      event.source?.postMessage(message, { targetOrigin: event.origin })
+      reply(message)
     }
 
-    const replyError = (e: unknown) => reply(err(e))
+    const sendError = (e: unknown) => sendResponse(err(e))
 
-    if (event.data.op === "query") {
-      const [data] = event.data.args
+    if (event.op === "query") {
+      const [data] = event.args
 
       const dataQuery = createDataQuery(data)
 
@@ -62,7 +63,7 @@ export function useIFrameRPC(
         })
         .exec()
         .then((documents) =>
-          reply(
+          sendResponse(
             ok(
               documents?.map((doc) => {
                 const docUnwrapped = doc.toJSON()
@@ -76,9 +77,9 @@ export function useIFrameRPC(
             ),
           ),
         )
-        .catch(replyError)
-    } else if (event.data.op === "delete") {
-      const [id] = event.data.args
+        .catch(sendError)
+    } else if (event.op === "delete") {
+      const [id] = event.args
       db.appdata
         .findByIds([id])
         .exec()
@@ -90,19 +91,19 @@ export function useIFrameRPC(
 
           return foundItem.remove()
         })
-        .then(() => reply(ok(undefined)))
-        .catch(replyError)
-    } else if (event.data.op === "get") {
-      const [id] = event.data.args
+        .then(() => sendResponse(ok(undefined)))
+        .catch(sendError)
+    } else if (event.op === "get") {
+      const [id] = event.args
       db.appdata
         .findByIds([id])
         .exec()
         .then((foundItems) => {
           const foundItem = foundItems.get(id)?.toJSON()
           if (!foundItem) {
-            reply(ok(undefined))
+            sendResponse(ok(undefined))
           } else {
-            reply(
+            sendResponse(
               ok({
                 id: foundItem.id,
                 space: foundItem.space,
@@ -112,9 +113,9 @@ export function useIFrameRPC(
             )
           }
         })
-        .catch(replyError)
-    } else if (event.data.op === "create") {
-      const [data] = event.data.args
+        .catch(sendError)
+    } else if (event.op === "create") {
+      const [data] = event.args
       db.appdata
         .insert({
           id: `${appId}__${Date.now()}`, // TODO is this default ID safe? what about batch inserts?
@@ -126,7 +127,7 @@ export function useIFrameRPC(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(
+          sendResponse(
             ok({
               id: docUnwrapped.id,
               data: docUnwrapped.data,
@@ -135,9 +136,9 @@ export function useIFrameRPC(
             }),
           )
         })
-        .catch(replyError)
-    } else if (event.data.op === "update") {
-      const [id, space, data] = event.data.args
+        .catch(sendError)
+    } else if (event.op === "update") {
+      const [id, space, data] = event.args
 
       db.appdata
         .upsert({
@@ -150,7 +151,7 @@ export function useIFrameRPC(
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
-          reply(
+          sendResponse(
             ok({
               id: docUnwrapped.id,
               data: docUnwrapped.data,
@@ -159,9 +160,13 @@ export function useIFrameRPC(
             }),
           )
         })
-        .catch(replyError)
+        .catch(sendError)
     }
   }
 
-  useWindowEvent("message", handler)
+  useChannelSubscription(channel, "rpc.request", handler, [
+    appId,
+    space,
+    filtered,
+  ])
 }

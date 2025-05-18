@@ -1,17 +1,22 @@
+import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { AppContext } from "@coat-rack/sdk"
 import { getAppUrlsFromQueryString, useApp } from "./dynamic"
 import { getRpcDb } from "./rpc"
 import { useSpacesMeta } from "./spaces"
 
-function Sandbox() {
+interface Props {
+  channel: SharedChannel
+}
+
+export function Sandbox({ channel }: Props) {
   const query = new URLSearchParams(window.location.search)
   const [appUrl, manifestUrl] = getAppUrlsFromQueryString(query)
 
   const [{ app }, error] = useApp(appUrl, manifestUrl)
   const App = app?.Entry
 
-  const spaces = useSpacesMeta()
-  const db = getRpcDb()
+  const spaces = useSpacesMeta(channel)
+  const db = getRpcDb(channel)
 
   if (error) {
     return (
@@ -24,7 +29,9 @@ function Sandbox() {
     )
   }
 
-  if (!App) {
+  const isLoaded = App && spaces
+
+  if (!isLoaded) {
     return
   }
 
@@ -40,5 +47,3 @@ function Sandbox() {
   // the app-loading side of things
   return <App context={context} />
 }
-
-export default Sandbox

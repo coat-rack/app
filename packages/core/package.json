@@ -42,16 +42,6 @@
         "default": "./dist/event.mjs"
       }
     },
-    "./iframe": {
-      "require": {
-        "types": "./dist/iframe.d.ts",
-        "default": "./dist/iframe.js"
-      },
-      "import": {
-        "types": "./dist/iframe.d.mts",
-        "default": "./dist/iframe.mjs"
-      }
-    },
     "./messaging": {
       "require": {
         "types": "./dist/messaging.d.ts",
@@ -60,6 +50,16 @@
       "import": {
         "types": "./dist/messaging.d.mts",
         "default": "./dist/messaging.mjs"
+      }
+    },
+    "./messsage": {
+      "require": {
+        "types": "./dist/messsage.d.ts",
+        "default": "./dist/messsage.js"
+      },
+      "import": {
+        "types": "./dist/messsage.d.mts",
+        "default": "./dist/messsage.mjs"
       }
     },
     "./models": {
@@ -80,6 +80,16 @@
       "import": {
         "types": "./dist/rpc.d.mts",
         "default": "./dist/rpc.mjs"
+      }
+    },
+    "./shared-channel": {
+      "require": {
+        "types": "./dist/shared-channel.d.ts",
+        "default": "./dist/shared-channel.js"
+      },
+      "import": {
+        "types": "./dist/shared-channel.d.mts",
+        "default": "./dist/shared-channel.mjs"
       }
     }
   }

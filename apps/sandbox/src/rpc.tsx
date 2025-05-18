@@ -1,12 +1,13 @@
-import { RpcResponse } from "@coat-rack/core/rpc"
+import { RpcRequest, RpcResponse } from "@coat-rack/core/rpc"
+import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { Db } from "@coat-rack/sdk"
 
-function guidGenerator() {
+function guidGenerator(): string {
   if (window.isSecureContext) {
     return crypto.randomUUID()
   }
 
-  return new Date().valueOf()
+  return new Date().valueOf().toString()
 }
 
 const initialDb: Db = {
@@ -30,36 +31,33 @@ const initialDb: Db = {
   },
 }
 
-export const getRpcDb = (): Db<unknown> => {
-  const host = document.referrer.replace(/\/$/, "")
-  if (!host) {
-    throw new Error("Couldn't determine host origin")
-  }
+type ProxyProps = Pick<RpcRequest<Db>, "op" | "args">
 
-  const rpcHost: (message: Object) => Promise<unknown | undefined> = (
+export const getRpcDb = (port: SharedChannel): Db<unknown> => {
+  const rpcHost: (message: ProxyProps) => Promise<unknown | undefined> = (
     message,
   ) => {
-    return new Promise<unknown | undefined>((resolve, reject) => {
+    return new Promise<unknown>((resolve, reject) => {
       const requestId = guidGenerator()
-      const handler = (event: MessageEvent<RpcResponse<Db>>) => {
-        if (event.origin != host || event.data.requestId != requestId) {
+      const handler = (event: RpcResponse<Db>) => {
+        if (event.requestId != requestId) {
           return
         }
-        window.removeEventListener("message", handler)
-        if (event.data.result.ok) {
-          resolve(event.data.result.value)
+
+        port.unsubscribe<RpcResponse<Db>>("rpc.response", handler)
+        if (event.result.ok) {
+          resolve(event.result.value)
         } else {
-          reject(event.data.result.error)
+          reject(event.result.error)
         }
       }
-      window.addEventListener("message", handler)
-      window.parent.postMessage(
-        {
-          requestId,
-          ...message,
-        },
-        host,
-      )
+
+      port.subscribe("rpc.response", handler)
+      port.postMessage<RpcRequest<Db>>({
+        type: "rpc.request",
+        requestId,
+        ...message,
+      } as RpcRequest<Db>)
     })
   }
 
@@ -69,12 +67,11 @@ export const getRpcDb = (): Db<unknown> => {
         if (typeof target[prop as keyof T] === "function") {
           const method = target[prop as keyof T] as CallableFunction
           return new Proxy(method, {
-            apply: (_, __, args) => {
-              return rpcHost({
+            apply: (_, __, args) =>
+              rpcHost({
                 op: prop,
                 args,
-              })
-            },
+              } as ProxyProps),
           })
         }
         return Reflect.get(target, prop)

@@ -1,18 +1,30 @@
-import { useIFrameMessage } from "@coat-rack/core/iframe"
-import { SpacesMessage } from "@coat-rack/core/messaging"
-import { useState } from "react"
+import { useChannelSubscription } from "@coat-rack/core/messaging"
+import {
+  SpacesRequestMessage,
+  SpacesResponseMessage,
+} from "@coat-rack/core/messsage"
+import { SharedChannel } from "@coat-rack/core/shared-channel"
+import { useEffect, useState } from "react"
 
 /**
  * Spaces are communicated as updates via the host using the `meta.spaces` update
  */
-export const useSpacesMeta = () => {
-  const [spaces, setSpaces] = useState<SpacesMessage>({
-    type: "meta.spaces",
-    filtered: false,
-    all: [],
-  })
+export const useSpacesMeta = (channel: SharedChannel) => {
+  const [spaces, setSpaces] = useState<SpacesResponseMessage>()
 
-  useIFrameMessage<SpacesMessage>("meta.spaces", setSpaces)
+  useEffect(() => {
+    channel.postMessage({
+      type: "meta.spaces",
+    } satisfies SpacesRequestMessage)
+  }, [])
+
+  useChannelSubscription<SpacesResponseMessage>(
+    channel,
+    "meta.spaces-response",
+    (message) => {
+      setSpaces(message)
+    },
+  )
 
   return spaces
 }

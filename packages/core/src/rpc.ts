@@ -1,11 +1,11 @@
-import { IFrameMessage } from "./messaging"
+import { ChannelMessage } from "./messsage"
 
 type RpcMessage = {
   requestId: string
 }
 
-type RpcResponseMessage = RpcMessage & IFrameMessage<"rpc", "response">
-type RpcRequestMessage = RpcMessage & IFrameMessage<"rpc", "request">
+type RpcResponseMessage = RpcMessage & ChannelMessage<"rpc", "response">
+type RpcRequestMessage = RpcMessage & ChannelMessage<"rpc", "request">
 
 type Fn = (...args: any[]) => any
 
