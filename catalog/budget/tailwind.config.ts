@@ -1,4 +1,4 @@
-import sharedConfig from "@repo/tailwind-config"
+import sharedConfig from "@coat-rack/tailwind-config"
 import type { Config } from "tailwindcss"
 
 const config: Pick<Config, "content" | "presets" | "prefix"> = {

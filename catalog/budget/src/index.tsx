@@ -1,12 +1,12 @@
-import { App, ProvideAppContext } from "@repo/sdk"
+import { App, ProvideAppContext } from "@coat-rack/sdk"
 
-import { ChevronDown, ChevronUp } from "@repo/icons/regular"
-import { Button } from "@repo/ui/components/button"
+import { ChevronDown, ChevronUp } from "@coat-rack/icons/regular"
+import { Button } from "@coat-rack/ui/components/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@repo/ui/components/collapsible"
+} from "@coat-rack/ui/components/collapsible"
 import { useState } from "react"
 import { BudgetModel, Category, CategoryGroup } from "./data"
 
@@ -17,7 +17,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/table"
+} from "@coat-rack/ui/components/table"
 import { CurrencyProvider, LocaleProvider } from "./context"
 import { useCurrencyFormatter } from "./format"
 import "./styles.css"
