@@ -1,16 +1,16 @@
-export interface Category {
+export interface CategoryItem {
   name: string
   assignedAmount: number
   spentAmount: number
 }
 
-export interface CategoryGroup {
+export interface CategoryGroupItem {
   name: string
-  categories: Category[]
+  categories: CategoryItem[]
 }
 
-export interface BudgetModel {
-  categoryGroups: CategoryGroup[]
+export interface BudgetInstance {
+  categoryGroups: CategoryGroupItem[]
   startDate: Date
   endDate: Date
   locale: string
