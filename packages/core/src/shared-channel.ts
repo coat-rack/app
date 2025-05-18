@@ -11,7 +11,7 @@ export type Subscriber<T extends ChannelMessage = ChannelMessage> = (
  *
  * - Subscribers don't need to `port.start()` when using `addEventListener`
  *     - This is important as it can be confusing to manage this and the docs don't really cover it well
- * - Logs debugging info in a centeral place since
+ * - Logs debugging info in a centeral place
  * - Provides types and some basic type checking on messages
  * - Makes it easy for subscribers to only handle messages they care about
  */
