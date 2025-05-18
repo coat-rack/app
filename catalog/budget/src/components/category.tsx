@@ -1,7 +1,7 @@
 import { Progress } from "@coat-rack/ui/components/progress"
 import { TableCell, TableRow } from "@coat-rack/ui/components/table"
-import { Category } from "../data"
 import { useCurrencyFormatter } from "../format"
+import { Category } from "../models"
 
 export interface CategoryViewProps {
   category: Category

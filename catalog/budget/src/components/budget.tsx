@@ -6,7 +6,7 @@ import {
   TableRow,
 } from "@coat-rack/ui/components/table"
 import { CurrencyProvider, LocaleProvider } from "../context"
-import { BudgetModel } from "../data"
+import { BudgetModel } from "../models"
 import { CategoryGroupView } from "./categoryGroup"
 
 export interface BudgetViewProps {

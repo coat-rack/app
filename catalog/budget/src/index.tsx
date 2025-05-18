@@ -1,6 +1,6 @@
 import { App, ProvideAppContext } from "@coat-rack/sdk"
 
-import { BudgetModel, Category } from "./data"
+import { BudgetModel, Category } from "./models"
 
 import { BudgetView } from "./components/budget"
 import "./styles.css"
