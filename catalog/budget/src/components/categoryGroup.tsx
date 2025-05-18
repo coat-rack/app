@@ -7,8 +7,8 @@ import {
 } from "@coat-rack/ui/components/collapsible"
 import { TableCell, TableRow } from "@coat-rack/ui/components/table"
 import { useState } from "react"
-import { CategoryGroup } from "../data"
 import { useCurrencyFormatter } from "../format"
+import { CategoryGroup } from "../models"
 import { CategoryView } from "./category"
 
 export interface CategoryGroupViewProps {
