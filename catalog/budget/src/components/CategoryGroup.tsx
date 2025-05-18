@@ -9,7 +9,7 @@ import { TableCell, TableRow } from "@coat-rack/ui/components/table"
 import { useState } from "react"
 import { useCurrencyFormatter } from "../format"
 import { CategoryGroupItem } from "../models"
-import { Category } from "./category"
+import { Category } from "./Category"
 
 export interface CategoryGroupViewProps {
   categoryGroup: CategoryGroupItem
