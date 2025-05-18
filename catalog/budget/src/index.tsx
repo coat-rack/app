@@ -2,7 +2,7 @@ import { App, ProvideAppContext } from "@coat-rack/sdk"
 
 import { BudgetInstance, CategoryItem } from "./models"
 
-import { Budget } from "./components/budget"
+import { Budget } from "./components/Budget"
 import "./styles.css"
 
 const rentCategory: CategoryItem = {

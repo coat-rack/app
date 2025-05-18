@@ -7,7 +7,7 @@ import {
 } from "@coat-rack/ui/components/table"
 import { CurrencyProvider, LocaleProvider } from "../context"
 import { BudgetInstance } from "../models"
-import { CategoryGroup } from "./categoryGroup"
+import { CategoryGroup } from "./CategoryGroup"
 
 export interface BudgetProps {
   data: BudgetInstance
