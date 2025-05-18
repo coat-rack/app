@@ -1,13 +1,13 @@
 import { Progress } from "@coat-rack/ui/components/progress"
 import { TableCell, TableRow } from "@coat-rack/ui/components/table"
 import { useCurrencyFormatter } from "../format"
-import { Category } from "../models"
+import { CategoryItem } from "../models"
 
 export interface CategoryViewProps {
-  category: Category
+  category: CategoryItem
 }
 
-export function CategoryView({ category }: CategoryViewProps) {
+export function Category({ category }: CategoryViewProps) {
   const formatter = useCurrencyFormatter()
   return (
     <TableRow key={category.name}>

@@ -8,14 +8,14 @@ import {
 import { TableCell, TableRow } from "@coat-rack/ui/components/table"
 import { useState } from "react"
 import { useCurrencyFormatter } from "../format"
-import { CategoryGroup } from "../models"
-import { CategoryView } from "./category"
+import { CategoryGroupItem } from "../models"
+import { Category } from "./category"
 
 export interface CategoryGroupViewProps {
-  categoryGroup: CategoryGroup
+  categoryGroup: CategoryGroupItem
 }
 
-export function CategoryGroupView({ categoryGroup }: CategoryGroupViewProps) {
+export function CategoryGroup({ categoryGroup }: CategoryGroupViewProps) {
   const totalAssigned = categoryGroup.categories.reduce(
     (sum, category) => (sum += category.assignedAmount),
     0,
@@ -43,7 +43,7 @@ export function CategoryGroupView({ categoryGroup }: CategoryGroupViewProps) {
         </TableRow>
         {open &&
           categoryGroup.categories.map((category) => (
-            <CategoryView key={category.name} category={category} />
+            <Category key={category.name} category={category} />
           ))}
         <CollapsibleContent></CollapsibleContent>
       </>

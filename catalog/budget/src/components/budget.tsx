@@ -6,13 +6,13 @@ import {
   TableRow,
 } from "@coat-rack/ui/components/table"
 import { CurrencyProvider, LocaleProvider } from "../context"
-import { BudgetModel } from "../models"
-import { CategoryGroupView } from "./categoryGroup"
+import { BudgetInstance } from "../models"
+import { CategoryGroup } from "./categoryGroup"
 
-export interface BudgetViewProps {
-  data: BudgetModel
+export interface BudgetProps {
+  data: BudgetInstance
 }
-export function BudgetView({ data }: BudgetViewProps) {
+export function Budget({ data }: BudgetProps) {
   return (
     <LocaleProvider value={data.locale}>
       <CurrencyProvider value={data.currency}>
@@ -27,7 +27,7 @@ export function BudgetView({ data }: BudgetViewProps) {
           </TableHeader>
           <TableBody>
             {data.categoryGroups.map((g) => (
-              <CategoryGroupView key={g.name} categoryGroup={g} />
+              <CategoryGroup key={g.name} categoryGroup={g} />
             ))}
           </TableBody>
         </Table>
