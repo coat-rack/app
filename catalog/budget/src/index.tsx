@@ -7,6 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@coat-rack/ui/components/collapsible"
+import { Progress } from "@coat-rack/ui/components/progress"
 import { useState } from "react"
 import { BudgetModel, Category, CategoryGroup } from "./data"
 
@@ -153,9 +154,7 @@ function CategoryGroupView({ categoryGroup }: CategoryGroupViewProps) {
           categoryGroup.categories.map((category) => (
             <CategoryView key={category.name} category={category} />
           ))}
-        <CollapsibleContent>
-          <div>hello</div>
-        </CollapsibleContent>
+        <CollapsibleContent></CollapsibleContent>
       </>
     </Collapsible>
   )
@@ -172,7 +171,12 @@ function CategoryView({ category }: CategoryViewProps) {
       <TableCell>{/* Empty space for chevron */}</TableCell>
       <TableCell>
         <div>{category.name}</div>
-        <div>Progress bar goes here</div>
+        <div>
+          <Progress
+            value={(category.spentAmount / category.assignedAmount) * 100}
+            size={"slim"}
+          ></Progress>
+        </div>
       </TableCell>
       <TableCell>{formatter.format(category.assignedAmount)}</TableCell>
       <TableCell>{formatter.format(category.spentAmount)}</TableCell>
