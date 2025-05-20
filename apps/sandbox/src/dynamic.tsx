@@ -7,8 +7,16 @@ import ReactDOM from "react-dom"
 window["React"] = React
 window["ReactDOM"] = ReactDOM
 
-const MANIFEST_FILE = "manifest.json"
-const INDEX_FILE = "index.mjs"
+const MANIFEST_FILE = "_app/manifest.json"
+const INDEX_FILE = "_app/index.mjs"
+export function resolveAppUrls(): [indexUrl: URL, manifestUrl: URL] {
+  const baseUrl = new URL(window.location.toString())
+
+  const manifestUrl = new URL(MANIFEST_FILE, baseUrl)
+  const indexUrl = new URL(INDEX_FILE, baseUrl)
+
+  return [indexUrl, manifestUrl]
+}
 
 type AppError = {
   type: "manifest" | "app"
@@ -76,21 +84,4 @@ export const useApp = (
     },
     undefined,
   ] as const
-}
-
-export function getAppUrlsFromQueryString(
-  query: URLSearchParams,
-): [indexUrl: URL, manifestUrl: URL] {
-  const appUrl = query.get("appUrl")
-
-  if (!appUrl) {
-    throw new Error("App URL is not defined")
-  }
-
-  const baseUrl = new URL(appUrl)
-
-  const manifestUrl = new URL(MANIFEST_FILE, baseUrl)
-  const indexUrl = new URL(INDEX_FILE, baseUrl)
-
-  return [indexUrl, manifestUrl]
 }

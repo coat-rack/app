@@ -6,7 +6,6 @@ import { useIFrameSpaces } from "./iframe/spaces"
 interface SynchronizedIframeProps {
   appId: string
   appUrl: URL
-  sandboxHost: string
   space: string
   filteredSpaces: boolean
   className?: string
@@ -15,7 +14,6 @@ interface SynchronizedIframeProps {
 export function SynchronizedIframe({
   appId,
   appUrl,
-  sandboxHost,
   space,
   filteredSpaces,
   className,
@@ -26,7 +24,6 @@ export function SynchronizedIframe({
   )
 
   const ref = useRef<HTMLIFrameElement>(null)
-  const url = `${sandboxHost}/?appUrl=${encodeURIComponent(appUrl.toString())}`
 
   useIFrameRPC(channel, appId, space, filteredSpaces)
   useIFrameSpaces(channel)
@@ -35,7 +32,7 @@ export function SynchronizedIframe({
     <iframe
       ref={ref}
       className={className}
-      src={url}
+      src={appUrl.toString()}
       onLoad={() => {
         onIframeLoaded(ref.current as HTMLIFrameElement)
       }}

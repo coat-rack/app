@@ -50,5 +50,9 @@ export default defineConfig({
   },
   server: {
     port: 5000,
+
+    // Need to Host so that we can proxy from the server
+    // since Node.js doesn't support proxying to "localhost"
+    host: true,
   },
 })
