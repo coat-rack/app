@@ -6,7 +6,7 @@ import express from "express"
 import { Server } from "http"
 import { createProxyMiddleware } from "http-proxy-middleware"
 import { resolve } from "path"
-import { DB_PATH, IS_DEV, PORT } from "./config"
+import { DB_PATH, HOST, IS_DEV, PORT } from "./config"
 import { initDb } from "./db"
 import { appRouter, seedDb } from "./router"
 
@@ -20,22 +20,37 @@ function setupAppServer(app: App) {
   }
 
   const appPath = resolve(DB_PATH, "catalog", app.id)
+  const sandboxPath = resolve(__dirname, "sandbox")
 
   const expressApp = express()
   expressApp.use(cors())
 
   if (app.devMode) {
-    const devProxy = createProxyMiddleware({
+    const appProxy = createProxyMiddleware({
       target: app.installURL,
     })
 
-    expressApp.use("/", devProxy)
+    expressApp.use("/_app", appProxy)
   } else {
-    expressApp.use("/", express.static(appPath))
+    expressApp.use("/_app", express.static(appPath))
+  }
+
+  if (IS_DEV) {
+    const sandboxProxy = createProxyMiddleware({
+      target: `http://${HOST}:${PORT.sandbox}/`,
+    })
+
+    expressApp.use("/", sandboxProxy)
+  } else {
+    expressApp.use("/", express.static(sandboxPath))
+
+    expressApp.get("*", function (_, res) {
+      res.sendFile(resolve(sandboxPath, "index.html"))
+    })
   }
 
   const server = expressApp.listen(app.port, () => {
-    console.log("App server started", app)
+    console.log(`App server started on port ${app.port}`, app)
   })
 
   appServers[app.id] = server
@@ -61,12 +76,14 @@ async function main() {
     }),
   )
 
-  app.listen(PORT.server, "0.0.0.0", () => {
-    console.info("Server started on port 3000")
+  app.listen(PORT.server, HOST, () => {
+    console.info(`Server started on port ${PORT.server}`)
   })
 }
 
-async function serve(path: string, port: number) {
+async function web() {
+  const path = resolve(__dirname, "web")
+
   const app = express()
 
   app.use(cors())
@@ -77,8 +94,8 @@ async function serve(path: string, port: number) {
     res.sendFile(resolve(path, "index.html"))
   })
 
-  app.listen(port, "0.0.0.0", () => {
-    console.info(`Static host for ${path} started on port ${port}`)
+  app.listen(PORT.web, HOST, () => {
+    console.info(`Host for Web started on port ${PORT.web}`)
   })
 }
 
@@ -87,6 +104,5 @@ main()
 // in dev the applications are hosted by the Vite server
 // in order to simplify things we're keeping the same behavior here
 if (!IS_DEV) {
-  serve(resolve(__dirname, "web"), PORT.web)
-  serve(resolve(__dirname, "sandbox"), PORT.sandbox)
+  web()
 }

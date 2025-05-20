@@ -37,18 +37,22 @@ function Index() {
     [id],
   )
 
+  const hasConfig = app && space
+  if (!hasConfig) {
+    return undefined
+  }
+
+  const appUrl = resolveAppUrl(app.port)
+
   return (
     <div className="h-full w-full" id={id} key={id}>
-      {space && app && (
-        <SynchronizedIframe
-          className="h-full w-full"
-          appId={app.id}
-          appUrl={resolveAppUrl(app.port)}
-          sandboxHost={sandboxHost.toString()}
-          filteredSpaces={filtered || false}
-          space={space}
-        />
-      )}
+      <SynchronizedIframe
+        className="h-full w-full"
+        appId={app.id}
+        appUrl={appUrl}
+        filteredSpaces={filtered || false}
+        space={space}
+      />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { AppContext } from "@coat-rack/sdk"
-import { getAppUrlsFromQueryString, useApp } from "./dynamic"
+import { resolveAppUrls, useApp } from "./dynamic"
 import { getRpcDb } from "./rpc"
 import { useSpacesMeta } from "./spaces"
 
@@ -9,8 +9,7 @@ interface Props {
 }
 
 export function Sandbox({ channel }: Props) {
-  const query = new URLSearchParams(window.location.search)
-  const [appUrl, manifestUrl] = getAppUrlsFromQueryString(query)
+  const [appUrl, manifestUrl] = resolveAppUrls()
 
   const [{ app }, error] = useApp(appUrl, manifestUrl)
   const App = app?.Entry
