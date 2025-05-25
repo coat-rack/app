@@ -1,5 +1,9 @@
 import { DependencyList, useEffect } from "react"
-import { ChannelMessage, InitializeChannelMessage } from "./messsage"
+import {
+  ChannelMessage,
+  HandshakeChannelMessage,
+  InitializeChannelMessage,
+} from "./messsage"
 import { SharedChannel } from "./shared-channel"
 
 export function isOfMessageType<T extends ChannelMessage>(
@@ -33,7 +37,7 @@ export function isOfMessageType<T extends ChannelMessage>(
  * ```
  */
 export function createMessageChannelForParent(
-  origin = "*",
+  childOrigin: string,
 ): [
   channel: SharedChannel,
   onIFrameLoaded: (iframe: HTMLIFrameElement) => void,
@@ -55,14 +59,24 @@ export function createMessageChannelForParent(
       )
     }
 
-    contentWindow.postMessage(
-      {
-        type: "channel.init",
-        port: iframePort,
-      } satisfies InitializeChannelMessage,
-      origin,
-      [iframePort],
-    )
+    const handshakeHandler = (event: MessageEvent) => {
+      if (
+        event.origin == childOrigin &&
+        isOfMessageType<HandshakeChannelMessage>("channel.handshake", event)
+      ) {
+        contentWindow.postMessage(
+          {
+            type: "channel.init",
+            port: iframePort,
+          } satisfies InitializeChannelMessage,
+          childOrigin,
+          [iframePort],
+        )
+        window.removeEventListener("message", handshakeHandler)
+      }
+    }
+
+    window.addEventListener("message", handshakeHandler)
   }
 
   return [channel, onIFrameLoaded]
@@ -84,10 +98,15 @@ export function createMessageChannelForParent(
  * const channel = useMemo(() => createMessageChannelForChild(), [])
  * ```
  */
-export async function createMessageChannelForChild(): Promise<SharedChannel> {
-  return new Promise<SharedChannel>((resolve) => {
+export async function createMessageChannelForChild(
+  hostOrigin: string,
+): Promise<SharedChannel> {
+  const promise = new Promise<SharedChannel>((resolve) => {
     const listener = (ev: MessageEvent<unknown>) => {
-      if (isOfMessageType<InitializeChannelMessage>("channel.init", ev)) {
+      if (
+        ev.origin == hostOrigin &&
+        isOfMessageType<InitializeChannelMessage>("channel.init", ev)
+      ) {
         const port = ev.data.port
 
         window.removeEventListener("message", listener)
@@ -98,6 +117,14 @@ export async function createMessageChannelForChild(): Promise<SharedChannel> {
 
     window.addEventListener("message", listener)
   })
+
+  window.parent.postMessage(
+    {
+      type: "channel.handshake",
+    } satisfies HandshakeChannelMessage,
+    hostOrigin,
+  )
+  return promise
 }
 
 export function useChannelSubscription<T extends ChannelMessage>(

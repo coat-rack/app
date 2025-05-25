@@ -11,6 +11,12 @@ export interface ChannelMessage<
 }
 
 /**
+ * Sent from Sandbox to Web to signal that the IFrame is ready to initialize communications
+ */
+export interface HandshakeChannelMessage
+  extends ChannelMessage<"channel", "handshake"> {}
+
+/**
  * Sent from Web to Sandbox to initialize the message channel for further communication
  */
 export interface InitializeChannelMessage
