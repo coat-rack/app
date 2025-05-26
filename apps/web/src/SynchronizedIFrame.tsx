@@ -20,11 +20,12 @@ export function SynchronizedIframe({
   className,
 }: SynchronizedIframeProps) {
   const hostOrigin = window.origin
-  const url = new URL(appUrl)
-  const origin = `${url.protocol}//${url.hostname}:${url.port}`
+  const appUrlWithHostOrigin = new URL(appUrl)
+  appUrlWithHostOrigin.searchParams.set(HostOriginQueryParam, hostOrigin)
+
   const [channel, onIframeLoaded] = useMemo(
-    () => createMessageChannelForParent(origin),
-    [appId],
+    () => createMessageChannelForParent(appUrlWithHostOrigin),
+    [appId, appUrlWithHostOrigin],
   )
 
   const ref = useRef<HTMLIFrameElement>(null)
@@ -32,15 +33,11 @@ export function SynchronizedIframe({
   useIFrameRPC(channel, appId, space, filteredSpaces)
   useIFrameSpaces(channel)
 
-  const appUrlWithHostOrigin = `${appUrl}?${HostOriginQueryParam}=${encodeURIComponent(
-    hostOrigin,
-  )}`
-
   return (
     <iframe
       ref={ref}
       className={className}
-      src={appUrlWithHostOrigin}
+      src={appUrlWithHostOrigin.href}
       onLoad={() => {
         onIframeLoaded(ref.current as HTMLIFrameElement)
       }}

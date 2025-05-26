@@ -37,7 +37,7 @@ export function isOfMessageType<T extends ChannelMessage>(
  * ```
  */
 export function createMessageChannelForParent(
-  childOrigin: string,
+  childOrigin: URL,
 ): [
   channel: SharedChannel,
   onIFrameLoaded: (iframe: HTMLIFrameElement) => void,
@@ -61,7 +61,7 @@ export function createMessageChannelForParent(
 
     const handshakeHandler = (event: MessageEvent) => {
       if (
-        event.origin == childOrigin &&
+        event.origin == childOrigin.origin &&
         isOfMessageType<HandshakeChannelMessage>("channel.handshake", event)
       ) {
         contentWindow.postMessage(
@@ -69,7 +69,7 @@ export function createMessageChannelForParent(
             type: "channel.init",
             port: iframePort,
           } satisfies InitializeChannelMessage,
-          childOrigin,
+          childOrigin.origin,
           [iframePort],
         )
         window.removeEventListener("message", handshakeHandler)
@@ -99,12 +99,12 @@ export function createMessageChannelForParent(
  * ```
  */
 export async function createMessageChannelForChild(
-  hostOrigin: string,
+  hostOrigin: URL,
 ): Promise<SharedChannel> {
   const promise = new Promise<SharedChannel>((resolve) => {
     const listener = (ev: MessageEvent<unknown>) => {
       if (
-        ev.origin == hostOrigin &&
+        ev.origin == hostOrigin.origin &&
         isOfMessageType<InitializeChannelMessage>("channel.init", ev)
       ) {
         const port = ev.data.port
@@ -122,7 +122,7 @@ export async function createMessageChannelForChild(
     {
       type: "channel.handshake",
     } satisfies HandshakeChannelMessage,
-    hostOrigin,
+    hostOrigin.origin,
   )
   return promise
 }
