@@ -1,5 +1,16 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.14
+
+### Patch Changes
+
+- daf0f55: Use handshake for initializing iframes in order to ensure that iframe is completely mounted before sending message channel
+  - @coat-rack/server@0.0.1-alpha.14
+  - @coat-rack/core@0.0.1-alpha.14
+  - @coat-rack/icons@0.0.1-alpha.14
+  - @coat-rack/sdk@0.0.1-alpha.14
+  - @coat-rack/ui@0.0.1-alpha.14
+
 ## 0.0.1-alpha.13
 
 ### Patch Changes

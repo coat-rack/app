@@ -1,5 +1,14 @@
 # @catalog/notes
 
+## 0.0.1-alpha.14
+
+### Patch Changes
+
+- @coat-rack/icons@0.0.1-alpha.14
+- @coat-rack/sdk@0.0.1-alpha.14
+- @coat-rack/tailwind-config@0.0.1-alpha.14
+- @coat-rack/ui@0.0.1-alpha.14
+
 ## 0.0.1-alpha.13
 
 ### Patch Changes
