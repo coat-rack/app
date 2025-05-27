@@ -45,3 +45,5 @@ type RpcResponseShape<I> = {
 }
 
 export type RpcResponse<I, K extends keyof I = keyof I> = RpcResponseShape<I>[K]
+
+export const HostOriginQueryParam = "hostOrigin"
