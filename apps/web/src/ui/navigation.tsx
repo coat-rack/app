@@ -18,7 +18,7 @@ export const Navigation = ({
 
   return (
     <div
-      className="relative grid h-screen w-screen"
+      className="relative grid h-dvh w-dvw"
       style={{
         ...spaceStyles,
         gridTemplateRows: "auto 1fr",
