@@ -7,7 +7,7 @@ function guidGenerator(): string {
     return crypto.randomUUID()
   }
 
-  return new Date().valueOf().toString()
+  return Math.random().toString()
 }
 
 const initialDb: Db = {
