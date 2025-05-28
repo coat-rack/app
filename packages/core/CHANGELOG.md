@@ -1,5 +1,11 @@
 # @coat-rack/core
 
+## 0.0.1-alpha.16
+
+### Patch Changes
+
+- 1af2e29: Ensure that requests don't have duplicate ids in insecure contexts
+
 ## 0.0.1-alpha.15
 
 ### Patch Changes
