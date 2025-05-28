@@ -1,5 +1,4 @@
 import { createMessageChannelForParent } from "@coat-rack/core/messaging"
-import { HostOriginQueryParam } from "@coat-rack/core/rpc"
 import { useMemo, useRef } from "react"
 import { useIFrameRPC } from "./iframe/rpc"
 import { useIFrameSpaces } from "./iframe/spaces"
@@ -19,13 +18,9 @@ export function SynchronizedIframe({
   filteredSpaces,
   className,
 }: SynchronizedIframeProps) {
-  const hostOrigin = window.origin
-  const appUrlWithHostOrigin = new URL(appUrl)
-  appUrlWithHostOrigin.searchParams.set(HostOriginQueryParam, hostOrigin)
-
-  const [channel, onIframeLoaded] = useMemo(
-    () => createMessageChannelForParent(appUrlWithHostOrigin),
-    [appId, appUrlWithHostOrigin],
+  const [iframeUrl, channel, onIframeLoaded] = useMemo(
+    () => createMessageChannelForParent(window.location, appUrl),
+    [appId],
   )
 
   const ref = useRef<HTMLIFrameElement>(null)
@@ -37,7 +32,7 @@ export function SynchronizedIframe({
     <iframe
       ref={ref}
       className={className}
-      src={appUrlWithHostOrigin.href}
+      src={iframeUrl.toString()}
       onLoad={() => {
         onIframeLoaded(ref.current as HTMLIFrameElement)
       }}
