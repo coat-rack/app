@@ -1,5 +1,11 @@
 # @coat-rack/core
 
+## 0.0.1-alpha.15
+
+### Patch Changes
+
+- a5f0e6b: Fix bugs related to space changing on iframe
+
 ## 0.0.1-alpha.14
 
 ## 0.0.1-alpha.13
