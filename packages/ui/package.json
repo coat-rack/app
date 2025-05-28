@@ -1,7 +1,7 @@
 {
   "name": "@coat-rack/ui",
   "description": "UI library used for building platform as well as app functionality. Depends on @coat-rack/sdk at runtime for theming primitives",
-  "version": "0.0.1-alpha.15",
+  "version": "0.0.1-alpha.16",
   "private": false,
   "sideEffects": [
     "**/*.css"
@@ -197,7 +197,7 @@
   },
   "devDependencies": {
     "@coat-rack/build-utils": "workspace:^",
-    "@coat-rack/typescript-config": "0.0.1-alpha.15",
+    "@coat-rack/typescript-config": "0.0.1-alpha.16",
     "@turbo/gen": "^1.11.3",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
@@ -218,8 +218,8 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.1.0",
-    "@coat-rack/icons": "0.0.1-alpha.15",
-    "@coat-rack/tailwind-config": "0.0.1-alpha.15",
+    "@coat-rack/icons": "0.0.1-alpha.16",
+    "@coat-rack/tailwind-config": "0.0.1-alpha.16",
     "autoprefixer": "^10.4.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
