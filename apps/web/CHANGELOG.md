@@ -1,5 +1,17 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.15
+
+### Patch Changes
+
+- a5f0e6b: Fix bugs related to space changing on iframe
+- Updated dependencies [a5f0e6b]
+  - @coat-rack/core@0.0.1-alpha.15
+  - @coat-rack/server@0.0.1-alpha.15
+  - @coat-rack/icons@0.0.1-alpha.15
+  - @coat-rack/sdk@0.0.1-alpha.15
+  - @coat-rack/ui@0.0.1-alpha.15
+
 ## 0.0.1-alpha.14
 
 ### Patch Changes
