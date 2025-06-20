@@ -1,0 +1,7 @@
+IMG_NAME="coatrack-$RELEASE-$ARCH"
+PI_GEN_RELEASE="we should set this"
+RELEASE="bookworm" # debian 12
+USE_QEMU=1
+TARGET_HOSTNAME="coatrack"
+FIRST_USER_NAME="user"
+DEPLOY_DIR=/out
