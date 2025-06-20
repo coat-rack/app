@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     tanstackRouter({
       target: "react",
-      autoCodeSplitting: true,
+      autoCodeSplitting: false, // must be disabled because we only support a single file bundle
     }),
     react(),
     cssInjectedByJsPlugin({
