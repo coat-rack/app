@@ -1,4 +1,5 @@
 import replace from "@rollup/plugin-replace"
+import { tanstackRouter } from "@tanstack/router-plugin/vite"
 import react from "@vitejs/plugin-react"
 import { resolve } from "path"
 import externalGlobals from "rollup-plugin-external-globals"
@@ -7,6 +8,10 @@ import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js"
 
 export default defineConfig({
   plugins: [
+    tanstackRouter({
+      target: "react",
+      autoCodeSplitting: true,
+    }),
     react(),
     cssInjectedByJsPlugin({
       dev: {
