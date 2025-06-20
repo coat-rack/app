@@ -16,3 +16,15 @@ export interface BudgetInstance {
   locale: string
   currency: string
 }
+
+export interface AccountInstance {
+  name: string
+  transactions: TransactionItem[]
+}
+
+export interface TransactionItem {
+  amount: number
+  payee: string
+  description: string
+  date: Date
+}
