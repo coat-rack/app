@@ -1,0 +1,27 @@
+services:
+  coatrack:
+    build: .
+    volumes:
+      - coatrack_data:/server/_data
+
+  caddy:
+    image: caddy:2.10
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 2015:2015 # temp cert brower
+      - 80:80
+      - 443:443
+      - "443:443/udp"
+      - "3000-6000:3000-6000"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+    environment:
+      COATRACK_DOMAIN: coatrack
+      HOST_DOMAIN: ${HOST_DOMAIN-localhost}
+
+volumes:
+  coatrack_data:
+  caddy_data:
