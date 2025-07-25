@@ -1,5 +1,13 @@
 # @catalog/sample-app
 
+## 0.0.1-alpha.17
+
+### Patch Changes
+
+- @coat-rack/sdk@0.0.1-alpha.17
+- @coat-rack/tailwind-config@0.0.1-alpha.17
+- @coat-rack/ui@0.0.1-alpha.17
+
 ## 0.0.1-alpha.16
 
 ### Patch Changes

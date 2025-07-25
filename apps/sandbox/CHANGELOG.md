@@ -1,5 +1,12 @@
 # @coat-rack/sandbox
 
+## 0.0.1-alpha.17
+
+### Patch Changes
+
+- @coat-rack/core@0.0.1-alpha.17
+- @coat-rack/sdk@0.0.1-alpha.17
+
 ## 0.0.1-alpha.16
 
 ### Patch Changes
