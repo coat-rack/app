@@ -12,8 +12,8 @@
 # certificate viewer/downloader UI, uses the default caddy UI
 # can use a custom server if we want, this just keeps dev effort low for now
 # maybe we'll even want to make this accessible from the app directly as a download
-{$HOST_DOMAIN:localhost}:2015 {
-	root * /data/caddy/pki/authorities/coatrack
+caddy:2015, {$HOST_DOMAIN:localhost}:2015 {
+	root * /data/caddy/pki/
 
 	file_server browse {
 		hide *.key
