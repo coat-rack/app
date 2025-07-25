@@ -1,2 +1,4 @@
-routeTree.gen.ts
+**/routeTree.gen.ts
 **/*.hbs
+**/.gitignore
+.prettierignore
