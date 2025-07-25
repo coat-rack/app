@@ -2,7 +2,7 @@ import { CADDY_ADMIN_HOST, COAT_RACK_DOMAIN } from "./config"
 
 function createServerConfig(domain: string, port: number) {
   return {
-    listen: [":1234"],
+    listen: [`:${port}`],
     routes: [
       {
         match: [{ host: [domain] }],
@@ -33,14 +33,15 @@ export async function registerCaddyServer(
   port: number,
 ): Promise<unknown> {
   if (!CADDY_ADMIN_HOST) {
+    console.log("CADDY_ADMIN_HOST is not defined")
     return
   }
 
   const config = createServerConfig(COAT_RACK_DOMAIN, port)
   const result = await fetch(
-    `${CADDY_ADMIN_HOST}/config/apps/http/servers/${id}`,
+    `http://${CADDY_ADMIN_HOST}/config/apps/http/servers/${id}`,
     {
-      method: "patch",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -49,5 +50,5 @@ export async function registerCaddyServer(
   )
 
   const json = await result.json()
-  return json
+  return { status: result.status, body: json }
 }
