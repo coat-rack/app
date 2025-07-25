@@ -1,6 +1,4 @@
 # for some reason these aren't working
-ENV VERSION
-
 FROM node:22-slim
 
 ENV PNPM_HOME="/pnpm"
@@ -11,4 +9,5 @@ WORKDIR /server
 
 # should ensure that generated app ports are also exposed in this range
 EXPOSE 3000 4000 40000-41000
+
 CMD pnpm dlx "@coat-rack/server@$VERSION"
