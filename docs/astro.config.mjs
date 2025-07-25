@@ -7,6 +7,8 @@ import react from "@astrojs/react"
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://coat-rack.github.io",
+  base: "/app",
   integrations: [
     starlight({
       title: "Coat Rack",
@@ -16,19 +18,19 @@ export default defineConfig({
       sidebar: [
         {
           label: "Welcome",
-          link: "welcome",
+          link: "/welcome",
         },
         {
           label: "Getting Started",
-          link: "getting-started",
+          link: "/getting-started",
         },
         {
           label: "Architecture",
-          link: "architecture",
+          link: "/architecture",
         },
         {
           label: "App Development",
-          link: "app-development",
+          link: "/app-development",
         },
         {
           label: "Reference",
