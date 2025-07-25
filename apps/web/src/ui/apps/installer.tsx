@@ -1,4 +1,4 @@
-import { useLoggedInContext } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { Plus } from "@coat-rack/icons/regular"
 import { getSpaceStyles } from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"

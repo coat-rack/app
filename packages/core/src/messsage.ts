@@ -35,7 +35,7 @@ export type SpacesRequestMessage = ChannelMessage<"meta", "spaces">
  */
 export interface SpacesResponseMessage
   extends ChannelMessage<"meta", "spaces-response"> {
-  active?: Space
+  active: Space
   all: Space[]
   filtered: boolean
 }

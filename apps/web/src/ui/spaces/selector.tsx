@@ -1,4 +1,4 @@
-import { useLoggedInContext } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { useObservable } from "@coat-rack/core/async"
 import { ChartNetwork, User } from "@coat-rack/icons/regular"
 import { FilterSolid } from "@coat-rack/icons/solid"

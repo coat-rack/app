@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { RouterProvider, createRouter } from "@tanstack/react-router"
-import { DatabaseProvider } from "./data"
+import { LoggedInContextProvider } from "./logged-in-context"
 import { routeTree } from "./routeTree.gen"
 import { trpcReact, trpcReactClient } from "./trpc"
 
@@ -29,9 +29,9 @@ function App() {
   return (
     <trpcReact.Provider client={trpcReactClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <DatabaseProvider>
+        <LoggedInContextProvider>
           <RouterProvider router={router} />
-        </DatabaseProvider>
+        </LoggedInContextProvider>
       </QueryClientProvider>
     </trpcReact.Provider>
   )

@@ -1,5 +1,5 @@
-import { SynchronizedIframe } from "@/SynchronizedIFrame"
-import { useLoggedInContext } from "@/data"
+import { SynchronizedIframe } from "@/iframe/synchronized"
+import { useLoggedInContext } from "@/logged-in-context"
 import { useObservable } from "@coat-rack/core/async"
 import { createLazyFileRoute } from "@tanstack/react-router"
 

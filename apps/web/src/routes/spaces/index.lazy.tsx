@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 
-import { useLoggedInContext } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { SpaceCreator } from "@/ui/spaces/creator"
 import { SpaceEditor } from "@/ui/spaces/editor"
 import { useObservable } from "@coat-rack/core/async"

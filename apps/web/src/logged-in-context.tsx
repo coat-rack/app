@@ -6,11 +6,8 @@ import {
   useState,
 } from "react"
 import { setupUserDB } from "./db/rxdb"
-import { trpcClient } from "./trpc"
 
 import { Space, User } from "@coat-rack/core/models"
-import { Button } from "@coat-rack/ui/components/button"
-import { Input } from "@coat-rack/ui/components/input"
 import { firstValueFrom } from "rxjs"
 import {
   setLocalFilterSpaces,
@@ -22,6 +19,8 @@ import {
   useLocalUser,
   useLocalUserSpace,
 } from "./db/local"
+import { trpcClient } from "./trpc"
+import { LoginForm } from "./ui/login/form"
 
 type ConfiguredDB = Awaited<ReturnType<typeof setupUserDB>>
 
@@ -52,49 +51,7 @@ export const useLoggedInContext = () => {
   return context
 }
 
-interface Props {
-  onLogin: (user: User) => void
-}
-
-const LoginScreen = ({ onLogin }: Props) => {
-  const [name, setName] = useState("")
-  const [error, setError] = useState("")
-
-  const logIn = () =>
-    trpcClient.users.login
-      .query({ name })
-      .then((result) => {
-        if (result) {
-          onLogin(result)
-        } else {
-          setError("User not found")
-        }
-      })
-      .catch(() => setError("Invalid login"))
-
-  const signUp = () =>
-    trpcClient.users.create
-      .mutate({
-        name,
-      })
-      .then((user) => onLogin(user))
-      .catch(() => setError("Invalid username"))
-
-  return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1 className="font-title text-5xl">Login</h1>
-
-      <Input onChange={(e) => setName(e.target.value)} value={name} />
-
-      <Button onClick={logIn}>Log In</Button>
-      <Button onClick={signUp}>Sign Up</Button>
-
-      <div>{error && <p className="text-red-500">{error}</p>}</div>
-    </div>
-  )
-}
-
-export const DatabaseProvider = ({ children }: PropsWithChildren) => {
+export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
   const user = useLocalUser()
   const userSpace = useLocalUserSpace()
   const activeSpace = useLocalActiveSpace()
@@ -128,8 +85,11 @@ export const DatabaseProvider = ({ children }: PropsWithChildren) => {
     setupUserData()
   }, [user?.id])
 
+  const logIn = (name: string) => trpcClient.users.login.query({ name })
+  const signUp = (name: string) => trpcClient.users.create.mutate({ name })
+
   if (!(dbSetup && user && userSpace && activeSpace)) {
-    return <LoginScreen onLogin={login} />
+    return <LoginForm logIn={logIn} signUp={signUp} onLogin={login} />
   }
 
   const signOut = () => {

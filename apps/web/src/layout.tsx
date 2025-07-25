@@ -2,7 +2,7 @@ import { useObservable } from "@coat-rack/core/async"
 import { Button } from "@coat-rack/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
-import { useLoggedInContext } from "./data"
+import { useLoggedInContext } from "./logged-in-context"
 import { Navigation } from "./ui/navigation"
 
 export const Layout = ({ children }: PropsWithChildren) => {

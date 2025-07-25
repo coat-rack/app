@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 
-import { useLoggedInContext } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { trpcClient } from "@/trpc"
 import { AppInstaller } from "@/ui/apps/installer"
 import { AppManager } from "@/ui/apps/manager"

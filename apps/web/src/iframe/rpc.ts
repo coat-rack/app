@@ -1,4 +1,4 @@
-import { useLoggedInContext } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { useChannelSubscription } from "@coat-rack/core/messaging"
 import { ChannelMessage } from "@coat-rack/core/messsage"
 import { RpcRequest, RpcResponse, err, ok } from "@coat-rack/core/rpc"

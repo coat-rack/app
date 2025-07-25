@@ -1,4 +1,4 @@
-import { useLoggedInContext } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { App } from "@coat-rack/core/models"
 import { Pencil } from "@coat-rack/icons/regular"
 import { getSpaceStyles } from "@coat-rack/sdk"
