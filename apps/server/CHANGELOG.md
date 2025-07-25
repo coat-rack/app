@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.17
+
+### Patch Changes
+
+- 8f44699: Create Caddy registration in production
+  - @coat-rack/core@0.0.1-alpha.17
+
 ## 0.0.1-alpha.16
 
 ### Patch Changes
