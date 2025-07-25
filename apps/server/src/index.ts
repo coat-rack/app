@@ -6,6 +6,7 @@ import express from "express"
 import { Server } from "http"
 import { createProxyMiddleware } from "http-proxy-middleware"
 import { resolve } from "path"
+import { registerCaddyServer } from "./caddy"
 import { DB_PATH, HOST, IS_DEV, PORT } from "./config"
 import { initDb } from "./db"
 import { appRouter, seedDb } from "./router"
@@ -49,8 +50,15 @@ function setupAppServer(app: App) {
     })
   }
 
-  const server = expressApp.listen(app.port, () => {
-    console.log(`App server started on port ${app.port}`, app)
+  const server = expressApp.listen(app.port, async () => {
+    console.log(`${app.id} App server started on port ${app.port}`, app)
+
+    console.log("NODE_ENV", process.env)
+
+    if (!IS_DEV) {
+      const caddyResult = await registerCaddyServer(app.id, app.port)
+      console.log(`${app.id} App server registered with Caddy`, caddyResult)
+    }
   })
 
   appServers[app.id] = server
