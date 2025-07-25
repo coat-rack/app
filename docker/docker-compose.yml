@@ -2,11 +2,10 @@ services:
   coatrack:
     build:
       context: .
-      args:
-        VERSION: latest
     volumes:
       - coatrack_data:/server/_data
     environment:
+      VERSION: latest
       NODE_ENV: production
       COAT_RACK_DOMAIN: coatrack
       CADDY_ADMIN_HOST: caddy:2019

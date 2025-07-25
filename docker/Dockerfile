@@ -1,6 +1,5 @@
 # for some reason these aren't working
-ARG VERSION="latest"
-ENV VERSION $VERSION
+ENV VERSION
 
 FROM node:22-slim
 
