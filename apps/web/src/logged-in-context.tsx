@@ -1,3 +1,4 @@
+import { Space, User } from "@coat-rack/core/models"
 import {
   PropsWithChildren,
   createContext,
@@ -5,20 +6,14 @@ import {
   useEffect,
   useState,
 } from "react"
-import { setupUserDB } from "./db/rxdb"
-
-import { Space, User } from "@coat-rack/core/models"
 import { firstValueFrom } from "rxjs"
 import {
-  setLocalFilterSpaces,
-  setLocalSelectedSpace,
-  setLocalUser,
-  setLocalUserSpace,
-  useLocalActiveSpace,
   useLocalFilterSpaces,
+  useLocalSelectedSpace,
   useLocalUser,
   useLocalUserSpace,
 } from "./db/local"
+import { setupUserDB } from "./db/rxdb"
 import { trpcClient } from "./trpc"
 import { LoginForm } from "./ui/login/form"
 
@@ -33,7 +28,7 @@ interface LoggedInContext extends ConfiguredDB {
   activeSpace: Space
   filterSpaces?: boolean
 
-  setActiveSpace: (space: Space) => void
+  setSelectedSpace: (space: Space) => void
   setFilterSpaces: (filter: boolean) => void
   signOut: () => void
 }
@@ -52,15 +47,17 @@ export const useLoggedInContext = () => {
 }
 
 export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
-  const user = useLocalUser()
-  const userSpace = useLocalUserSpace()
-  const activeSpace = useLocalActiveSpace()
-  const filterSpaces = useLocalFilterSpaces()
+  const [user, setUser] = useLocalUser()
+  const [userSpace, setUserSpace] = useLocalUserSpace()
+  const [selectedSpace, setSelectedSpace] = useLocalSelectedSpace()
+  const [filterSpaces, setFilterSpaces] = useLocalFilterSpaces()
+
+  const activeSpace = selectedSpace || userSpace
 
   const [dbSetup, setDbSetup] = useState<ConfiguredDB>()
 
   const login = async (loginUser: User) => {
-    setLocalUser(loginUser)
+    setUser(loginUser)
   }
 
   useEffect(() => {
@@ -79,7 +76,7 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
       }
 
       setDbSetup(db)
-      setLocalUserSpace(space._data)
+      setUserSpace(space._data)
     }
 
     setupUserData()
@@ -94,9 +91,9 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
 
   const signOut = () => {
     // For now we're just logging out the user but we may want to cleanup the DB here in the future
-    setLocalUser(undefined)
-    setLocalUserSpace(undefined)
-    setLocalSelectedSpace(undefined)
+    setUser(undefined)
+    setUserSpace(undefined)
+    setSelectedSpace(undefined)
   }
 
   return (
@@ -108,8 +105,8 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
         activeSpace,
         signOut,
         filterSpaces,
-        setFilterSpaces: setLocalFilterSpaces,
-        setActiveSpace: setLocalSelectedSpace,
+        setFilterSpaces,
+        setSelectedSpace,
       }}
     >
       {children}

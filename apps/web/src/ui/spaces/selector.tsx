@@ -4,7 +4,7 @@ import { ChartNetwork, User } from "@coat-rack/icons/regular"
 import { FilterSolid } from "@coat-rack/icons/solid"
 
 export const SpaceSelector = () => {
-  const { db, filterSpaces, activeSpace, setFilterSpaces, setActiveSpace } =
+  const { db, filterSpaces, activeSpace, setFilterSpaces, setSelectedSpace } =
     useLoggedInContext()
   const spaces = useObservable(db.spaces.find({}).$)
 
@@ -37,7 +37,7 @@ export const SpaceSelector = () => {
         ) : (
           <button
             key={space.id}
-            onClick={() => setActiveSpace(space._data)}
+            onClick={() => setSelectedSpace(space._data)}
             className="flex h-6 w-6 items-center justify-center"
             style={{ backgroundColor: space.color }}
             title={space.name}
