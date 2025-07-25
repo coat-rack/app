@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.20
+
+### Patch Changes
+
+- Don't parse caddy response during registration
+  - @coat-rack/core@0.0.1-alpha.20
+
 ## 0.0.1-alpha.19
 
 ### Patch Changes
