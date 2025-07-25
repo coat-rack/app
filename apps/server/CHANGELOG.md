@@ -1,5 +1,13 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.21
+
+### Patch Changes
+
+- dfd4d69: Adds docker/caddy configuration for hosting application
+- ce36bfd: Ensure that caddy registration matcher is correct
+  - @coat-rack/core@0.0.1-alpha.21
+
 ## 0.0.1-alpha.20
 
 ### Patch Changes

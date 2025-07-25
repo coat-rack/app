@@ -1,5 +1,13 @@
 # @catalog/kitchen-sink
 
+## 0.0.1-alpha.21
+
+### Patch Changes
+
+- @coat-rack/sdk@0.0.1-alpha.21
+- @coat-rack/tailwind-config@0.0.1-alpha.21
+- @coat-rack/ui@0.0.1-alpha.21
+
 ## 0.0.1-alpha.20
 
 ### Patch Changes
