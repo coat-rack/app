@@ -49,6 +49,8 @@ export async function registerCaddyServer(
     },
   )
 
+  console.log("Caddy Response", result)
+
   const json = await result.json()
   return { status: result.status, body: json }
 }
