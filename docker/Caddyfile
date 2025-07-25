@@ -1,0 +1,37 @@
+# the DOMAIN env var can be set to specify the domain that the app will be hosted configures
+
+# configures a CA for local certificate management
+{
+	pki {
+		ca coatrack {
+			name "Local Coat Rack CA"
+		}
+	}
+}
+
+# certificate viewer/downloader UI, uses the default caddy UI
+# can use a custom server if we want, this just keeps dev effort low for now
+# maybe we'll even want to make this accessible from the app directly as a download
+caddy:2015, {$HOST_DOMAIN:localhost}:2015 {
+	root * /data/caddy/pki/
+
+	file_server browse {
+		hide *.key
+	}
+}
+
+{$HOST_DOMAIN:localhost} {
+	reverse_proxy {$COATRACK_DOMAIN}:4000
+
+	acme_server {
+		ca coatrack
+	}
+}
+
+{$HOST_DOMAIN:localhost}:3000 {
+	reverse_proxy {$COATRACK_DOMAIN}:3000
+
+	acme_server {
+		ca coatrack
+	}
+}

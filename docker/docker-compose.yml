@@ -1,0 +1,39 @@
+services:
+  coatrack:
+    build:
+      context: .
+      args:
+        VERSION: latest
+    volumes:
+      - coatrack_data:/server/_data
+    environment:
+      NODE_ENV: production
+      COAT_RACK_DOMAIN: coatrack
+      CADDY_ADMIN_HOST: caddy:2019
+    depends_on:
+      - caddy
+
+  caddy:
+    image: caddy:2.10
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 2015:2015 # temp cert brower
+      - 2019:2019 # caddy admin port - only responds to calls to `localhost`
+      - 80:80
+      - 443:443
+      - 443:443/udp
+      - 3000:3000
+      - 40000-41000:40000-41000
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+    environment:
+      COATRACK_DOMAIN: coatrack
+      HOST_DOMAIN: ${HOST_DOMAIN-localhost}
+      CADDY_ADMIN: 0.0.0.0:2019
+
+volumes:
+  coatrack_data:
+  caddy_data:
