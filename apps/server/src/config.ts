@@ -6,6 +6,7 @@ declare global {
       NODE_ENV: "development" | "production"
       DB_PATH?: string
       CADDY_ADMIN_HOST?: string
+      CADDY_EXTERNAL_DOMAIN?: string
       COAT_RACK_DOMAIN?: string
     }
   }
@@ -25,8 +26,10 @@ export const PORT = {
 }
 
 export const DB_PATH = process.env.DB_PATH || resolve("_data")
+
 export const CADDY_ADMIN_HOST = process.env.CADDY_ADMIN_HOST
-export const COAT_RACK_DOMAIN = process.env.COAT_RACK_DOMAIN || "localhost"
+export const COAT_RACK_DOMAIN = process.env.COAT_RACK_DOMAIN
+export const CADDY_EXTERNAL_DOMAIN = process.env.CADDY_EXTERNAL_DOMAIN
 
 const ENV = process.env.NODE_ENV || "production"
 
