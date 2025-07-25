@@ -1,7 +1,7 @@
 import { App, ProvideAppContext } from "@coat-rack/sdk"
 
 import { createRouter, RouterProvider } from "@tanstack/react-router"
-import { CurrencyProvider, LocaleProvider } from "./context"
+import { DbTypes } from "./models"
 import { routeTree } from "./routeTree.gen"
 import "./styles.css"
 
@@ -12,18 +12,14 @@ declare module "@tanstack/react-router" {
   }
 }
 
-export const BudgetApp: App = {
+export const BudgetApp: App<DbTypes> = {
   /**
    *  The Entrypoint for the app
    */
   Entry: ({ context }) => {
     return (
       <ProvideAppContext {...context}>
-        <LocaleProvider value={"en-NL"}>
-          <CurrencyProvider value={"EUR"}>
-            <RouterProvider router={router}></RouterProvider>
-          </CurrencyProvider>
-        </LocaleProvider>
+        <RouterProvider router={router} context={context}></RouterProvider>
       </ProvideAppContext>
     )
   },
