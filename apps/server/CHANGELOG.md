@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.19
+
+### Patch Changes
+
+- e00f3c0: Add some logging for debugging caddy issues during registration
+  - @coat-rack/core@0.0.1-alpha.19
+
 ## 0.0.1-alpha.18
 
 ### Patch Changes
