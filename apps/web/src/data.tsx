@@ -1,22 +1,49 @@
-import { usePromise } from "@coat-rack/core/async"
-import { PropsWithChildren, createContext, useContext, useState } from "react"
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import { setupUserDB } from "./db/rxdb"
 import { trpcClient } from "./trpc"
 
+import { Space, User } from "@coat-rack/core/models"
 import { Button } from "@coat-rack/ui/components/button"
 import { Input } from "@coat-rack/ui/components/input"
-import { setLocalUser, useLocalUser } from "./db/local"
+import { firstValueFrom } from "rxjs"
+import {
+  setLocalFilterSpaces,
+  setLocalSelectedSpace,
+  setLocalUser,
+  setLocalUserSpace,
+  useLocalActiveSpace,
+  useLocalFilterSpaces,
+  useLocalUser,
+  useLocalUserSpace,
+} from "./db/local"
 
 type ConfiguredDB = Awaited<ReturnType<typeof setupUserDB>>
 
-interface Context extends ConfiguredDB {
-  user: string
+interface LoggedInContext extends ConfiguredDB {
+  /**
+   * This should be unique across users so is fine for querying against
+   */
+  user: User
+  userSpace: Space
+  activeSpace: Space
+  filterSpaces?: boolean
+
+  setActiveSpace: (space: Space) => void
+  setFilterSpaces: (filter: boolean) => void
   signOut: () => void
 }
 
-const Context = createContext<Context>(undefined as unknown as Context)
+const Context = createContext<LoggedInContext>(
+  undefined as unknown as LoggedInContext,
+)
 
-export const useDatabase = () => {
+export const useLoggedInContext = () => {
   const context = useContext(Context)
   if (!context) {
     throw new Error("Cannot use outside of the DatabaseProvider")
@@ -26,7 +53,7 @@ export const useDatabase = () => {
 }
 
 interface Props {
-  onLogin: (user: string) => void
+  onLogin: (user: User) => void
 }
 
 const LoginScreen = ({ onLogin }: Props) => {
@@ -38,7 +65,7 @@ const LoginScreen = ({ onLogin }: Props) => {
       .query({ name })
       .then((result) => {
         if (result) {
-          onLogin(result.name)
+          onLogin(result)
         } else {
           setError("User not found")
         }
@@ -50,7 +77,7 @@ const LoginScreen = ({ onLogin }: Props) => {
       .mutate({
         name,
       })
-      .then((user) => onLogin(user.id))
+      .then((user) => onLogin(user))
       .catch(() => setError("Invalid username"))
 
   return (
@@ -69,24 +96,47 @@ const LoginScreen = ({ onLogin }: Props) => {
 
 export const DatabaseProvider = ({ children }: PropsWithChildren) => {
   const user = useLocalUser()
+  const userSpace = useLocalUserSpace()
+  const activeSpace = useLocalActiveSpace()
+  const filterSpaces = useLocalFilterSpaces()
 
-  const login = (username: string) => setLocalUser(username)
+  const [dbSetup, setDbSetup] = useState<ConfiguredDB>()
 
-  const [dbSetup] = usePromise(async () => {
+  const login = async (loginUser: User) => {
+    setLocalUser(loginUser)
+  }
+
+  useEffect(() => {
     if (!user) {
       return
     }
 
-    return setupUserDB(user)
-  }, [user])
+    const setupUserData = async () => {
+      const db = await setupUserDB(user.id)
+      await db.spacesCollection.awaitInitialReplication()
 
-  if (!(dbSetup && user)) {
+      const space = await firstValueFrom(db.db.spaces.findOne(user.id).$)
+
+      if (!(space && user)) {
+        throw new Error("User space could not be found in collection")
+      }
+
+      setDbSetup(db)
+      setLocalUserSpace(space._data)
+    }
+
+    setupUserData()
+  }, [user?.id])
+
+  if (!(dbSetup && user && userSpace && activeSpace)) {
     return <LoginScreen onLogin={login} />
   }
 
   const signOut = () => {
     // For now we're just logging out the user but we may want to cleanup the DB here in the future
     setLocalUser(undefined)
+    setLocalUserSpace(undefined)
+    setLocalSelectedSpace(undefined)
   }
 
   return (
@@ -94,7 +144,12 @@ export const DatabaseProvider = ({ children }: PropsWithChildren) => {
       value={{
         ...dbSetup,
         user,
+        userSpace,
+        activeSpace,
         signOut,
+        filterSpaces,
+        setFilterSpaces: setLocalFilterSpaces,
+        setActiveSpace: setLocalSelectedSpace,
       }}
     >
       {children}

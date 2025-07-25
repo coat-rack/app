@@ -1,6 +1,5 @@
 import { SynchronizedIframe } from "@/SynchronizedIFrame"
-import { useDatabase } from "@/data"
-import { useActiveSpace, useFilterSpaces, useLocalUser } from "@/db/local"
+import { useLoggedInContext } from "@/data"
 import { useObservable } from "@coat-rack/core/async"
 import { createLazyFileRoute } from "@tanstack/react-router"
 
@@ -21,13 +20,8 @@ function Index() {
   sandboxHost.pathname = ""
   const { id } = Route.useParams()
 
-  const user = useLocalUser()
-  const activeSpace = useActiveSpace()
-  const filtered = useFilterSpaces()
+  const { db, activeSpace, filterSpaces } = useLoggedInContext()
 
-  const space = activeSpace?.id || user
-
-  const { db } = useDatabase()
   const app = useObservable(
     db.apps.findOne({
       selector: {
@@ -37,7 +31,7 @@ function Index() {
     [id],
   )
 
-  const hasConfig = app && space
+  const hasConfig = app && activeSpace
   if (!hasConfig) {
     return undefined
   }
@@ -50,8 +44,8 @@ function Index() {
         className="h-full w-full"
         appId={app.id}
         appUrl={appUrl}
-        filteredSpaces={filtered || false}
-        space={space}
+        filteredSpaces={filterSpaces || false}
+        space={activeSpace.id}
       />
     </div>
   )

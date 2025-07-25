@@ -2,11 +2,11 @@ import { useObservable } from "@coat-rack/core/async"
 import { Button } from "@coat-rack/ui/components/button"
 import { Link } from "@tanstack/react-router"
 import { PropsWithChildren } from "react"
-import { useDatabase } from "./data"
+import { useLoggedInContext } from "./data"
 import { Navigation } from "./ui/navigation"
 
 export const Layout = ({ children }: PropsWithChildren) => {
-  const { signOut, db } = useDatabase()
+  const { signOut, db } = useLoggedInContext()
   const apps = useObservable(db.apps.find({}).$)
 
   return (

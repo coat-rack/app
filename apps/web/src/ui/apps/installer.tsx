@@ -1,4 +1,4 @@
-import { useActiveSpace } from "@/db/local"
+import { useLoggedInContext } from "@/data"
 import { Plus } from "@coat-rack/icons/regular"
 import { getSpaceStyles } from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"
@@ -20,10 +20,10 @@ export function AppInstaller({
 }: {
   onSubmit: (url: string) => void
 }) {
-  const space = useActiveSpace()
+  const { activeSpace } = useLoggedInContext()
   const [url, setUrl] = useState("")
 
-  const spaceStyles = getSpaceStyles(space)
+  const spaceStyles = getSpaceStyles(activeSpace)
 
   const handleSubmit = async () => {
     onSubmit(url)

@@ -1,5 +1,4 @@
-import { useDatabase } from "@/data"
-import { useActiveSpace, useFilterSpaces } from "@/db/local"
+import { useLoggedInContext } from "@/data"
 import { useObservable } from "@coat-rack/core/async"
 import { useChannelSubscription } from "@coat-rack/core/messaging"
 import {
@@ -10,15 +9,13 @@ import { SharedChannel } from "@coat-rack/core/shared-channel"
 import { useEffect } from "react"
 
 export const useIFrameSpaces = (channel: SharedChannel) => {
-  const { db } = useDatabase()
+  const { db, filterSpaces, activeSpace } = useLoggedInContext()
   const spaces = useObservable(db.spaces.find({}).$)
-  const active = useActiveSpace()
-  const filtered = useFilterSpaces()
 
   const message: SpacesResponseMessage = {
     type: "meta.spaces-response",
-    active,
-    filtered: filtered || false,
+    active: activeSpace,
+    filtered: filterSpaces || false,
     all: spaces?.map((space) => space._data) || [],
   }
 
@@ -30,5 +27,5 @@ export const useIFrameSpaces = (channel: SharedChannel) => {
 
   useEffect(() => {
     channel.postMessage(message)
-  }, [spaces, active, filtered])
+  }, [spaces, activeSpace, filterSpaces])
 }

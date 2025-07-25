@@ -1,4 +1,4 @@
-import { useDatabase } from "@/data"
+import { useLoggedInContext } from "@/data"
 import { useObservable } from "@coat-rack/core/async"
 import { Link, createLazyFileRoute } from "@tanstack/react-router"
 
@@ -7,7 +7,7 @@ export const Route = createLazyFileRoute("/")({
 })
 
 function Index() {
-  const { db } = useDatabase()
+  const { db } = useLoggedInContext()
   const apps = useObservable(db.apps.find({}).$)
 
   return (

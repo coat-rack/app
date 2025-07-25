@@ -2,7 +2,7 @@ import type { ComponentType } from "react"
 
 export interface AppContext<T = unknown> {
   db: Db<T>
-  activeSpace?: Space
+  activeSpace: Space
   spaces: Space[]
 }
 

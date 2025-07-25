@@ -1,11 +1,13 @@
 import { useObservable } from "@coat-rack/core/async"
-import { KeyValue, Space } from "@coat-rack/core/models"
+import { KeyValue, Space, User } from "@coat-rack/core/models"
 import { map } from "rxjs"
 import { localDB } from "./rxdb"
 
 export const USER_META_KEY = "user"
 
-export const ACTIVE_SPACE_META_KEY = "space"
+export const SELECTED_SPACE_META_KEY = "space"
+
+export const USER_SPACE_META_KEY = "user-space"
 
 export const FILTER_SPACES_META_KEY = "filter-spaces"
 
@@ -13,41 +15,64 @@ interface Meta<T> extends KeyValue {
   value: T
 }
 
-export const setLocalUser = (username?: string) =>
-  localDB.meta.upsertLocal<Meta<string | undefined>>(USER_META_KEY, {
+export const setLocalUser = (user?: User) =>
+  localDB.meta.upsertLocal<Meta<User | undefined>>(USER_META_KEY, {
     id: USER_META_KEY,
-    value: username,
+    value: user,
   })
 
 export const useLocalUser = () =>
   useObservable(
     localDB.meta
-      .getLocal$<Meta<string | undefined>>(USER_META_KEY)
+      .getLocal$<Meta<User>>(USER_META_KEY)
       .pipe(map((result) => result?._data.data.value)),
     [],
   )
 
-export const setActiveSpace = (space: Space) =>
-  localDB.meta.upsertLocal<Meta<Space>>(ACTIVE_SPACE_META_KEY, {
-    id: ACTIVE_SPACE_META_KEY,
+export const setLocalUserSpace = (space?: Space) =>
+  localDB.meta.upsertLocal<Meta<Space | undefined>>(USER_SPACE_META_KEY, {
+    id: USER_SPACE_META_KEY,
     value: space,
   })
 
-export const useActiveSpace = () =>
+export const useLocalUserSpace = () =>
   useObservable(
     localDB.meta
-      .getLocal$<Meta<Space>>(ACTIVE_SPACE_META_KEY)
+      .getLocal$<Meta<Space>>(USER_SPACE_META_KEY)
       .pipe(map((result) => result?._data.data.value)),
     [],
   )
 
-export const setFilterSpaces = (active: boolean) =>
+export const setLocalSelectedSpace = (space?: Space) =>
+  localDB.meta.upsertLocal<Meta<Space | undefined>>(SELECTED_SPACE_META_KEY, {
+    id: SELECTED_SPACE_META_KEY,
+    value: space,
+  })
+
+export const useLocalSelectedSpace = () =>
+  useObservable(
+    localDB.meta
+      .getLocal$<Meta<Space>>(SELECTED_SPACE_META_KEY)
+      .pipe(map((result) => result?._data.data.value)),
+    [],
+  )
+
+export const useLocalActiveSpace = () => {
+  const userSpace = useLocalUserSpace()
+  const selectedSpace = useLocalSelectedSpace()
+
+  const resolvedSpace = selectedSpace || userSpace
+
+  return resolvedSpace
+}
+
+export const setLocalFilterSpaces = (active: boolean) =>
   localDB.meta.upsertLocal<Meta<boolean>>(FILTER_SPACES_META_KEY, {
     id: FILTER_SPACES_META_KEY,
     value: active,
   })
 
-export const useFilterSpaces = () =>
+export const useLocalFilterSpaces = () =>
   useObservable(
     localDB.meta
       .getLocal$<Meta<boolean>>(FILTER_SPACES_META_KEY)
