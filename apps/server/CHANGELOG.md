@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.18
+
+### Patch Changes
+
+- 399dd2e: Fix caddy registration
+  - @coat-rack/core@0.0.1-alpha.18
+
 ## 0.0.1-alpha.17
 
 ### Patch Changes
