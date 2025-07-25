@@ -24,6 +24,7 @@
     "@tanstack/router-plugin": "^1.121.27",
     "@vitejs/plugin-react": "^4.2.1",
     "rollup-plugin-external-globals": "^0.9.2",
+    "swr": "^2.3.4",
     "tailwindcss": "^3.4.1",
     "vite": "^5.0.8",
     "vite-plugin-css-injected-by-js": "^3.5.0"
