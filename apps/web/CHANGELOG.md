@@ -1,5 +1,17 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.22
+
+### Patch Changes
+
+- 0ea4c18: Consistent handling of spaces and local user data
+- Updated dependencies [0ea4c18]
+  - @coat-rack/core@0.0.1-alpha.22
+  - @coat-rack/sdk@0.0.1-alpha.22
+  - @coat-rack/server@0.0.1-alpha.22
+  - @coat-rack/icons@0.0.1-alpha.22
+  - @coat-rack/ui@0.0.1-alpha.22
+
 ## 0.0.1-alpha.21
 
 ### Patch Changes
