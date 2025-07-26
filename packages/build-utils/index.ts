@@ -4,6 +4,7 @@
 
 import { readFileSync, readdirSync, writeFileSync, type Dirent } from "node:fs"
 import { join } from "node:path"
+import * as prettier from "prettier"
 
 type ExportPaths = {
   default: string
@@ -80,7 +81,7 @@ export function getTsupEntrypoints(basePath: string, dir: SrcDir = "src") {
   return { tsupEntry, packageJsonExports }
 }
 
-export function updatePackageJsonExports(
+export async function updatePackageJsonExports(
   basePath: string,
   exports: PackageExports | Record<string, string>,
 ) {
@@ -93,7 +94,11 @@ export function updatePackageJsonExports(
     exports,
   }
 
-  writeFileSync("./package.json", JSON.stringify(updatedPackageJson, null, 2))
+  const formatted = await prettier.format(
+    JSON.stringify(updatedPackageJson, null, 2),
+    { parser: "json" },
+  )
+  writeFileSync("./package.json", formatted)
 }
 
 /**
