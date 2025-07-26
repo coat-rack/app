@@ -34,9 +34,9 @@ export default defineConfig({
           link: "/app-development",
         },
         {
-          label: "Reference",
+          label: "Packages",
           autogenerate: {
-            directory: "reference",
+            directory: "packages",
           },
         },
       ],
