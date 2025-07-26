@@ -8,7 +8,8 @@ import react from "@astrojs/react"
 // https://astro.build/config
 export default defineConfig({
   site: "https://coat-rack.github.io",
-  base: "/app",
+  base: "/app/",
+  trailingSlash: "always",
   integrations: [
     starlight({
       title: "Coat Rack",

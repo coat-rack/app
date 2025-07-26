@@ -19,4 +19,12 @@
     --mix-bg: white;
     --mix-fg: black;
   }
+
+  h1,
+  h2,
+  h3,
+  button,
+  a {
+    font-family: "Pixelify Sans";
+  }
 }
