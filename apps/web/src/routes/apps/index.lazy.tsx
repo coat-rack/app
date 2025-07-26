@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 
-import { useDatabase } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { trpcClient } from "@/trpc"
 import { AppInstaller } from "@/ui/apps/installer"
 import { AppManager } from "@/ui/apps/manager"
@@ -12,7 +12,7 @@ export const Route = createLazyFileRoute("/apps/")({
 })
 
 function Index() {
-  const { db, appsCollection } = useDatabase()
+  const { db, appsCollection } = useLoggedInContext()
 
   const [createKey, setCreateKey] = useState(Date.now())
 

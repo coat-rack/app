@@ -1,19 +1,12 @@
-import { useDatabase } from "@/data"
-import {
-  setActiveSpace,
-  setFilterSpaces,
-  useActiveSpace,
-  useFilterSpaces,
-} from "@/db/local"
+import { useLoggedInContext } from "@/logged-in-context"
 import { useObservable } from "@coat-rack/core/async"
 import { ChartNetwork, User } from "@coat-rack/icons/regular"
 import { FilterSolid } from "@coat-rack/icons/solid"
 
 export const SpaceSelector = () => {
-  const { db } = useDatabase()
+  const { db, filterSpaces, activeSpace, setFilterSpaces, setSelectedSpace } =
+    useLoggedInContext()
   const spaces = useObservable(db.spaces.find({}).$)
-  const activeSpace = useActiveSpace()
-  const isFiltered = useFilterSpaces()
 
   if (!spaces) {
     return undefined
@@ -44,7 +37,7 @@ export const SpaceSelector = () => {
         ) : (
           <button
             key={space.id}
-            onClick={() => setActiveSpace(space._data)}
+            onClick={() => setSelectedSpace(space._data)}
             className="flex h-6 w-6 items-center justify-center"
             style={{ backgroundColor: space.color }}
             title={space.name}
@@ -54,7 +47,7 @@ export const SpaceSelector = () => {
         )
       })}
 
-      {isFiltered ? (
+      {filterSpaces ? (
         <button
           title="Show all spaces"
           className="bg-primary flex h-6 w-6 items-center justify-center"

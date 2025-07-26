@@ -1,7 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 
-import { useDatabase } from "@/data"
-import { useLocalUser } from "@/db/local"
+import { useLoggedInContext } from "@/logged-in-context"
 import { SpaceCreator } from "@/ui/spaces/creator"
 import { SpaceEditor } from "@/ui/spaces/editor"
 import { useObservable } from "@coat-rack/core/async"
@@ -13,13 +12,11 @@ export const Route = createLazyFileRoute("/spaces/")({
 })
 
 function Index() {
-  const { db, spacesCollection } = useDatabase()
+  const { db, spacesCollection, user } = useLoggedInContext()
   const users = useObservable(db.users.find({}).$)
   const spaces = useObservable(db.spaces.find({}).$)
 
   const [createKey, setCreateKey] = useState(Date.now())
-
-  const user = useLocalUser()
 
   const upsertSpace = async (space: Space) => {
     setCreateKey(Date.now())
@@ -37,14 +34,14 @@ function Index() {
             <SpaceCreator
               key={createKey}
               appUsers={users || []}
-              user={user}
+              user={user.id}
               onSubmit={upsertSpace}
             />
           )}
         </div>
         <div className="flex flex-col">
           {spaces
-            ?.filter((s) => s.owner === user)
+            ?.filter((s) => s.owner === user.id)
             ?.map((space) => (
               <SpaceEditor
                 key={space.id}
@@ -59,7 +56,7 @@ function Index() {
           <h2 className="text-xl">Shared Spaces</h2>
           <ol>
             {spaces
-              ?.filter((s) => s.owner !== user)
+              ?.filter((s) => s.owner !== user.id)
               ?.map((s) => (
                 <li key={s.id} style={{ color: s.color }}>
                   {s.name}

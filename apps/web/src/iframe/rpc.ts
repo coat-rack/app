@@ -1,4 +1,4 @@
-import { useDatabase } from "@/data"
+import { useLoggedInContext } from "@/logged-in-context"
 import { useChannelSubscription } from "@coat-rack/core/messaging"
 import { ChannelMessage } from "@coat-rack/core/messsage"
 import { RpcRequest, RpcResponse, err, ok } from "@coat-rack/core/rpc"
@@ -25,7 +25,7 @@ export function useIFrameRPC(
   space: string,
   filtered: boolean,
 ) {
-  const { db } = useDatabase()
+  const { db } = useLoggedInContext()
 
   const handler = (
     event: RpcRequest<Db<unknown>>,

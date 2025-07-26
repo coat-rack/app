@@ -1,7 +1,7 @@
 import { createMessageChannelForParent } from "@coat-rack/core/messaging"
 import { useMemo, useRef } from "react"
-import { useIFrameRPC } from "./iframe/rpc"
-import { useIFrameSpaces } from "./iframe/spaces"
+import { useIFrameRPC } from "./rpc"
+import { useIFrameSpaces } from "./spaces"
 
 interface SynchronizedIframeProps {
   appId: string

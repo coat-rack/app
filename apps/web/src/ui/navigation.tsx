@@ -1,4 +1,4 @@
-import { useActiveSpace } from "@/db/local"
+import { useLoggedInContext } from "@/logged-in-context"
 import { HomeSolid, OctagonTimesSolid } from "@coat-rack/icons/solid"
 import { getSpaceStyles } from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"
@@ -13,7 +13,7 @@ export const Navigation = ({
   Links?: React.ReactNode
   signOut: () => void
 }>) => {
-  const activeSpace = useActiveSpace()
+  const { activeSpace } = useLoggedInContext()
   const spaceStyles = getSpaceStyles(activeSpace)
 
   return (
