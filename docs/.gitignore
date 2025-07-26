@@ -1,5 +1,7 @@
 # build output
 dist/
+public/coat-rack-docker-compose.zip
+
 # generated types
 .astro/
 

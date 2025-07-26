@@ -3,6 +3,45 @@ title: Getting Started
 description: Basic introduction to using the platform
 ---
 
-:::caution
-TODO: This should be done once we have the deployment structure done
-:::
+import { LinkButton, FileTree } from "@astrojs/starlight/components"
+
+## Prerequisites
+
+The following are necessary to run the application:
+
+- [Docker Compose](https://docs.docker.com/compose/) or an equivalent tool
+
+It is assumed that you're familiar with Docker and Docker Compose and have a basic understanding of the how application hosting works within your server's environment
+
+## Running with Docker
+
+### Using the Compose Stack
+
+The application is intended to be deployed and distributed using Docker Compose. The relevant files for hosting the application can be downloaded below:
+
+<LinkButton icon="download" href="../coat-rack-docker-compose.zip">
+  Download Docker Compose Files
+</LinkButton>
+
+Once downloaded you will need to unzip the folder. The from within the folder, run the following command:
+
+```sh
+HOST_DOMAIN=<your server domain> docker compose up
+```
+
+> Note that the `HOST_DOMAIN` variable needs to be the domain for accessing your host server and is the domain that your application will be accessed from outside of your network
+
+### Compose Stack Overview
+
+The Compose stack consists of the following files:
+
+<FileTree>
+
+- coat-rack-docker-compose
+  - Dockerfile - image defintion for running coat-rack
+  - Caddyfile - reverse proxy configuration for stack
+  - docker-compose.yml - composes the above files into the app stack
+
+</FileTree>
+
+Additionally, it exposes the volumes `coatrack_data` and `caddy_data`. The `coatrack_data` volume is where all your Coat Rack data lives

@@ -7,7 +7,7 @@ import { FileTree } from "@astrojs/starlight/components"
 
 ## Prerequisites
 
-To build an app for the platform it is assumed that you have some basic knowledge of [React](https://react.dev/) and that you have [Node.js](https://nodejs.org/en) installed.
+To build an app for the platform it is assumed that you have some basic knowledge of [React](https://react.dev/) and that you have [Node.js](https://nodejs.org/en) and `[pnpm](https://pnpm.io/) installed.
 
 ## Scaffolding an App
 
@@ -45,9 +45,11 @@ The created app will contain the following:
 
 </FileTree>
 
-Most of the generated files are to configure the application, the main files that you will work with are `index.tsx`, `styles.csgs`, and `manifest.json` files
+Most of the generated files are to configure the application, the main files that you will work with are `index.tsx`, `styles.css`, and `manifest.json` files
 
 ## Developing
+
+### Starting your App Dev Server
 
 Running the application in dev mode consists of running the following two commands:
 
@@ -55,6 +57,16 @@ Running the application in dev mode consists of running the following two comman
 2. `pnpm serve` host the compiled app so it installed on the Coat Rack instance
 
 Once the dev server is running, a message will be logged via the `pnpm serve` process indicating what the **Network** address of the app is. Using this URL, the app can then be installed via the App installation on Coat Rack
+
+### Running Coat Rack Locally
+
+It's likely that a developer would want a local Coat Rack instance for the sake of development. This can be done by running the following command which will start up a Coat Rack server on the development machine:
+
+```sh
+pnpx @coat-rack/server
+```
+
+Once this is up, the Coat Rack app can be visited in the browser from `http://localhost:4000`
 
 ## App Entrypoint
 

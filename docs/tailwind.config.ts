@@ -33,10 +33,6 @@ const config: Config = {
         accent,
         gray,
       },
-      fontFamily: {
-        sans: "Pixelify Sans",
-        mono: "Pixelify Sans",
-      },
     },
   },
 }

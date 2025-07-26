@@ -4,8 +4,9 @@
   "type": "module",
   "version": "0.0.1-alpha.22",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "pnpm run copy-docker && astro dev",
+    "build": "pnpm run copy-docker && astro build",
+    "copy-docker": "cd .. &&  zip -r docs/public/coat-rack-docker-compose.zip docker",
     "preview": "astro preview",
     "astro": "astro"
   },
