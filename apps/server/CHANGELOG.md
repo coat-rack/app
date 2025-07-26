@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.22
+
+### Patch Changes
+
+- Updated dependencies [0ea4c18]
+  - @coat-rack/core@0.0.1-alpha.22
+
 ## 0.0.1-alpha.21
 
 ### Patch Changes

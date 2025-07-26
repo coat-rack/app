@@ -1,5 +1,7 @@
 # @coat-rack/build-utils
 
+## 0.0.1-alpha.22
+
 ## 0.0.1-alpha.21
 
 ## 0.0.1-alpha.20

@@ -1,5 +1,11 @@
 # @coat-rack/sdk
 
+## 0.0.1-alpha.22
+
+### Patch Changes
+
+- 0ea4c18: Consistent handling of spaces and local user data
+
 ## 0.0.1-alpha.21
 
 ## 0.0.1-alpha.20
