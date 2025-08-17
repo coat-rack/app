@@ -46,6 +46,48 @@ export const useLoggedInContext = () => {
   return context
 }
 
+function getServerUrl() {
+  const url = new URL(window.location.toString())
+  url.port = import.meta.env.VITE_SERVER_PORT
+  url.pathname = ""
+  return url
+}
+
+function getCredentials(rpId: string, id: BufferSource) {
+  return navigator.credentials.get({
+    publicKey: {
+      rpId,
+      challenge: new Uint8Array([117, 61, 252, 231, 191, 241 /* … */]),
+      allowCredentials: [
+        {
+          id,
+          type: "public-key",
+        },
+      ],
+      userVerification: "required",
+    },
+  })
+}
+
+function createCredentials(
+  rpId: string,
+  username: string,
+  challenge: Uint8Array,
+) {
+  return navigator.credentials.create({
+    publicKey: {
+      challenge,
+      rp: { id: rpId, name: "Coat Rack" },
+      user: {
+        id: Uint8Array.from(username),
+        name: username,
+        displayName: username,
+      },
+      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+    },
+  })
+}
+
 export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useLocalUser()
   const [userSpace, setUserSpace] = useLocalUserSpace()
@@ -83,7 +125,22 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
   }, [user?.id])
 
   const logIn = (name: string) => trpcClient.auth.login.query({ name })
-  const signUp = (name: string) => trpcClient.auth.register.mutate({ name })
+  const signUp = async (name: string) => {
+    const res = await fetch(getServerUrl() + "login/public-key/challenge", {
+      method: "POST",
+    })
+
+    const json = await res.json()
+
+    const rpId = json.rpId
+    const challenge = new Uint8Array(json.challenge.data)
+    const credential = await createCredentials(rpId, name, challenge)
+
+    console.log(credential)
+    // trpcClient.auth.register.mutate({ name })
+
+    throw new Error("challenge in progress")
+  }
 
   if (!(dbSetup && user && userSpace && activeSpace)) {
     return <LoginForm logIn={logIn} signUp={signUp} onLogin={login} />

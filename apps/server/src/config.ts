@@ -8,6 +8,8 @@ declare global {
       CADDY_ADMIN_HOST?: string
       CADDY_EXTERNAL_DOMAIN?: string
       COAT_RACK_DOMAIN?: string
+      SESSION_SECRET?: string
+      PUBLIC_DOMAIN?: string
     }
   }
 }
@@ -34,3 +36,11 @@ export const CADDY_EXTERNAL_DOMAIN = process.env.CADDY_EXTERNAL_DOMAIN
 const ENV = process.env.NODE_ENV || "production"
 
 export const IS_DEV = ENV === "development"
+
+export const SESSION_SECRET =
+  process.env.SESSION_SECRET || "placeholder session secret"
+
+/**
+ * Relying Party ID needed for the Web Authn API
+ */
+export const PUBLIC_DOMAIN = process.env.PUBLIC_DOMAIN || "localhost"

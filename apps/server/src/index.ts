@@ -3,12 +3,20 @@ import { App, User } from "@coat-rack/core/models"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import cors from "cors"
 import express from "express"
+import session from "express-session"
 import { Server } from "http"
 import { createProxyMiddleware } from "http-proxy-middleware"
 import { resolve } from "path"
 import { createAuthentication } from "./auth"
 import { registerCaddyServer } from "./caddy"
-import { DB_PATH, HOST, IS_DEV, PORT } from "./config"
+import {
+  DB_PATH,
+  HOST,
+  IS_DEV,
+  PORT,
+  PUBLIC_DOMAIN,
+  SESSION_SECRET,
+} from "./config"
 import { initDb } from "./db"
 import { appRouter, seedDb } from "./router"
 
@@ -80,6 +88,13 @@ async function main() {
 
   const auth = createAuthentication(db)
 
+  // session middleware is required for passport
+  app.use(
+    session({
+      secret: SESSION_SECRET,
+    }),
+  )
+
   app.post("/login/public-key/challenge", (req, res, next) => {
     auth.store.challenge(req, (err, challenge) => {
       if (err) {
@@ -89,7 +104,7 @@ async function main() {
       // buffers are JSON encoded automatically
       // same as challenge: challenge.toJSON()
       // this can be decoded with new Buffer(challenge) directly
-      res.json({ challenge })
+      res.json({ challenge, rpId: PUBLIC_DOMAIN })
     })
   })
 
@@ -97,12 +112,10 @@ async function main() {
     "/login/public-key",
     auth.passport.authenticate("webauthn", { failWithError: true }),
   )
-
-  // not sure if this is necessary?
   // app.use(auth.passport.session())
 
   app.use(
-    "/",
+    "/trpc",
     trpcExpress.createExpressMiddleware({
       router: appRouter(root, db, setupAppServer),
 

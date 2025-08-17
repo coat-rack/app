@@ -8,11 +8,19 @@ import { Passport } from "passport"
 import { DB } from "./db"
 
 function verifyCredential(db: DB): VerifyFunction {
-  return () => {}
+  return (...args) => {
+    console.log("Running verifyCredential")
+    console.log(args)
+    console.log("After verifyCredential")
+  }
 }
 
 function registerCredential(db: DB): RegisterFunction {
-  return async () => {}
+  return async () => {
+    console.log("Running registerCredential")
+    console.log(args)
+    console.log("After registerCredential")
+  }
 }
 
 export function createAuthentication(db: DB) {
