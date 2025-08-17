@@ -1,12 +1,18 @@
 import { Schema } from "@coat-rack/core/models"
 import { join } from "path"
 import { MultiFileTable } from "./persistence/multi-file-db"
-import { Table } from "./persistence/types"
+import { Table, TableRow } from "./persistence/types"
 import { NonEmptyArray } from "./util"
+
+export interface UserCredential extends TableRow<string> {}
+
+type ServerDB = Schema & {
+  userCredentials: UserCredential
+}
 
 const dbDirName = "database"
 export type DB = Readonly<{
-  [K in keyof Schema]: Table<string, Schema[K]>
+  [K in keyof ServerDB]: Table<string, ServerDB[K]>
 }>
 
 export type DBKey = keyof DB
@@ -22,9 +28,14 @@ export function initDb(rootDir: string) {
   const dbName = join(rootDir, dbDirName)
   const db: DB = {
     spaces: new MultiFileTable(join(dbName, "spaces")),
+
     users: new MultiFileTable(join(dbName, "users")),
+    userCredentials: new MultiFileTable(join(dbName, "userCredentials")),
+
     appdata: new MultiFileTable(join(dbName, "appData")),
     apps: new MultiFileTable(join(dbName, "apps")),
   }
   return db
 }
+
+export const PUBLIC_SPACE_ID = "public"

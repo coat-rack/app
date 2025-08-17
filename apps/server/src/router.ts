@@ -9,7 +9,7 @@ import {
 import { z } from "zod"
 import { DB, dbKeys } from "./db"
 import { addToCatalog } from "./persistence/fs"
-import { publicProcedure, router } from "./trpc"
+import { authedProcedure, publicProcedure, router } from "./trpc"
 
 const PUBLIC_SPACE_ID = "public"
 
@@ -78,6 +78,68 @@ export const seedDb = async (db: DB, isDev: boolean) => {
 
 const username = z.string().regex(/^[a-z]+$/)
 
+const authRouter = (db: DB) =>
+  router({
+    login: publicProcedure
+      .input(
+        z.object({
+          name: username,
+        }),
+      )
+      .query(async ({ input }) => {
+        const users = await db.users.getAll()
+        console.log({ users })
+        return users.find((user) => user.name === input.name)
+      }),
+    register: publicProcedure
+      .input(
+        z.object({
+          name: username,
+        }),
+      )
+      .mutation(async ({ input }) => {
+        const id = input.name.toLowerCase()
+
+        const user: User = {
+          id,
+          name: id,
+          timestamp: Date.now(),
+          type: "user",
+        }
+
+        const users = await db.users.getItems(0, Infinity)
+        const existing = users.find((u) => u.id === id)
+        if (existing) {
+          return existing
+        }
+
+        await db.users.putItems([user])
+        await db.spaces.putItems([
+          {
+            type: "space",
+            id: user.id,
+            name: user.name,
+            owner: user.id,
+            spaceType: "user",
+            timestamp: Date.now(),
+            color: "#f59e0b",
+          },
+        ])
+
+        const publicSpace = await db.spaces.get(PUBLIC_SPACE_ID)
+        if (publicSpace && publicSpace.spaceType === "shared") {
+          await db.spaces.putItems([
+            {
+              ...publicSpace,
+              users: [...(publicSpace.users || []), user.id],
+            },
+          ])
+        }
+
+        return user
+      }),
+  })
+
 /**
  * Tables whose data is not scoped by user access
  */
@@ -92,7 +154,7 @@ const isNonScopedTable = (key: keyof DB): key is NonScopedTable =>
  */
 export const rxdbRouter = (db: DB) =>
   router({
-    pull: publicProcedure
+    pull: authedProcedure
       .input(
         z.object({
           collection: z.enum(dbKeys),
@@ -150,7 +212,7 @@ export const rxdbRouter = (db: DB) =>
         }
       }),
 
-    push: publicProcedure
+    push: authedProcedure
       .input(z.union([Push("spaces", Space), Push("appdata", AppData)]))
       .mutation(async ({ input }) => {
         const { conflicts } = await db[input.type].putItems(
@@ -174,7 +236,7 @@ export const rxdbRouter = (db: DB) =>
       }),
 
     // This method needs to return any other changes that are not from the current client
-    pullStream: publicProcedure.subscription((sub) => {
+    pullStream: authedProcedure.subscription((sub) => {
       console.log("Subscription", sub)
     }),
   })
@@ -186,68 +248,9 @@ export const appRouter = (
 ) =>
   router({
     rxdb: rxdbRouter(db),
-    users: router({
-      login: publicProcedure
-        .input(
-          z.object({
-            name: username,
-          }),
-        )
-        .query(async ({ input }) => {
-          const users = await db.users.getAll()
-          console.log({ users })
-          return users.find((user) => user.name === input.name)
-        }),
-      create: publicProcedure
-        .input(
-          z.object({
-            name: username,
-          }),
-        )
-        .mutation(async ({ input }) => {
-          const id = input.name.toLowerCase()
-
-          const user: User = {
-            id,
-            name: id,
-            timestamp: Date.now(),
-            type: "user",
-          }
-
-          const users = await db.users.getItems(0, Infinity)
-          const existing = users.find((u) => u.id === id)
-          if (existing) {
-            return existing
-          }
-
-          await db.users.putItems([user])
-          await db.spaces.putItems([
-            {
-              type: "space",
-              id: user.id,
-              name: user.name,
-              owner: user.id,
-              spaceType: "user",
-              timestamp: Date.now(),
-              color: "#f59e0b",
-            },
-          ])
-
-          const publicSpace = await db.spaces.get(PUBLIC_SPACE_ID)
-          if (publicSpace && publicSpace.spaceType === "shared") {
-            await db.spaces.putItems([
-              {
-                ...publicSpace,
-                users: [...(publicSpace.users || []), user.id],
-              },
-            ])
-          }
-
-          return user
-        }),
-    }),
+    auth: authRouter(db),
     spaces: router({
-      grantAccess: publicProcedure
+      grantAccess: authedProcedure
         .input(
           z.object({
             spaceId: z.string(),
@@ -273,7 +276,7 @@ export const appRouter = (
         }),
     }),
     apps: router({
-      install: publicProcedure
+      install: authedProcedure
         .input(z.string().url())
         .mutation(async ({ input: installURL }) => {
           const manifest = await addToCatalog(rootDir, new URL(installURL))
@@ -297,7 +300,7 @@ export const appRouter = (
 
           return item
         }),
-      setDevMode: publicProcedure
+      setDevMode: authedProcedure
         .input(
           z.object({
             appId: z.string(),

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-import { App } from "@coat-rack/core/models"
+import { App, User } from "@coat-rack/core/models"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import cors from "cors"
 import express from "express"
 import { Server } from "http"
 import { createProxyMiddleware } from "http-proxy-middleware"
 import { resolve } from "path"
+import { createAuthentication } from "./auth"
 import { registerCaddyServer } from "./caddy"
 import { DB_PATH, HOST, IS_DEV, PORT } from "./config"
 import { initDb } from "./db"
@@ -77,10 +78,41 @@ async function main() {
 
   allApps.map(setupAppServer)
 
+  const auth = createAuthentication(db)
+
+  app.post("/login/public-key/challenge", (req, res, next) => {
+    auth.store.challenge(req, (err, challenge) => {
+      if (err) {
+        return next(err)
+      }
+
+      // buffers are JSON encoded automatically
+      // same as challenge: challenge.toJSON()
+      // this can be decoded with new Buffer(challenge) directly
+      res.json({ challenge })
+    })
+  })
+
+  app.post(
+    "/login/public-key",
+    auth.passport.authenticate("webauthn", { failWithError: true }),
+  )
+
+  // not sure if this is necessary?
+  // app.use(auth.passport.session())
+
   app.use(
     "/",
     trpcExpress.createExpressMiddleware({
       router: appRouter(root, db, setupAppServer),
+
+      createContext: ({ req }: trpcExpress.CreateExpressContextOptions) => {
+        const user = req.user as User | undefined
+
+        return {
+          user: user?.id,
+        }
+      },
     }),
   )
 

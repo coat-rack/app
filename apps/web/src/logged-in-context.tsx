@@ -82,8 +82,8 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
     setupUserData()
   }, [user?.id])
 
-  const logIn = (name: string) => trpcClient.users.login.query({ name })
-  const signUp = (name: string) => trpcClient.users.create.mutate({ name })
+  const logIn = (name: string) => trpcClient.auth.login.query({ name })
+  const signUp = (name: string) => trpcClient.auth.register.mutate({ name })
 
   if (!(dbSetup && user && userSpace && activeSpace)) {
     return <LoginForm logIn={logIn} signUp={signUp} onLogin={login} />
