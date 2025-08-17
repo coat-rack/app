@@ -95,6 +95,8 @@ async function main() {
     }),
   )
 
+  // once this is all working it may be worth trying to put it
+  // into trpc so we can get some nice types, etc.
   app.post("/login/public-key/challenge", (req, res, next) => {
     auth.store.challenge(req, (err, challenge) => {
       if (err) {
