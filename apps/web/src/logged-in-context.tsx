@@ -71,21 +71,38 @@ function getCredentials(rpId: string, id: BufferSource) {
 
 function createCredentials(
   rpId: string,
-  username: string,
+  userId: Uint8Array,
+  name: string,
+  displayName: string,
   challenge: Uint8Array,
 ) {
   return navigator.credentials.create({
     publicKey: {
       challenge,
       rp: { id: rpId, name: "Coat Rack" },
+      // the entire user object comes from the backend, we just do some parsing here
+      // this is the same object that passport uses to hold the user reference
       user: {
-        id: Uint8Array.from(username),
-        name: username,
-        displayName: username,
+        id: userId,
+        name,
+        displayName,
       },
-      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+      pubKeyCredParams: [
+        {
+          type: "public-key",
+          alg: -7, // ES256
+        },
+        {
+          type: "public-key",
+          alg: -257, // RS256
+        },
+        {
+          type: "public-key",
+          alg: -8, // Ed25519
+        },
+      ],
     },
-  })
+  }) as Promise<PublicKeyCredential | null>
 }
 
 export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
@@ -126,17 +143,56 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
 
   const logIn = (name: string) => trpcClient.auth.login.query({ name })
   const signUp = async (name: string) => {
-    const res = await fetch(getServerUrl() + "login/public-key/challenge", {
-      method: "POST",
-    })
+    const challengeResponse = await fetch(
+      new URL("/register/public-key/challenge", getServerUrl()),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          displayName: name,
+        }),
+      },
+    )
 
-    const json = await res.json()
+    const challengeJson = await challengeResponse.json()
+    const rpId = challengeJson.rpId
+    const challenge = new Uint8Array(challengeJson.challenge.data)
+    const userId = new Uint8Array(challengeJson.user.id.data)
 
-    const rpId = json.rpId
-    const challenge = new Uint8Array(json.challenge.data)
-    const credential = await createCredentials(rpId, name, challenge)
+    console.log(challengeJson)
 
-    console.log(credential)
+    const credential = await createCredentials(
+      rpId,
+      userId,
+      challengeJson.user.name,
+      challengeJson.user.displayName,
+      challenge,
+    )
+
+    if (!credential) {
+      throw new Error("Credential creation failed")
+    }
+
+    console.log(challenge, credential)
+
+    const registerResponse = await fetch(
+      new URL("/login/public-key", getServerUrl()),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credential),
+      },
+    )
+
+    const loginJson = await registerResponse.json()
+
+    console.log(loginJson)
+
     // trpcClient.auth.register.mutate({ name })
 
     throw new Error("challenge in progress")

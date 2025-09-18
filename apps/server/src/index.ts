@@ -2,6 +2,7 @@
 import { App, User } from "@coat-rack/core/models"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import cors from "cors"
+import { randomUUID } from "crypto"
 import express from "express"
 import session from "express-session"
 import { Server } from "http"
@@ -62,8 +63,6 @@ function setupAppServer(app: App) {
   const server = expressApp.listen(app.port, async () => {
     console.log(`${app.id} App server started on port ${app.port}`, app)
 
-    console.log("NODE_ENV", process.env)
-
     if (!IS_DEV) {
       const caddyResult = await registerCaddyServer(app.id, app.port)
       console.log(`${app.id} App server registered with Caddy`, caddyResult)
@@ -77,6 +76,7 @@ async function main() {
   const app = express()
 
   app.use(cors())
+  app.use(express.json())
 
   const root = resolve("_data")
   const db = initDb(root)
@@ -92,6 +92,8 @@ async function main() {
   app.use(
     session({
       secret: SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
     }),
   )
 
@@ -105,14 +107,47 @@ async function main() {
 
       // buffers are JSON encoded automatically
       // same as challenge: challenge.toJSON()
-      // this can be decoded with new Buffer(challenge) directly
+      // this can be decoded with new Buffer(challenge) directly in Node.js
       res.json({ challenge, rpId: PUBLIC_DOMAIN })
+    })
+  })
+
+  app.post("/register/public-key/challenge", (req, res, next) => {
+    const handle = Buffer.from(randomUUID())
+    console.log("register body", req.body)
+    const user = {
+      id: handle,
+      name: req.body.name,
+      displayName: req.body.displayName,
+    }
+
+    auth.store.challenge(req, { user }, (err, challenge) => {
+      if (err) {
+        return next(err)
+      }
+
+      console.log("Creating challenge for", user, challenge)
+
+      // buffers are JSON encoded automatically
+      // same as challenge: challenge.toJSON()
+      // this can be decoded with new Buffer(challenge) directly in Node.js
+      res.json({ challenge, user, rpId: PUBLIC_DOMAIN })
     })
   })
 
   app.post(
     "/login/public-key",
-    auth.passport.authenticate("webauthn", { failWithError: true }),
+    auth.passport.authenticate(
+      "webauthn",
+      {
+        failWithError: true,
+        failureMessage: true,
+      },
+      function (...args) {
+        console.log("auth args", ...args)
+        // res.send("hello")
+      },
+    ),
   )
   // app.use(auth.passport.session())
 
