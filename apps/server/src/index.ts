@@ -141,29 +141,10 @@ async function main() {
 
   app.post(
     "/login/public-key",
-    (req, _, next) => {
-      if (req.session) {
-        const clientDataJSON = req.body?.response?.clientDataJSON
-        req.session["webauthn"] = JSON.parse(atob(clientDataJSON))
-      }
-
-      console.log("adding to session")
-
-      console.log(req.path, req.body)
-      next()
-    },
-
-    auth.passport.authenticate(
-      "webauthn",
-      {
-        failWithError: true,
-        failureMessage: true,
-      },
-      function (...args) {
-        console.log("auth args", ...args)
-        // res.send("hello")
-      },
-    ),
+    auth.passport.authenticate("webauthn", {
+      failWithError: true,
+      failureMessage: true,
+    }),
   )
 
   app.use(
@@ -180,6 +161,17 @@ async function main() {
       },
     }),
   )
+
+  if (IS_DEV) {
+    const target = `http://${HOST}:${PORT.web}/`
+    const webProxy = createProxyMiddleware({
+      target,
+    })
+
+    console.log("running web proxy", target)
+
+    app.use("/", webProxy)
+  }
 
   app.listen(PORT.server, HOST, () => {
     console.info(`Server started on port ${PORT.server}`)
