@@ -79,7 +79,7 @@ function createCredentials(
   return navigator.credentials.create({
     publicKey: {
       challenge,
-      rp: { id: rpId, name: "Coat Rack" },
+      rp: { name: "Coat Rack" },
       // the entire user object comes from the backend, we just do some parsing here
       // this is the same object that passport uses to hold the user reference
       user: {
@@ -178,6 +178,8 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
 
     console.log(challenge, credential)
 
+    // convert buffers in some predictable way
+    const jsonCredential = JSON.parse(JSON.stringify(credential))
     const registerResponse = await fetch(
       new URL("/login/public-key", getServerUrl()),
       {
@@ -185,7 +187,16 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(credential),
+        body: JSON.stringify({
+          response: {
+            clientDataJSON: encodeURIComponent(
+              jsonCredential.response.clientDataJSON,
+            ),
+            attestationObject: encodeURIComponent(
+              jsonCredential.response.attestationObject,
+            ),
+          },
+        }),
       },
     )
 

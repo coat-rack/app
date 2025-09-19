@@ -97,6 +97,10 @@ async function main() {
     }),
   )
 
+  // app.use(auth.passport.session())
+
+  // app.use(auth.passport.authenticate("session"))
+
   // once this is all working it may be worth trying to put it
   // into trpc so we can get some nice types, etc.
   app.post("/login/public-key/challenge", (req, res, next) => {
@@ -137,6 +141,18 @@ async function main() {
 
   app.post(
     "/login/public-key",
+    (req, _, next) => {
+      if (req.session) {
+        const clientDataJSON = req.body?.response?.clientDataJSON
+        req.session["webauthn"] = JSON.parse(atob(clientDataJSON))
+      }
+
+      console.log("adding to session")
+
+      console.log(req.path, req.body)
+      next()
+    },
+
     auth.passport.authenticate(
       "webauthn",
       {
@@ -149,7 +165,6 @@ async function main() {
       },
     ),
   )
-  // app.use(auth.passport.session())
 
   app.use(
     "/trpc",
