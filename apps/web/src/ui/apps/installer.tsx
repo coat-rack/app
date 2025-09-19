@@ -4,6 +4,7 @@ import { getSpaceStyles } from "@coat-rack/sdk"
 import { Button } from "@coat-rack/ui/components/button"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -61,15 +62,17 @@ export function AppInstaller({
         </form>
 
         <DialogFooter className="mt-4">
-          <Button
-            disabled={!url}
-            variant="default"
-            className="flex flex-row items-center gap-2"
-            onClick={handleSubmit}
-          >
-            install
-            <Plus className="h-4 w-4 fill-current" />
-          </Button>
+          <DialogClose asChild>
+            <Button
+              disabled={!url}
+              variant="default"
+              className="flex flex-row items-center gap-2"
+              onClick={handleSubmit}
+            >
+              install
+              <Plus className="h-4 w-4 fill-current" />
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
