@@ -13,7 +13,7 @@ export const SpaceSelector = () => {
   }
 
   return (
-    <div className="flex flex-row items-center gap-4">
+    <div className="flex flex-row items-center gap-2">
       {filterSpaces ? (
         <button
           title="Show all spaces"
@@ -43,7 +43,7 @@ export const SpaceSelector = () => {
         return space.id === activeSpace?.id ? (
           <div
             key={space.id}
-            className="flex h-6 flex-row items-center gap-2 border border-solid px-2"
+            className="flex h-6 flex-row items-center gap-2 text-nowrap border border-solid px-2"
             style={{
               borderColor: space.color,
               backgroundColor: space.color,

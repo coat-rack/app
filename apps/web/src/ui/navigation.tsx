@@ -60,7 +60,7 @@ export const Navigation = ({
         </div>
       </nav>
       <main className="content">{children}</main>
-      <div className="spaces flex flex-row items-center px-2 py-1">
+      <div className="spaces flex flex-row items-center overflow-x-auto px-2 pb-3 pt-1 md:pb-1">
         <SpaceSelector />
       </div>
     </div>
