@@ -67,7 +67,7 @@ export function AppInstaller({
             className="flex flex-row items-center gap-2"
             onClick={handleSubmit}
           >
-            create
+            install
             <Plus className="h-4 w-4 fill-current" />
           </Button>
         </DialogFooter>
