@@ -9,7 +9,6 @@ import WebAuthnStrategy, {
   type VerifyFunction,
 } from "passport-fido2-webauthn"
 
-import { User } from "@coat-rack/core/models"
 import { Passport } from "passport"
 import { DB, UserCredential } from "./db"
 
@@ -49,20 +48,19 @@ function registerCredential(db: DB): RegisterFunction {
     publicKey: string,
     registered: RegisteredFunction,
   ) => {
-    console.log("Running registerCredential")
-
     const userId = new TextDecoder().decode(user.id)
-    console.log({ user, id: credentialId, publicKey, userId })
-    console.log("After registerCredential")
 
-    const newUser: User = {
-      type: "user",
-      id: userId,
-      name: user.name,
-      timestamp: Date.now(),
+    let dbUser = await db.users.get(userId)
+    if (!dbUser) {
+      dbUser = {
+        type: "user",
+        id: userId,
+        name: user.name,
+        timestamp: Date.now(),
+      }
+      await db.users.putItems([dbUser])
     }
 
-    await db.users.putItems([newUser])
     const existingCredential = await db.userCredentials.get(userId)
 
     const publicKeys = existingCredential?.publicKeys || []
@@ -79,11 +77,7 @@ function registerCredential(db: DB): RegisterFunction {
 
     await db.userCredentials.putItems([credential])
 
-    return registered(undefined, {
-      id: userId,
-      username: user.name,
-      name: user.name,
-    })
+    return registered(null, dbUser)
   }
 }
 
@@ -98,8 +92,14 @@ export function createAuthentication(db: DB) {
 
   const passport = new Passport()
   passport.use(strategy)
-  passport.serializeUser((user) => user)
-  passport.deserializeUser((user) => user)
+  passport.serializeUser((user, done) => {
+    console.log("serialize", user)
+    return done(undefined, JSON.stringify(user))
+  })
+  passport.deserializeUser((user: string, done) => {
+    console.log("deserialize", user)
+    return done(undefined, JSON.parse(user))
+  })
 
   return {
     store,

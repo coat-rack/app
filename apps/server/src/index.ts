@@ -78,8 +78,6 @@ async function web(app: express.Application) {
       target,
     })
 
-    console.log("running web proxy", target)
-
     app.use("/", webProxy)
   } else {
     const path = resolve(__dirname, "web")
@@ -154,21 +152,25 @@ async function main() {
       displayName: username,
     }
 
-    console.log({ user })
-
     auth.store.challenge(req, { user }, (err, challenge) => {
       if (err) {
         return next(err)
       }
 
-      user.id = new TextDecoder().decode(user.id)
-
-      console.log("Creating challenge for", user, challenge)
+      const id = new TextDecoder().decode(user.id)
+      const serializedUser = {
+        ...user,
+        id,
+      }
 
       // buffers are JSON encoded automatically
       // same as challenge: challenge.toJSON()
       // this can be decoded with new Buffer(challenge) directly in Node.js
-      res.json({ challenge, user, rpId: PUBLIC_DOMAIN })
+      res.json({
+        challenge,
+        user: serializedUser,
+        rpId: PUBLIC_DOMAIN,
+      })
     })
   })
 
@@ -177,7 +179,14 @@ async function main() {
     auth.passport.authenticate("webauthn", {
       failWithError: true,
       failureMessage: true,
+      session: false,
     }),
+    function verified(_req, res) {
+      res.status(200)
+      res.json({
+        ok: true,
+      })
+    },
   )
 
   app.use(
