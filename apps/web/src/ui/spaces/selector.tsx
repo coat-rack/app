@@ -14,6 +14,24 @@ export const SpaceSelector = () => {
 
   return (
     <div className="flex flex-row items-center gap-4">
+      {filterSpaces ? (
+        <button
+          title="Show all spaces"
+          className="bg-primary flex h-6 w-6 items-center justify-center"
+          onClick={() => setFilterSpaces(false)}
+        >
+          <FilterSolid className="h-3 w-3 fill-current" />
+        </button>
+      ) : (
+        <button
+          title="Show active space"
+          className="border-primary bg-primary-foreground flex h-6 w-6 items-center justify-center"
+          onClick={() => setFilterSpaces(true)}
+        >
+          <FilterSolid className="h-3 w-3 fill-current" />
+        </button>
+      )}
+
       {spaces.map((space) => {
         const Icon =
           space.spaceType === "user" ? (
@@ -25,7 +43,7 @@ export const SpaceSelector = () => {
         return space.id === activeSpace?.id ? (
           <div
             key={space.id}
-            className="flex h-6 flex-row items-center gap-2 border border-solid px-2 text-base"
+            className="flex h-6 flex-row items-center gap-2 border border-solid px-2"
             style={{
               borderColor: space.color,
               backgroundColor: space.color,
@@ -46,24 +64,6 @@ export const SpaceSelector = () => {
           </button>
         )
       })}
-
-      {filterSpaces ? (
-        <button
-          title="Show all spaces"
-          className="bg-primary flex h-6 w-6 items-center justify-center"
-          onClick={() => setFilterSpaces(false)}
-        >
-          <FilterSolid className="h-3 w-3 fill-current" />
-        </button>
-      ) : (
-        <button
-          title="Show active space"
-          className="border-primary bg-primary-foreground flex h-6 w-6 items-center justify-center"
-          onClick={() => setFilterSpaces(true)}
-        >
-          <FilterSolid className="h-3 w-3 fill-current" />
-        </button>
-      )}
     </div>
   )
 }
