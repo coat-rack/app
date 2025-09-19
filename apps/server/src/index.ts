@@ -2,7 +2,6 @@
 import { App, User } from "@coat-rack/core/models"
 import * as trpcExpress from "@trpc/server/adapters/express"
 import cors from "cors"
-import { randomUUID } from "crypto"
 import express from "express"
 import session from "express-session"
 import { Server } from "http"
@@ -72,6 +71,33 @@ function setupAppServer(app: App) {
   appServers[app.id] = server
 }
 
+async function web(app: express.Application) {
+  if (IS_DEV) {
+    const target = `http://${HOST}:${PORT.webDev}/`
+    const webProxy = createProxyMiddleware({
+      target,
+    })
+
+    console.log("running web proxy", target)
+
+    app.use("/", webProxy)
+  } else {
+    const path = resolve(__dirname, "web")
+
+    app.use(cors())
+
+    app.use("/", express.static(path))
+
+    app.get("*", function (_, res) {
+      res.sendFile(resolve(path, "index.html"))
+    })
+
+    app.listen(PORT.webDev, HOST, () => {
+      console.info(`Host for Web started on port ${PORT.webDev}`)
+    })
+  }
+}
+
 async function main() {
   const app = express()
 
@@ -117,18 +143,25 @@ async function main() {
   })
 
   app.post("/register/public-key/challenge", (req, res, next) => {
-    const handle = Buffer.from(randomUUID())
-    console.log("register body", req.body)
-    const user = {
-      id: handle,
-      name: req.body.name,
-      displayName: req.body.displayName,
+    const username = req.body.name
+    if (!username) {
+      throw new Error("Expected `name` to be provided in body")
     }
+    const id = Buffer.from(new TextEncoder().encode(username))
+    const user = {
+      id,
+      name: username,
+      displayName: username,
+    }
+
+    console.log({ user })
 
     auth.store.challenge(req, { user }, (err, challenge) => {
       if (err) {
         return next(err)
       }
+
+      user.id = new TextDecoder().decode(user.id)
 
       console.log("Creating challenge for", user, challenge)
 
@@ -162,37 +195,10 @@ async function main() {
     }),
   )
 
-  if (IS_DEV) {
-    const target = `http://${HOST}:${PORT.web}/`
-    const webProxy = createProxyMiddleware({
-      target,
-    })
-
-    console.log("running web proxy", target)
-
-    app.use("/", webProxy)
-  }
+  await web(app)
 
   app.listen(PORT.server, HOST, () => {
     console.info(`Server started on port ${PORT.server}`)
-  })
-}
-
-async function web() {
-  const path = resolve(__dirname, "web")
-
-  const app = express()
-
-  app.use(cors())
-
-  app.use("/", express.static(path))
-
-  app.get("*", function (_, res) {
-    res.sendFile(resolve(path, "index.html"))
-  })
-
-  app.listen(PORT.web, HOST, () => {
-    console.info(`Host for Web started on port ${PORT.web}`)
   })
 }
 
@@ -200,6 +206,3 @@ main()
 
 // in dev the applications are hosted by the Vite server
 // in order to simplify things we're keeping the same behavior here
-if (!IS_DEV) {
-  web()
-}

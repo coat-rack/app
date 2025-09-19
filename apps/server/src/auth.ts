@@ -2,14 +2,16 @@
 // And the relevant passport docs: https://www.passportjs.org/packages/passport-fido2-webauthn/
 
 import WebAuthnStrategy, {
+  RegisteredFunction,
   SessionChallengeStore,
   VerifiedFunction,
   type RegisterFunction,
   type VerifyFunction,
 } from "passport-fido2-webauthn"
 
+import { User } from "@coat-rack/core/models"
 import { Passport } from "passport"
-import { DB } from "./db"
+import { DB, UserCredential } from "./db"
 
 function verifyCredential(db: DB): VerifyFunction {
   return async (id: string, userHandle: Buffer, verified: VerifiedFunction) => {
@@ -41,10 +43,47 @@ function verifyCredential(db: DB): VerifyFunction {
 }
 
 function registerCredential(db: DB): RegisterFunction {
-  return async (...args) => {
+  return async (
+    user: { name: string; id: Buffer },
+    credentialId: string,
+    publicKey: string,
+    registered: RegisteredFunction,
+  ) => {
     console.log("Running registerCredential")
-    console.log(args)
+
+    const userId = new TextDecoder().decode(user.id)
+    console.log({ user, id: credentialId, publicKey, userId })
     console.log("After registerCredential")
+
+    const newUser: User = {
+      type: "user",
+      id: userId,
+      name: user.name,
+      timestamp: Date.now(),
+    }
+
+    await db.users.putItems([newUser])
+    const existingCredential = await db.userCredentials.get(userId)
+
+    const publicKeys = existingCredential?.publicKeys || []
+    publicKeys.push({
+      id: credentialId,
+      key: publicKey,
+    })
+
+    const credential: UserCredential = {
+      id: userId,
+      publicKeys,
+      timestamp: Date.now(),
+    }
+
+    await db.userCredentials.putItems([credential])
+
+    return registered(undefined, {
+      id: userId,
+      username: user.name,
+      name: user.name,
+    })
   }
 }
 
@@ -59,6 +98,8 @@ export function createAuthentication(db: DB) {
 
   const passport = new Passport()
   passport.use(strategy)
+  passport.serializeUser((user) => user)
+  passport.deserializeUser((user) => user)
 
   return {
     store,

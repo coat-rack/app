@@ -71,21 +71,24 @@ function getCredentials(rpId: string, id: BufferSource) {
 
 function createCredentials(
   rpId: string,
-  userId: Uint8Array,
-  name: string,
-  displayName: string,
+  userId: string,
   challenge: Uint8Array,
 ) {
+  const encoder = new TextEncoder()
+  const id = encoder.encode(userId)
+
+  console.log({ id })
+
   return navigator.credentials.create({
     publicKey: {
       challenge,
-      rp: { name: "Coat Rack" },
+      rp: { id: rpId, name: "Coat Rack" },
       // the entire user object comes from the backend, we just do some parsing here
       // this is the same object that passport uses to hold the user reference
       user: {
-        id: userId,
-        name,
-        displayName,
+        id,
+        name: userId,
+        displayName: userId,
       },
       pubKeyCredParams: [
         {
@@ -160,15 +163,12 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
     const challengeJson = await challengeResponse.json()
     const rpId = challengeJson.rpId
     const challenge = new Uint8Array(challengeJson.challenge.data)
-    const userId = new Uint8Array(challengeJson.user.id.data)
 
     console.log(challengeJson)
 
     const credential = await createCredentials(
       rpId,
-      userId,
-      challengeJson.user.name,
-      challengeJson.user.displayName,
+      challengeJson.user.id,
       challenge,
     )
 

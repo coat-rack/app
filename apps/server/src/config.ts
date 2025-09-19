@@ -23,8 +23,12 @@ export const HOST = "0.0.0.0"
 
 export const PORT = {
   server: 3000,
-  web: 4000,
   sandbox: 5000,
+  /**
+   * Used for `web` during DEV, this is proxied to from the main app
+   * In production, `web` is hosted by the main server
+   */
+  webDev: 4000,
 }
 
 export const DB_PATH = process.env.DB_PATH || resolve("_data")

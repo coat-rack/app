@@ -4,7 +4,10 @@ import { MultiFileTable } from "./persistence/multi-file-db"
 import { Table, TableRow } from "./persistence/types"
 import { NonEmptyArray } from "./util"
 
-type PublicKey = string
+type PublicKey = {
+  id: string
+  key: string
+}
 
 export interface UserCredential extends TableRow<string> {
   publicKeys: PublicKey[]
