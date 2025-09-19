@@ -53,6 +53,21 @@ function getServerUrl() {
   return url
 }
 
+function getCookies(): Record<string, string> {
+  const entries = document.cookie.split(";").map((entry) => entry.split("="))
+  return Object.fromEntries(entries)
+}
+
+/**
+ * Passport uses the `connect.sid` cookie to represent a session
+ */
+function getSession(): string | undefined {
+  const cookies = getCookies()
+  const sessionId = cookies["connect.sid"]
+
+  return sessionId
+}
+
 function getCredentials(rpId: string, id: BufferSource) {
   return navigator.credentials.get({
     publicKey: {
@@ -147,7 +162,7 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
   const logIn = (name: string) => trpcClient.auth.login.query({ name })
   const signUp = async (name: string) => {
     const challengeResponse = await fetch(
-      new URL("/register/public-key/challenge", getServerUrl()),
+      new URL("/signup/public-key/challenge", getServerUrl()),
       {
         method: "POST",
         headers: {

@@ -2,7 +2,7 @@ import { User } from "@coat-rack/core/models"
 import { initTRPC, TRPCError } from "@trpc/server"
 
 interface TRPCContext {
-  user?: User["id"]
+  user?: User
 }
 
 /**

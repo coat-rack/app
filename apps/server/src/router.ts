@@ -99,42 +99,7 @@ const authRouter = (db: DB) =>
       )
       .mutation(async ({ input }) => {
         const id = input.name.toLowerCase()
-
-        const user: User = {
-          id,
-          name: id,
-          timestamp: Date.now(),
-          type: "user",
-        }
-
-        const users = await db.users.getItems(0, Infinity)
-        const existing = users.find((u) => u.id === id)
-        if (existing) {
-          return existing
-        }
-
-        await db.users.putItems([user])
-        await db.spaces.putItems([
-          {
-            type: "space",
-            id: user.id,
-            name: user.name,
-            owner: user.id,
-            spaceType: "user",
-            timestamp: Date.now(),
-            color: "#f59e0b",
-          },
-        ])
-
-        const publicSpace = await db.spaces.get(PUBLIC_SPACE_ID)
-        if (publicSpace && publicSpace.spaceType === "shared") {
-          await db.spaces.putItems([
-            {
-              ...publicSpace,
-              users: [...(publicSpace.users || []), user.id],
-            },
-          ])
-        }
+        const user = await registerUser(db, id)
 
         return user
       }),
@@ -341,4 +306,44 @@ function getNextAvailablePort(
   }
 
   throw new Error("No ports available")
+}
+
+export async function registerUser(db: DB, id: string): Promise<User> {
+  const user: User = {
+    id,
+    name: id,
+    timestamp: Date.now(),
+    type: "user",
+  }
+
+  const users = await db.users.getItems(0, Infinity)
+  const existing = users.find((u) => u.id === id)
+  if (existing) {
+    return existing
+  }
+
+  await db.users.putItems([user])
+  await db.spaces.putItems([
+    {
+      type: "space",
+      id: user.id,
+      name: user.name,
+      owner: user.id,
+      spaceType: "user",
+      timestamp: Date.now(),
+      color: "#f59e0b",
+    },
+  ])
+
+  const publicSpace = await db.spaces.get(PUBLIC_SPACE_ID)
+  if (publicSpace && publicSpace.spaceType === "shared") {
+    await db.spaces.putItems([
+      {
+        ...publicSpace,
+        users: [...(publicSpace.users || []), user.id],
+      },
+    ])
+  }
+
+  return user
 }

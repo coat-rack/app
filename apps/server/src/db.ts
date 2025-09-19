@@ -1,6 +1,8 @@
 import { Schema } from "@coat-rack/core/models"
+import session from "express-session"
 import { join } from "path"
 import { MultiFileTable } from "./persistence/multi-file-db"
+import { SingleFileTable } from "./persistence/single-file-db"
 import { Table, TableRow } from "./persistence/types"
 import { NonEmptyArray } from "./util"
 
@@ -43,6 +45,16 @@ export function initDb(rootDir: string) {
     apps: new MultiFileTable(join(dbName, "apps")),
   }
   return db
+}
+
+export interface SessionDataRow extends TableRow<string> {
+  session: session.SessionData
+}
+
+export function initSessionDb(rootDir: string) {
+  const dbName = join(rootDir, dbDirName, "session.json")
+
+  return new SingleFileTable<string, SessionDataRow>(dbName)
 }
 
 export const PUBLIC_SPACE_ID = "public"

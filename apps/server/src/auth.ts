@@ -11,6 +11,7 @@ import WebAuthnStrategy, {
 
 import { Passport } from "passport"
 import { DB, UserCredential } from "./db"
+import { registerUser } from "./router"
 
 function verifyCredential(db: DB): VerifyFunction {
   return async (id: string, userHandle: Buffer, verified: VerifiedFunction) => {
@@ -18,16 +19,18 @@ function verifyCredential(db: DB): VerifyFunction {
     console.log(db, id, userHandle, verified)
     console.log("After verifyCredential")
 
-    const userCredential = await db.userCredentials.get(id)
+    const userId = new TextDecoder().decode(userHandle)
+
+    const userCredential = await db.userCredentials.get(userId)
     if (!userCredential) {
       const message = `User not found: ${id}`
 
       return verified(undefined, undefined, { message })
     }
 
-    const foundKey = userCredential.publicKeys
-      .map((k) => Buffer.from(k.buffer.data))
-      .find((key) => userHandle.equals(key))
+    const foundKey = userCredential.publicKeys.find((key) => key.id === id)
+
+    throw new Error("Not implemented")
 
     if (!foundKey) {
       const message = `Failed to verify credential for user: ${id}`
@@ -37,7 +40,7 @@ function verifyCredential(db: DB): VerifyFunction {
 
     // not sure what we need to return here
     // also unclear about how/where we're going from public key to buffer/vice versa
-    return verified(undefined, id, foundKey.toString())
+    return verified(undefined, id, foundKey)
   }
 }
 
@@ -52,17 +55,11 @@ function registerCredential(db: DB): RegisterFunction {
 
     let dbUser = await db.users.get(userId)
     if (!dbUser) {
-      dbUser = {
-        type: "user",
-        id: userId,
-        name: user.name,
-        timestamp: Date.now(),
-      }
-      await db.users.putItems([dbUser])
+      dbUser = await registerUser(db, userId)
     }
 
-    const existingCredential = await db.userCredentials.get(userId)
-
+    const existingCredential = await db.userCredentials.get(dbUser.id)
+    dbUser.id
     const publicKeys = existingCredential?.publicKeys || []
     publicKeys.push({
       id: credentialId,

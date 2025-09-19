@@ -17,8 +17,59 @@ import {
   PUBLIC_DOMAIN,
   SESSION_SECRET,
 } from "./config"
-import { initDb } from "./db"
+import { SessionDataRow, initDb, initSessionDb } from "./db"
+import { SingleFileTable } from "./persistence/single-file-db"
 import { appRouter, seedDb } from "./router"
+
+type PassportSession = {
+  passport: { user: User }
+}
+
+class SessionStore extends session.Store {
+  db: SingleFileTable<string, SessionDataRow>
+
+  constructor(rootDir: string) {
+    super()
+    this.db = initSessionDb(rootDir)
+  }
+
+  async destroy(sid: string, callback?: (err?: any) => void) {
+    console.log("DESTROY SESSION", sid)
+    await this.db.destroy(sid)
+    callback?.()
+  }
+
+  async get(
+    sid: string,
+    callback: (err: any, session?: session.SessionData | null) => void,
+  ) {
+    console.log("GET SESSION", sid)
+    const result = await this.db.get(sid)
+    if (!result) {
+      return callback?.(new Error("Session not found"))
+    }
+
+    return callback?.(undefined, result.session)
+  }
+
+  async set(
+    sid: string,
+    session: session.SessionData,
+    callback?: (err?: any) => void,
+  ) {
+    console.log("SET SESSION", sid)
+    await this.db.putItems([
+      {
+        id: sid,
+        session,
+        timestamp: Date.now(),
+        isDeleted: true,
+      },
+    ])
+
+    callback?.()
+  }
+}
 
 const appServers: Partial<Record<string, Server>> = {}
 
@@ -118,6 +169,10 @@ async function main() {
       secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
+      store: new SessionStore(root),
+      cookie: {
+        httpOnly: false,
+      },
     }),
   )
 
@@ -140,7 +195,7 @@ async function main() {
     })
   })
 
-  app.post("/register/public-key/challenge", (req, res, next) => {
+  app.post("/signup/public-key/challenge", (req, res, next) => {
     const username = req.body.name
     if (!username) {
       throw new Error("Expected `name` to be provided in body")
@@ -179,7 +234,6 @@ async function main() {
     auth.passport.authenticate("webauthn", {
       failWithError: true,
       failureMessage: true,
-      session: false,
     }),
     function verified(_req, res) {
       res.status(200)
@@ -193,12 +247,24 @@ async function main() {
     "/trpc",
     trpcExpress.createExpressMiddleware({
       router: appRouter(root, db, setupAppServer),
+      createContext: async ({
+        req,
+      }: trpcExpress.CreateExpressContextOptions) => {
+        const session = await new Promise<Partial<PassportSession> | undefined>(
+          (res, rej) =>
+            req.sessionStore.get(req.sessionID, (err, session) =>
+              err
+                ? rej(err)
+                : res(session as Partial<PassportSession> | undefined),
+            ),
+        )
 
-      createContext: ({ req }: trpcExpress.CreateExpressContextOptions) => {
-        const user = req.user as User | undefined
+        const user = session?.passport?.user
+
+        console.log("creating context for user", user)
 
         return {
-          user: user?.id,
+          user,
         }
       },
     }),
