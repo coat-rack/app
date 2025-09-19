@@ -10,7 +10,7 @@ import type { AppRouter } from "@coat-rack/server/src/types"
 function getServerUrl() {
   const url = new URL(window.location.toString())
   url.port = import.meta.env.VITE_SERVER_PORT
-  url.pathname = ""
+  url.pathname = "/trpc"
   return url
 }
 const config = {

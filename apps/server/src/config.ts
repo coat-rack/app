@@ -8,6 +8,8 @@ declare global {
       CADDY_ADMIN_HOST?: string
       CADDY_EXTERNAL_DOMAIN?: string
       COAT_RACK_DOMAIN?: string
+      SESSION_SECRET?: string
+      PUBLIC_DOMAIN?: string
     }
   }
 }
@@ -21,8 +23,12 @@ export const HOST = "0.0.0.0"
 
 export const PORT = {
   server: 3000,
-  web: 4000,
   sandbox: 5000,
+  /**
+   * Used for `web` during DEV, this is proxied to from the main app
+   * In production, `web` is hosted by the main server
+   */
+  webDev: 4000,
 }
 
 export const DB_PATH = process.env.DB_PATH || resolve("_data")
@@ -34,3 +40,11 @@ export const CADDY_EXTERNAL_DOMAIN = process.env.CADDY_EXTERNAL_DOMAIN
 const ENV = process.env.NODE_ENV || "production"
 
 export const IS_DEV = ENV === "development"
+
+export const SESSION_SECRET =
+  process.env.SESSION_SECRET || "placeholder session secret"
+
+/**
+ * Relying Party ID needed for the Web Authn API
+ */
+export const PUBLIC_DOMAIN = process.env.PUBLIC_DOMAIN || "localhost"

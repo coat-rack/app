@@ -4,7 +4,6 @@ import { Async, Checkpoint, OperationResult, Table, TableRow } from "./types"
 interface File<TData> {
   data: TData[]
   checkpoint: Checkpoint
-  deletes: TData[]
 }
 
 export class SingleFileTable<ID, T extends TableRow<ID>>
@@ -22,7 +21,6 @@ export class SingleFileTable<ID, T extends TableRow<ID>>
       {
         checkpoint: Date.now(),
         data: initial,
-        deletes: [],
       },
       (file) => {
         file.checkpoint = this.getCheckpoint()
@@ -75,5 +73,13 @@ export class SingleFileTable<ID, T extends TableRow<ID>>
 
     this.file.setField("data", data)
     return { conflicts }
+  }
+
+  /**
+   * Removes entry from table completely
+   */
+  async destroy(id: ID) {
+    const newData = this.file.get().data.filter((d) => d.id !== id)
+    this.file.setField("data", newData)
   }
 }

@@ -46,6 +46,83 @@ export const useLoggedInContext = () => {
   return context
 }
 
+function getServerUrl() {
+  const url = new URL(window.location.toString())
+  url.port = import.meta.env.VITE_SERVER_PORT
+  url.pathname = ""
+  return url
+}
+
+function getCookies(): Record<string, string> {
+  const entries = document.cookie.split(";").map((entry) => entry.split("="))
+  return Object.fromEntries(entries)
+}
+
+/**
+ * Passport uses the `connect.sid` cookie to represent a session
+ */
+function getSession(): string | undefined {
+  const cookies = getCookies()
+  const sessionId = cookies["connect.sid"]
+
+  return sessionId
+}
+
+function getCredentials(rpId: string, id: BufferSource) {
+  return navigator.credentials.get({
+    publicKey: {
+      rpId,
+      challenge: new Uint8Array([117, 61, 252, 231, 191, 241 /* … */]),
+      allowCredentials: [
+        {
+          id,
+          type: "public-key",
+        },
+      ],
+      userVerification: "required",
+    },
+  })
+}
+
+function createCredentials(
+  rpId: string,
+  userId: string,
+  challenge: Uint8Array,
+) {
+  const encoder = new TextEncoder()
+  const id = encoder.encode(userId)
+
+  console.log({ id })
+
+  return navigator.credentials.create({
+    publicKey: {
+      challenge,
+      rp: { id: rpId, name: "Coat Rack" },
+      // the entire user object comes from the backend, we just do some parsing here
+      // this is the same object that passport uses to hold the user reference
+      user: {
+        id,
+        name: userId,
+        displayName: userId,
+      },
+      pubKeyCredParams: [
+        {
+          type: "public-key",
+          alg: -7, // ES256
+        },
+        {
+          type: "public-key",
+          alg: -257, // RS256
+        },
+        {
+          type: "public-key",
+          alg: -8, // Ed25519
+        },
+      ],
+    },
+  }) as Promise<PublicKeyCredential | null>
+}
+
 export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useLocalUser()
   const [userSpace, setUserSpace] = useLocalUserSpace()
@@ -82,8 +159,70 @@ export const LoggedInContextProvider = ({ children }: PropsWithChildren) => {
     setupUserData()
   }, [user?.id])
 
-  const logIn = (name: string) => trpcClient.users.login.query({ name })
-  const signUp = (name: string) => trpcClient.users.create.mutate({ name })
+  const logIn = (name: string) => trpcClient.auth.login.query({ name })
+  const signUp = async (name: string) => {
+    const challengeResponse = await fetch(
+      new URL("/signup/public-key/challenge", getServerUrl()),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          displayName: name,
+        }),
+      },
+    )
+
+    const challengeJson = await challengeResponse.json()
+    const rpId = challengeJson.rpId
+    const challenge = new Uint8Array(challengeJson.challenge.data)
+
+    console.log(challengeJson)
+
+    const credential = await createCredentials(
+      rpId,
+      challengeJson.user.id,
+      challenge,
+    )
+
+    if (!credential) {
+      throw new Error("Credential creation failed")
+    }
+
+    console.log(challenge, credential)
+
+    // convert buffers in some predictable way
+    const jsonCredential = JSON.parse(JSON.stringify(credential))
+    const registerResponse = await fetch(
+      new URL("/login/public-key", getServerUrl()),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          response: {
+            clientDataJSON: encodeURIComponent(
+              jsonCredential.response.clientDataJSON,
+            ),
+            attestationObject: encodeURIComponent(
+              jsonCredential.response.attestationObject,
+            ),
+          },
+        }),
+      },
+    )
+
+    const loginJson = await registerResponse.json()
+
+    console.log(loginJson)
+
+    // trpcClient.auth.register.mutate({ name })
+
+    throw new Error("challenge in progress")
+  }
 
   if (!(dbSetup && user && userSpace && activeSpace)) {
     return <LoginForm logIn={logIn} signUp={signUp} onLogin={login} />

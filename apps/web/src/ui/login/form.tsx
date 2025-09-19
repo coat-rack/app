@@ -27,7 +27,10 @@ export const LoginForm = ({ onLogin, logIn, signUp }: Props) => {
   const handleSignUp = () =>
     signUp(username)
       .then((user) => onLogin(user))
-      .catch(() => setError("Invalid username"))
+      .catch((err) => {
+        console.error(err)
+        setError("Invalid username")
+      })
 
   return (
     <form
