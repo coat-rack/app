@@ -1,0 +1,32 @@
+{
+  "name": "@catalog/budget",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "react": "^18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@coat-rack/icons": "workspace:*",
+    "@coat-rack/sdk": "workspace:*",
+    "@coat-rack/tailwind-config": "workspace:*",
+    "@coat-rack/ui": "workspace:*",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@tanstack/react-router": "^1.121.27",
+    "@tanstack/router-plugin": "^1.121.27",
+    "@vitejs/plugin-react": "^4.2.1",
+    "rollup-plugin-external-globals": "^0.9.2",
+    "swr": "^2.3.4",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.0.8",
+    "vite-plugin-css-injected-by-js": "^3.5.0"
+  }
+}
