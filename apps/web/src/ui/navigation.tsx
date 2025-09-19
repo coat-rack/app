@@ -29,7 +29,7 @@ export const Navigation = ({
         <div className="flex flex-row items-center gap-4">
           <Button asChild variant="link" size="sm">
             <Link
-              className="flex flex-row gap-2"
+              className="flex flex-row gap-2 text-base"
               to="/"
               activeProps={{
                 className: "text-primary",
@@ -46,7 +46,7 @@ export const Navigation = ({
         <Button
           variant="ghost"
           size="sm"
-          className="align-center flex flex-row gap-2 justify-self-end"
+          className="align-center flex flex-row gap-2 justify-self-end text-base"
           onClick={signOut}
           title="Sign out"
         >

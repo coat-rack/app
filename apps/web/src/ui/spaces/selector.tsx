@@ -25,7 +25,7 @@ export const SpaceSelector = () => {
         return space.id === activeSpace?.id ? (
           <div
             key={space.id}
-            className="flex h-6 flex-row items-center gap-2 border border-solid px-2 text-xs"
+            className="flex h-6 flex-row items-center gap-2 border border-solid px-2 text-base"
             style={{
               borderColor: space.color,
               backgroundColor: space.color,
