@@ -34,6 +34,10 @@ export default defineConfig({
           link: "/app-development",
         },
         {
+          label: "Sample Apps",
+          link: "/sample-apps",
+        },
+        {
           label: "Packages",
           autogenerate: {
             directory: "packages",
