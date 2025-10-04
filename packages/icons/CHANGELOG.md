@@ -1,5 +1,7 @@
 # @coat-rack/icons
 
+## 0.0.1-alpha.23
+
 ## 0.0.1-alpha.22
 
 ## 0.0.1-alpha.21

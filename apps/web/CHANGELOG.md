@@ -1,5 +1,17 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.23
+
+### Patch Changes
+
+- 51adf08: Mobile UI Tweaks
+- Updated dependencies [51adf08]
+  - @coat-rack/ui@0.0.1-alpha.23
+  - @coat-rack/server@0.0.1-alpha.23
+  - @coat-rack/core@0.0.1-alpha.23
+  - @coat-rack/icons@0.0.1-alpha.23
+  - @coat-rack/sdk@0.0.1-alpha.23
+
 ## 0.0.1-alpha.22
 
 ### Patch Changes

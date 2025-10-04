@@ -1,5 +1,14 @@
 # @catalog/sample-app
 
+## 0.0.1-alpha.23
+
+### Patch Changes
+
+- Updated dependencies [51adf08]
+  - @coat-rack/tailwind-config@0.0.1-alpha.23
+  - @coat-rack/ui@0.0.1-alpha.23
+  - @coat-rack/sdk@0.0.1-alpha.23
+
 ## 0.0.1-alpha.22
 
 ### Patch Changes
