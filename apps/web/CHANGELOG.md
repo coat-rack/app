@@ -1,5 +1,17 @@
 # @coat-rack/web
 
+## 0.0.1-alpha.24
+
+### Patch Changes
+
+- cb111d1: Mention last updated user in appdata entities
+- Updated dependencies [cb111d1]
+  - @coat-rack/server@0.0.1-alpha.24
+  - @coat-rack/sdk@0.0.1-alpha.24
+  - @coat-rack/core@0.0.1-alpha.24
+  - @coat-rack/icons@0.0.1-alpha.24
+  - @coat-rack/ui@0.0.1-alpha.24
+
 ## 0.0.1-alpha.23
 
 ### Patch Changes

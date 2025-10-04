@@ -1,5 +1,7 @@
 # @coat-rack/dev-catalog
 
+## 0.0.1-alpha.24
+
 ## 0.0.1-alpha.23
 
 ## 0.0.1-alpha.22

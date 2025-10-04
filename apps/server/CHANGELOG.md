@@ -1,5 +1,12 @@
 # @coat-rack/server
 
+## 0.0.1-alpha.24
+
+### Patch Changes
+
+- cb111d1: Mention last updated user in appdata entities
+  - @coat-rack/core@0.0.1-alpha.24
+
 ## 0.0.1-alpha.23
 
 ### Patch Changes
