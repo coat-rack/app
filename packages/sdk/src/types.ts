@@ -38,6 +38,7 @@ export interface DbRecord<T> {
   id: string
   timestamp: number
   space: string
+  updatedBy: string
   data: T
 }
 

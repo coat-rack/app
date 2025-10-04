@@ -72,6 +72,7 @@ export function useIFrameRPC(
                   space: docUnwrapped.space,
                   data: docUnwrapped.data,
                   timestamp: docUnwrapped.timestamp,
+                  updatedBy: docUnwrapped.updatedBy,
                 }
               }),
             ),
@@ -109,6 +110,7 @@ export function useIFrameRPC(
                 space: foundItem.space,
                 data: foundItem.data,
                 timestamp: foundItem.timestamp,
+                updatedBy: foundItem.updatedBy,
               }),
             )
           }
@@ -134,6 +136,7 @@ export function useIFrameRPC(
               data: docUnwrapped.data,
               space: docUnwrapped.space,
               timestamp: docUnwrapped.timestamp,
+              updatedBy: docUnwrapped.updatedBy,
             }),
           )
         })
@@ -159,6 +162,7 @@ export function useIFrameRPC(
               data: docUnwrapped.data,
               space: docUnwrapped.space,
               timestamp: docUnwrapped.timestamp,
+              updatedBy: docUnwrapped.updatedBy,
             }),
           )
         })
