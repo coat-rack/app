@@ -1,5 +1,12 @@
 # @coat-rack/ui
 
+## 0.0.1-alpha.25
+
+### Patch Changes
+
+- @coat-rack/icons@0.0.1-alpha.25
+- @coat-rack/tailwind-config@0.0.1-alpha.25
+
 ## 0.0.1-alpha.24
 
 ### Patch Changes

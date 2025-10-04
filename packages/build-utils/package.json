@@ -1,12 +1,12 @@
 {
   "name": "@coat-rack/build-utils",
-  "version": "0.0.1-alpha.24",
+  "version": "0.0.1-alpha.25",
   "private": true,
   "exports": {
     ".": "./index.ts"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
-    "@coat-rack/typescript-config": "0.0.1-alpha.24"
+    "@coat-rack/typescript-config": "0.0.1-alpha.25"
   }
 }
