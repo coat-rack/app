@@ -1,5 +1,15 @@
 # @catalog/notes
 
+## 0.0.1-alpha.25
+
+### Patch Changes
+
+- Updated dependencies [8a1babf]
+  - @coat-rack/sdk@0.0.1-alpha.25
+  - @coat-rack/icons@0.0.1-alpha.25
+  - @coat-rack/tailwind-config@0.0.1-alpha.25
+  - @coat-rack/ui@0.0.1-alpha.25
+
 ## 0.0.1-alpha.24
 
 ### Patch Changes

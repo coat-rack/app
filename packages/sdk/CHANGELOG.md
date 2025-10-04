@@ -1,5 +1,11 @@
 # @coat-rack/sdk
 
+## 0.0.1-alpha.25
+
+### Patch Changes
+
+- 8a1babf: Expose updatedBy to apps
+
 ## 0.0.1-alpha.24
 
 ### Patch Changes
