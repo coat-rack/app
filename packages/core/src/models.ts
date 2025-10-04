@@ -52,6 +52,7 @@ export const KeyValue = z.object({
 export type AppData = z.infer<typeof AppData>
 export const AppData = RowWithSpace("app-data").extend({
   app: z.string(),
+  updatedBy: z.string(),
   data: z.any(),
 })
 

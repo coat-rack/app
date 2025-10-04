@@ -25,7 +25,7 @@ export function useIFrameRPC(
   space: string,
   filtered: boolean,
 ) {
-  const { db } = useLoggedInContext()
+  const { db, user } = useLoggedInContext()
 
   const handler = (
     event: RpcRequest<Db<unknown>>,
@@ -124,6 +124,7 @@ export function useIFrameRPC(
           timestamp: Date.now(),
           type: "app-data",
           space,
+          updatedBy: user.id,
         })
         .then((doc) => {
           const docUnwrapped = doc.toJSON()
@@ -145,6 +146,7 @@ export function useIFrameRPC(
           id,
           data,
           app: appId,
+          updatedBy: user.id,
           timestamp: Date.now(),
           type: "app-data",
           space,
